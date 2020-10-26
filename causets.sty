@@ -1,81 +1,152 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{causets}[2020/10/25 Package to draw causal set diagrams]
 
+\RequirePackage{tikz}
+\RequirePackage{xcolor}
+\RequirePackage{xfp}
+\RequirePackage{listofitems}
+\usetikzlibrary{calc}
+
+\makeatletter
+\colorlet{causetsEventColor}{black}
+\colorlet{causetsEventLabelColor}{black}
+\colorlet{causetsLinkColor}{black}
+\colorlet{causetsSpaceSeparationColor}{black}
+\newif\ifcausets@drawPermutation
+\newif\ifcausets@drawEventLabels
+\newif\ifcausets@drawLinks
+\newif\ifcausets@drawSpaceSeparations
+\causets@drawLinkstrue
+\DeclareOption{black}{%
+\colorlet{causetsEventColor}{black}
+\colorlet{causetsLinkColor}{black}
+\colorlet{causetsSpaceSeparationColor}{black}
+}
+\DeclareOption{gray}{%
+\colorlet{causetsEventColor}{black}
+\colorlet{causetsLinkColor}{gray}
+\colorlet{causetsSpaceSeparationColor}{gray}
+}
+\DeclareOption{neon}{%
+\colorlet{causetsEventColor}{blue}
+\colorlet{causetsLinkColor}{cyan}
+\colorlet{causetsSpaceSeparationColor}{red}
+}
+\DeclareOption{colored}{%
+\colorlet{causetsEventColor}{blue!65!black}
+\colorlet{causetsLinkColor}{cyan!65!black}
+\colorlet{causetsSpaceSeparationColor}{red!65!black}
+}
+\DeclareOption{permutation}{\causets@drawPermutationtrue}
+\DeclareOption{labeled}{\causets@drawEventLabelstrue}
+\DeclareOption{spacelike}{\causets@drawSpaceSeparationstrue}
+\DeclareOption{notlinked}{\causets@drawLinksfalse}
+\DeclareOption*{\PackageWarning{causets}{'\CurrentOption' is not supported.}}
+\ProcessOptions\relax
+
 \newcounter{permui}
 \newcounter{permuj}
-\newcommand*{\permcauset}[3][]%
+\def\cellsize{1cm}
+\tikzset{causetsEvent/.style={circle, fill=causetsEventColor, inner sep=0pt, minimum size=3.3mm}}
+\tikzset{causetsEventLabel/.style={below right, causetsEventLabelColor, text opacity=1, fill opacity=0.0, inner sep=1pt, scale=0.8}}
+\tikzset{causalrel/.style={thick, causetsLinkColor}}
+\tikzset{spacelikerel/.style={thick, causetsSpaceSeparationColor, dashed}}
+\tikzset{permutation/.style={blue, thin, fill=white}}
+\tikzset{totordlabel/.style={scale=0.7, below right=-0.5ex}}
+\tikzset{parordlabel/.style={scale=0.7, below left=-0.5ex}}
+\tikzset{permcell/.style={fill=blue, fill opacity=0.2}}
+
+\newcommand*{\causets@drawEvents}%
 {%
-\begin{scope}[#1]
-	\begin{scope}[rotate=45]
-		\begin{scope}[xshift=-#2*\cellsize/2, yshift=-#2*\cellsize/2]
-			\def\permliststr{#3}
-			\readlist*\permlisti{\permliststr}
-			\readlist*\permlistj{\permliststr}
-			% draw shape if option set:
-			\ifdrawpermutation
-				\draw[2Dshape] ( 0*\cellsize, 0*\cellsize ) rectangle ( #2*\cellsize, #2*\cellsize );
-			\fi
-			% define events and draw labels:
-			\setcounter{permui}{0}
-			\foreachitem \permvi \in \permlisti[]{
-				\stepcounter{permui}
-				\coordinate (ec\permvi) at ( \permvi*\cellsize-0.5*\cellsize, \value{permui}*\cellsize-0.5*\cellsize );
-				\ifdrawbiposet
-					\node[event] (e\permvi) at (ec\permvi) {};
-				\fi
-				\ifdrawpermutation
-					\node[totordlabel] at ( \value{permui}*\cellsize-0.5*\cellsize, 0 ) {\thepermui};
-					\path[permcell] ($(ec\permvi)+(-0.5*\cellsize,-0.5*\cellsize )$) rectangle +( 1*\cellsize , 1*\cellsize );
-					\node[parordlabel] at ( 0, \value{permui}*\cellsize-0.5*\cellsize ) {\permvi};
-				\fi
-			}
-			\ifdrawbiposet
-				% draw causal relations:
-				\setcounter{permui}{0}
-				\foreachitem \permvi \in \permlisti[]{
-					\stepcounter{permui}
-					\edef\permvjbound{\fpeval{#2 + 1}}
-					\setcounter{permuj}{0}
-					\foreachitem \permvj \in \permlistj[]{
-						\stepcounter{permuj}
-						\ifnum\value{permuj}>\value{permui}
-							\ifnum\permvi<\permvj
-								\ifnum\permvj<\permvjbound
-									\draw[causalrel] (e\permvi) -- (e\permvj);
-									\edef\permvjbound{\fpeval{\permvj}}
+	% draw shape if option set:
+	\ifcausets@drawPermutation
+		\draw[permutation] ( 0*\cellsize, 0*\cellsize ) 
+			rectangle ( \causet@N*\cellsize, \causet@N*\cellsize );
+	\fi
+	% define events and draw labels:
+	\setcounter{permui}{0}
+	\foreachitem \permvi \in \permlisti[]{
+		\stepcounter{permui}
+		\coordinate (ec\permvi) 
+			at ( \permvi*\cellsize-0.5*\cellsize, 
+			     \value{permui}*\cellsize-0.5*\cellsize );
+		\node[causetsEvent] (e\permvi) at (ec\permvi) {};
+		\ifcausets@drawEventLabels
+			\node[causetsEventLabel] at (e\permvi.south west) {\permvi};
+		\fi
+		\ifcausets@drawPermutation
+			\node[totordlabel] 
+				at ( \value{permui}*\cellsize-0.5*\cellsize, 0 ) 
+				{\thepermui};
+			\path[permcell] ($(ec\permvi)+(-0.5*\cellsize,-0.5*\cellsize )$) 
+				rectangle +( \cellsize , \cellsize );
+			\node[parordlabel] 
+				at ( 0, \value{permui}*\cellsize-0.5*\cellsize ) 
+				{\permvi};
+		\fi
+	}
+}
+
+\newcommand*{\drawpermcauset}[2][]%
+{%
+	\def\permliststr{#2}
+	\readlist*\permlisti{\permliststr}
+	\readlist*\permlistj{\permliststr}
+	\def\causet@N{\permlistilen}
+	\begin{scope}[#1]
+		\begin{scope}[rotate=45]
+			\begin{scope}[xshift=-\causet@N*\cellsize/2, 
+			              yshift=-\causet@N*\cellsize/2]
+				\causets@drawEvents
+				\ifcausets@drawLinks
+					% draw links:
+					\setcounter{permui}{0}
+					\foreachitem \permvi \in \permlisti[]{
+						\stepcounter{permui}
+						\edef\permvjbound{\fpeval{\causet@N + 1}}
+						\setcounter{permuj}{0}
+						\foreachitem \permvj \in \permlistj[]{
+							\stepcounter{permuj}
+							\ifnum\value{permuj}>\value{permui}
+								\ifnum\permvi<\permvj
+									\ifnum\permvj<\permvjbound
+										\draw[causalrel] (e\permvi) -- (e\permvj);
+										\edef\permvjbound{\fpeval{\permvj}}
+									\fi
 								\fi
 							\fi
-						\fi
+						}
 					}
-				}
-				% draw spacelike relations:
-				\setcounter{permui}{0}
-				\foreachitem \permvi \in \permlisti[]{
-					\stepcounter{permui}
-					\edef\permvjbound{0}
-					\setcounter{permuj}{0}
-					\foreachitem \permvj \in \permlistj[]{
-						\stepcounter{permuj}
-						\ifnum\value{permuj}>\value{permui}
-							\ifnum\permvi>\permvj
-								\ifnum\permvj>\permvjbound
-									\draw[spacelikerel] (e\permvj) -- (e\permvi);
-									\edef\permvjbound{\fpeval{\permvj}}
+				\fi
+				\ifcausets@drawSpaceSeparations
+					% draw spacelike separations:
+					\setcounter{permui}{0}
+					\foreachitem \permvi \in \permlisti[]{
+						\stepcounter{permui}
+						\edef\permvjbound{0}
+						\setcounter{permuj}{0}
+						\foreachitem \permvj \in \permlistj[]{
+							\stepcounter{permuj}
+							\ifnum\value{permuj}>\value{permui}
+								\ifnum\permvi>\permvj
+									\ifnum\permvj>\permvjbound
+										\draw[spacelikerel] (e\permvj) -- (e\permvi);
+										\edef\permvjbound{\fpeval{\permvj}}
+									\fi
 								\fi
 							\fi
-						\fi
+						}
 					}
-				}
-			\fi
+				\fi
+			\end{scope}
 		\end{scope}
 	\end{scope}
-\end{scope}
 }
-\tikzset{permframe/.style={YorkGrey!75!black, thick}}
-\newcommand*{\drawframe}[3][none]{\draw[permframe, fill=#1] ( #2*\offset-\offset/2,-\offset/2 ) rectangle +( #3*\offset, \offset );}
-\newcommand*{\drawframeOne}[1][none]{\draw[permframe, fill=#1, xshift=-\offset/2, yshift=-\offset/2] (0, 0) rectangle (\offset, \offset);}
-\newcommand*{\drawframeOneShort}[2][0]{\draw[permframe, xshift=-\offset/2, yshift=#1*\offset] (0, 0) rectangle (\offset, #2*\offset);}
-\newcommand*{\drawframeTwo}[1][none]{\draw[permframe, fill=#1, xshift=-\offset, yshift=-\offset/2] (0, 0) rectangle (2*\offset, \offset);}
-\newcommand*{\drawframeThree}[1][none]{\draw[permframe, fill=#1, xshift=-1.5*\offset, yshift=-\offset/2] (0, 0) rectangle (3*\offset, \offset);}
-\newcounter{permrow}
 
+\newcommand*{\permcauset}[2][]%
+{%
+	\begin{tikzpicture}
+		\drawpermcauset[#1]{#2}
+	\end{tikzpicture}
+}
+\makeatother
