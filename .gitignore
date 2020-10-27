@@ -1,8 +1,6 @@
 /tmp/
 .project
 .texlipse
-/manual.pdf
-/manual.synctex.gz
-/manua.synctex.gz
-/manual.aux
-/manual.log
+/causets_manual_en.aux
+/causets_manual_en.log
+/causets_manual_en.synctex.gz

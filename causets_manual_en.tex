@@ -1,0 +1,551 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper, left = 2.5cm, right = 2.5cm, top = 2.5cm, bottom = 2.5cm]{geometry}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\linespread{1.20}                                    % line spreading
+\setlength{\parindent}{2em}                          % paragraph indent
+\setlength{\parskip}{0em}%{1em plus 0.4em minus 0.3em}  % space between paragraphs
+\usepackage{lastpage}                            % total number of pages
+\usepackage{fancyhdr}                            % header and footer package
+\pagestyle{fancy}                                % user defined header and footer
+\setlength{\headheight}{16.0pt}
+\fancyhead[LO,RE]{}
+\fancyhead[C]{}
+\fancyhead[RO,LE]{\sffamily \nouppercase{\rightmark}}
+\renewcommand{\headrulewidth}{0.0pt}
+\renewcommand{\footrulewidth}{0.0pt}
+\fancyfoot[LO,RE]{}
+\fancyfoot[C]{}
+\fancyfoot[RO,LE]{\sffamily \thepage}
+\fancypagestyle{plain}{                          % redefine plain style for first chapter pages
+	\fancyhf{}                                     % clear all
+	\renewcommand{\headrulewidth}{0.0pt}
+	\renewcommand{\footrulewidth}{0.0pt}
+	\fancyfoot[RO,LE]{\sffamily \thepage}
+}
+\usepackage{titlesec}
+% \setlength{\cftbeforesecskip}{1.0ex}
+\renewcommand{\thesection}{\arabic{section}}
+\titlespacing*{\section}{0pt}{15pt}{5pt}
+\titleformat{\section}{\large\bfseries\sffamily}{\thetitle}{17pt}{}{}
+\usepackage{multirow}                            % span multiple rows
+\usepackage{booktabs}                            % enables book table style
+\usepackage[language=TeX]{listings}
+\lstdefinestyle{manualstyle}{
+    backgroundcolor=\color{yellow!50!black!10},   
+    commentstyle=\color{green!50!gray},
+    keywordstyle=\color{blue},
+    numberstyle=\footnotesize\color{gray},
+    stringstyle=\color{black},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=true,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=manualstyle}
+
+\usepackage{amsmath}
+\usepackage{causets}
+
+\title{{\small package}\\[0.5cm] \huge causets \\[0.2cm]{\small version 1.0}\\[0.5cm]}
+\author{Christoph Minz}
+
+\begin{document}
+
+{\sffamily\maketitle}
+
+\begin{center}
+$\displaystyle
+	\causetsSetSizesLarge
+	\left\{ 
+		\pcauset{3,2,1}, 
+		\pcauset{3,1,2}, 
+		\pcauset{2,1,3}, 
+		\pcauset{1,3,2}, 
+		\pcauset{1,2,3} 
+	\right\} 
+$
+\\
+$\displaystyle
+	\causetsSetSizesLarge
+	\causetsDrawLabelstrue
+	\left\{ 
+		\pcauset{3,2,1}, 
+		\pcauset{3,1,2}, 
+		\pcauset{2,1,3}, 
+		\pcauset{1,3,2}, 
+		\pcauset{1,2,3} 
+	\right\} 
+$
+\\
+$\displaystyle
+	\causetsSetSizesLarge
+	\causetsDrawPermutationtrue
+	\left\{ 
+		\pcauset{3,2,1}, 
+		\pcauset{3,1,2}, 
+		\pcauset{2,1,3}, 
+		\pcauset{1,3,2}, 
+		\pcauset{1,2,3} 
+	\right\} 
+$
+\end{center}
+
+\vspace{2em}
+
+\section*{What Is the Purpose of This Package?}
+Causal set theory is a proposed framework for quantum gravity. 
+Causal sets (causets for short) are locally finite, partially ordered sets. 
+Though one can describe them mathematically as a set with a partial order, it is usually much simpler to just draw (Hasse) diagrams. 
+
+This package implements some simple functionality to produce such diagrams for causets by drawing them as TikZ graphics. 
+The drawing algorithm makes use of the fact that every finite causet that embeds in $\smash{1 + 1}$ dimensional Minkowski spacetime can be represented by a product of two total orders (2D-orders), where one order can be the total order of the integers labeling the causet elements, while the other is a permutation of the labels. 
+The idea is then used as a blueprint to draw diagrams for any generic causet, so that it becomes easy to draw causets and even use them in mathematical expressions. 
+
+\clearpage
+\section{Introduction - the Main Commands}
+This package requires the packages \lstinline§tikz§ (for the main drawing tasks), and \lstinline§listofitems§ (for handling the command inputs as lists). 
+Import the package into \LaTeX\ with: 
+\begin{lstlisting}
+\usepackage{causets}
+\end{lstlisting}
+For a more demonstrative introduction in this first section, I use the package options \lstinline§black§ (only black and white diagrams) and \lstinline§permutation§ (also shows the permutation), 
+\begin{lstlisting}
+\usepackage[black,permutation]{causets}
+\end{lstlisting}
+The three main commands of this package are 
+\begin{lstlisting}
+\pcauset{..,i,..,k,..,j,..}
+\rcauset{...}{..,i!j,..}
+\causet{...}{..,i-j,..}
+\end{lstlisting}
+The first command takes an integer permutation that determines the event positions and causal structure such that events $i$ and $j$ are linked if $i < j$ and there is no $k > j$ between $i$ and $j$. 
+The second command does the same, but ignores links between event pairs $i$!$j$ as given in the second argument. 
+The third command only uses the permutation to position the events and links all event pairs $i$-$j$ as specified in the second argument. 
+
+Any causet that can be embedded in $1 + 1$ dimensional Minkowski spacetime can also be described by the product of two total orders (a 2D-order). 
+Let the causets elements be labeled by an increasing null coordinate $u$ (pointing upwards along the right axis of the grids under the diagrams below), then the causal relation (partial order) implies a label permutation along the null coordinate $v$ (pointing upwards along the left axis of the grids under the diagrams below). 
+This permutation is the input of the \lstinline§\pcauset§ command that computes the causal relation from the permutation. 
+See example 1 in Table \ref{tab:MainCommandsExamples}. 
+\causetsSetColorsBlack
+\causetsDrawPermutationtrue
+\begin{table}[h!]
+	\begin{tabular*}{\textwidth}{lp{0.72\textwidth}c}
+		\toprule
+		\#
+	& command 
+	& inline output 
+	\\\midrule
+		1 
+	& \lstinline§\pcauset{4,7,2,6,1,5,3}§
+	& \pcauset{4,7,2,6,1,5,3}
+	\\\midrule
+		2 
+	& \lstinline§\rcauset{4,7,2,6,1,5,3}{2!5}§
+	& \rcauset{4,7,2,6,1,5,3}{2!5}
+	\\\midrule
+		3 
+	& \lstinline§\causet{4,7,2,6,1,5,3}{1-3,1-5,2-3,2-6,4-5,4-6,4-7}§
+	& \causet{4,7,2,6,1,5,3}{1-3,1-5,2-3,2-6,4-5,4-6,4-7}
+	\\\bottomrule
+	\end{tabular*}
+	\caption{\label{tab:MainCommandsExamples} Examples for the three main commands of the package.}
+\end{table}
+\causetsSetColorsGray
+\causetsDrawPermutationfalse
+
+Every causet that does not embed in $1 + 1$ dimensional Minkowski spacetime can be made embedable by adding links to it. 
+Adding the minimal number of links yields a permutation that is used to determine the coordinates of the diagram. 
+The links that have been added to obtain the permutation need to be removed from the generated causet, which is specified by link pairs with a exclamation mark (often used for the logical not in programming). 
+See example 2 in Table \ref{tab:MainCommandsExamples}. 
+
+In some situations, it might be easier to specify the list of link pairs that exist, instead of removing links. 
+For this purpose, use the \lstinline§\causet§ command. 
+As an example, we rewrite the example 2 by specifying all existing links as pairs separated by a minus sign, see example 3 in Table \ref{tab:MainCommandsExamples}. 
+Note that the \lstinline§\rcauset§ command was actually much shorter for this particular example. 
+However, if the list of link pairs in the \lstinline§\rcauset§ command is very long, specifying all existing link pairs instead with the \lstinline§\causet§ yields a faster performance. 
+
+As an example for the use in mathematical expressions, here is the code for the first set of causets on the title page:
+\begin{lstlisting}
+\usepackage{causets}
+...
+\begin{align*}
+	\left\{ 
+		\pcauset{3,2,1}, \pcauset{3,1,2}, \pcauset{2,1,3}, \pcauset{1,3,2}, \pcauset{1,2,3} 
+	\right\}. 
+\end{align*}
+\end{lstlisting}
+\begin{align*}
+	\left\{ 
+		\pcauset{3,2,1}, 
+		\pcauset{3,1,2}, 
+		\pcauset{2,1,3}, 
+		\pcauset{1,3,2}, 
+		\pcauset{1,2,3} 
+	\right\} 
+	. 
+\end{align*}
+
+\section{Package Options}
+Each of the package options can either be specified in square brackets when declaring the package (option applies globally) or be changed with a macro at any point in the document (option applies to the local scope). 
+
+If no options are used, an output like \rcauset{4,2,7,6,1,5,3}{2!5} is obtained with the commands  
+\begin{lstlisting}
+\usepackage{causets}
+...
+\rcauset{4,2,7,6,1,5,3}{2!5}
+\end{lstlisting}
+The package options and their macros are shown in Table \ref{tab:PackageOptions}, using the same example. 
+
+\begin{table}[p]
+	\begin{tabular*}{\textwidth}{p{0.75\textwidth}c}
+		\toprule
+		package option 
+	& inline output 
+	\\\midrule
+		\lstinline§\usepackage[permutation]{causets}§ shows permutations 
+	& \multirow{3}{5em}{%
+		\causetsDrawPermutationtrue \rcauset{4,2,7,6,1,5,3}{2!5}}
+	\\
+		~~(\lstinline§\causetsDrawPermutationtrue§ activates the option) 
+	\\
+		~~(\lstinline§\causetsDrawPermutationfalse§ deactivates the option) 
+	\\\midrule
+		\lstinline§\usepackage[labeled]{causets}§ shows labeled events 
+	& \multirow{3}{5em}{%
+		\causetsDrawLabelstrue \rcauset{4,2,7,6,1,5,3}{2!5}}
+	\\
+		~~(\lstinline§\causetsDrawLabelstrue§ activates the option) 
+	\\
+		~~(\lstinline§\causetsDrawLabelsfalse§ deactivates the option) 
+	\\\midrule
+		\lstinline§\usepackage[unlinked]{causets}§ hides links 
+	& \multirow{3}{5em}{%
+		\causetsDrawLinksfalse \rcauset{4,2,7,6,1,5,3}{2!5}}
+	\\
+		~~(\lstinline§\causetsDrawLinksfalse§ activates the option) 
+	\\
+		~~(\lstinline§\causetsDrawLinkstrue§ deactivates the option) 
+	\\\midrule
+		\lstinline§\usepackage[small]{causets}§ for smaller diagrams 
+	& \multirow{2}{5em}{%
+		\causetsSetSizesSmall \rcauset{4,2,7,6,1,5,3}{2!5}}
+	\\
+		~~(\lstinline§\causetsSetSizesSmall§ activates the option) 
+	\\
+		\lstinline§\usepackage[large]{causets}§ for larger diagrams 
+	& \multirow{4}{5em}{%
+		\causetsSetSizesLarge \rcauset{4,2,7,6,1,5,3}{2!5}}
+	\\
+		~~(\lstinline§\causetsSetSizesLarge§ activates the option) 
+	\\
+		~~(\lstinline§\causetsSetSizesNormal§ resets to normal size) 
+	\\
+		(\lstinline§\causetsSetSizes{}{}{}{}{}§ for user-defined sizes, see below) 
+	\\\midrule
+		\lstinline§\usepackage[black]{causets}§ for black and white causets 
+	& \multirow{2}{5em}{%
+		\causetsSetColorsBlack \rcauset{4,2,7,6,1,5,3}{2!5}}
+	\\
+		~~(\lstinline§\causetsSetColorsBlack§ activates the option) 
+	\\
+		\lstinline§\usepackage[gray]{causets}§ for gray scale causets (default)
+	& \multirow{2}{5em}{%
+		\causetsSetColorsGray \rcauset{4,2,7,6,1,5,3}{2!5}}
+	\\
+		~~(\lstinline§\causetsSetColorsGray§ activates the option) 
+	\\
+		\lstinline§\usepackage[blue]{causets}§ for blue causets 
+	& \multirow{2}{5em}{%
+		\causetsSetColorsBlue \rcauset{4,2,7,6,1,5,3}{2!5}}
+	\\
+		~~(\lstinline§\causetsSetColorsBlue§ activates the option) 
+	\\
+		\lstinline§\usepackage[neon]{causets}§ for brightly colored causets 
+	& \multirow{2}{5em}{%
+		\causetsSetColorsNeon \rcauset{4,2,7,6,1,5,3}{2!5}}
+	\\
+		~~(\lstinline§\causetsSetColorsNeon§ activates the option) 
+	\\
+		(more color formatting options below) 
+	\\\midrule
+		\lstinline§\usepackage[spacelike]{causets}§ shows a partial order for spacelike separated events, but only with the \lstinline§\pcauset§ commands
+	& \multirow{2}{5em}{%
+		\causetsDrawSeparationstrue \pcauset{2,4,1,3}}
+	\\
+		~~(\lstinline§\causetsDrawSeparationstrue§ activates the option) 
+	\\
+		~~(\lstinline§\causetsDrawSeparationsfalse§ deactivates the option) 
+	\\\bottomrule
+	\end{tabular*}
+	\caption{\label{tab:PackageOptions} All package options.}
+\end{table}
+
+All these options can also be combined, but only one of the size and color options. 
+The last option (\lstinline§spacelike§) is only supported by the \lstinline§\pcauset§ commands (and ignored by the other commands), so that the last example uses \lstinline§\pcauset{2,4,1,3}§. 
+
+\section{(Optional) Arguments for the Main Commands}
+The permutations and labels for causets can be switched on globally with the package options \lstinline§permutation§ and \lstinline§labeled§, or at any point in the document with the switches \lstinline§\causetsDrawPermutationtrue§ and \lstinline§\causetsDrawLabelstrue§, respectively. 
+
+To show only single causets with either of these options, there exist short hand macros for all three main commands. 
+Each main command can be followed by a capital letter \lstinline§P§ (to show the permutation), \lstinline§L§ (to show event labels), or \lstinline§X§ (to show both). 
+\begin{lstlisting}
+\usepackage{causets}
+...
+Causets with permutations (and labels) \pcausetP{4,1,2,3}, \pcausetX{1,2,3,4}, \pcausetL{1,2,4,3}, and without any \pcauset{2,4,1,3}.
+\end{lstlisting}
+Causets with permutations (and labels) \pcausetP{4,1,2,3}, \pcausetX{1,2,3,4}, \pcausetL{1,2,4,3}, and without any \pcauset{2,4,1,3}. 
+
+All main commands have an optional argument in which any TikZ commands can be used to change the style of the causet. 
+By default, the optional argument is set to \lstinline§causet§, which is a TikZ style defined by the package to align the output with the baseline of the text, see the examples here. 
+\begin{lstlisting}
+Without an optional argument \pcauset{2,4,5,1,3} aligns the center just above the baseline. Using \pcauset[]{2,4,5,1,3}, the bottom of the diagram will be aligned with the baseline; and with \pcauset[baseline=1mm]{2,4,5,1,3} the center is placed 1mm below the baseline.
+\end{lstlisting}
+Without an optional argument \pcauset{2,4,5,1,3} aligns the center just above the baseline. Using \pcauset[]{2,4,5,1,3}, the bottom of the diagram will be aligned with the baseline; and with \pcauset[baseline=1mm]{2,4,5,1,3} the center is placed 1mm below the baseline.
+
+\section{Some Common Causets}
+There are a few short hand macros for small common causets:
+\begin{lstlisting}
+\causetFence{2}
+\causetFence{3}
+\causetFence{4}
+\causetFence{5}
+\causetClosedFence{2}
+\causetClosedFence{3}
+\causetClosedFence{4}
+\causetCrown
+\end{lstlisting}
+\causetFence{2}~~~~
+\causetFence{3}~~~~
+\causetFence{4}~~~~
+\causetFence{5}~~~~
+\causetClosedFence{2}~~~~
+\causetClosedFence{3}~~~~
+\causetClosedFence{4}~~~~
+\causetCrown
+
+\section{Changing Sizes}
+Apart from the pre-defined sizes \lstinline§small§, \lstinline§large§ (and \lstinline§normal§), sizes can be defined with a macro similar to 
+\begin{lstlisting}
+\causetsSetSizes{0.50ex}{0.01ex}{0.30ex}{0.08ex}{0.28} % small
+\causetsSetSizes{1.00ex}{0.02ex}{0.60ex}{0.16ex}{0.56} % normal
+\causetsSetSizes{2.00ex}{0.04ex}{1.00ex}{0.28ex}{1.12} % large
+\end{lstlisting}
+The arguments set the following size macros in order: 
+\begin{enumerate}
+  \item \lstinline§\causetTileSize§ as size of the tiles in the permutation 
+  	(measured in any absolute unit, like cm, or any relative unit, like ex)
+  \item \lstinline§\causetPermutationLine§ as line thickness of the permutation grid
+  	(measured in any absolute unit, like cm, or any relative unit, like ex)
+  \item \lstinline§\causetEventSize§ as diameter of the events 
+  	(measured in any absolute unit, like cm, or any relative unit, like ex)
+  \item \lstinline§\causetLinkWidth§ as link thickness 
+  	(measured in any absolute unit, like cm, or any relative unit, like ex)
+  \item \lstinline§\causetTextScale§ as the scaling factor of text relative to the normal font size
+\end{enumerate}
+
+For example: 
+\begin{lstlisting}
+\causetsSetSizes{2.50ex}{0.06ex}{1.30ex}{0.35ex}{1.20}
+\pcausetL{13,8,14,9,3,15,12,1,6,5,11,7,2,10,4}
+\end{lstlisting}
+\causetsSetSizes{2.50ex}{0.06ex}{1.30ex}{0.35ex}{1.20}
+\pcausetL{13,8,14,9,3,15,12,1,6,5,11,7,2,10,4}
+\causetsSetSizesNormal
+
+\clearpage
+Causets diagrams can also be used in mathematical expression, where the size may be adjusted when they are used in indices or limits, for example: 
+\begin{lstlisting}
+\begin{equation}
+		\sum_{C \in \causetsSetSizesSmall
+			\left\{
+				\pcauset{1,2,3},
+				\;\pcauset{1,3,2,4},
+				\;\pcauset{1,4,3,2,5},
+				\;\pcauset{1,5,4,3,2,6}
+			\right\}}
+		| C | 
+	= \left| \pcauset{1,2,3} \right| 
+		+ \left| \pcauset{1,3,2,4} \right| 
+		+ \left| \pcauset{1,4,3,2,5} \right| 
+		+ \left| \pcauset{1,5,4,3,2,6} \right| 
+\end{equation}
+\end{lstlisting}
+\begin{equation}
+		\sum_{C \in \causetsSetSizesSmall
+			\left\{
+				\pcauset{1,2,3}, 
+				\;\pcauset{1,3,2,4}, 
+				\;\pcauset{1,4,3,2,5}, 
+				\;\pcauset{1,5,4,3,2,6} 
+			\right\}}
+		| C | 
+	= \left| \pcauset{1,2,3} \right| 
+		+ \left| \pcauset{1,3,2,4} \right| 
+		+ \left| \pcauset{1,4,3,2,5} \right| 
+		+ \left| \pcauset{1,5,4,3,2,6} \right| 
+\end{equation}
+
+\section{Changing Colors}
+This package uses the following colors 
+\begin{itemize}
+  \item \lstinline§causetRegionColor§ for the lines of the permutation grid
+  \item \lstinline§causetTileColor§ for the occupied tiles
+  \item \lstinline§causetULabelColor§ for the $u$ labels
+  \item \lstinline§causetVLabelColor§ for the $v$ labels
+  \item \lstinline§causetEventColor§ for the events
+  \item \lstinline§causetLabelColor§ for the label text
+  \item \lstinline§causetLinkColor§ for the links
+  \item \lstinline§causetSeparationColor§ for the spacelike separations.
+\end{itemize}
+Any of these colors can be set to a new value with the \lstinline§\colorlet§ macro, for example 
+\begin{lstlisting}
+\colorlet{causetEventColor}{purple}
+\end{lstlisting}
+redefines the event color to purple. 
+
+\section{Advanced Style Changes}
+The optional argument of the main commands is not restricted to baseline adjustments. 
+TikZ options will change the output of the macros, for example: 
+\begin{lstlisting}
+\usepackage{causets}
+...
+A labeled causet with red-framed semi-transparent labels, \pcausetL[causet,causetLabels/.style={draw=red, fill=white, opacity=0.8, inner sep=1pt, scale=1.2}]{2,4,5,1,3}.
+\end{lstlisting}
+A labeled causet with red-framed semi-transparent labels, \pcausetL[causet,causetLabels/.style={draw=red, fill=white, opacity=0.8, inner sep=1pt, scale=1.2}]{2,4,5,1,3}.
+
+In the same way, it is possible to modify the existing styles of all parts of the diagrams, which means that the default drawing styles are extended by the options passed to 
+\begin{itemize}
+  \item the permutation grid (\lstinline§causetRegion/.style={...}§), 
+  \item the occupied permutation tiles (\lstinline§causetTiles/.style={...}§), 
+  \item the permutation $u$ labels (\lstinline§causetULabels/.style={...}§), 
+  \item the permutation $v$ labels (\lstinline§causetVLabels/.style={...}§), 
+  \item the events (\lstinline§causetEvents/.style={...}§), 
+  \item the labels (\lstinline§causetLabels/.style={...}§), 
+  \item the links (\lstinline§causetLinks/.style={...}§), 
+  \item and the spacelike separations (\lstinline§causetSeparations/.style={...}§). 
+\end{itemize}
+In order to manually define the full style of the parts in the diagram - not extending, but \emph{overwriting all} drawing options - use the following style options: 
+\begin{itemize}
+  \item the permutation grid (\lstinline§causetRegionStyle/.style={...}§), 
+  \item the occupied permutation tiles (\lstinline§causetTilesStyle/.style={...}§), 
+  \item the permutation $u$ labels (\lstinline§causetULabelsStyle/.style={...}§), 
+  \item the permutation $v$ labels (\lstinline§causetVLabelsStyle/.style={...}§), 
+  \item the events (\lstinline§causetEventsStyle/.style={...}§), 
+  \item the labels (\lstinline§causetLabelsStyle/.style={...}§), 
+  \item the links (\lstinline§causetLinksStyle/.style={...}§), 
+  \item and the spacelike separations (\lstinline§causetSeparationsStyle/.style={...}§). 
+\end{itemize}
+Of course, it is also possible to redefine any of these styles with a \lstinline§\tikzset{...}§ in the preamble of the document. 
+So for example 
+\begin{lstlisting}
+\usepackage{causets}
+\tikzset{causetEvents/.style={rectangle}}
+...
+\pcauset{2,4,5,1,3}
+\end{lstlisting}
+will generate {\tikzset{causetEvents/.style={rectangle}}\pcauset{2,4,5,1,3}}. 
+
+\section{Using causets with TikZ}
+Since the package is TikZ based, using a causet within a TikZ picture is simple. 
+Each of the three main commands is based on a draw command in TikZ that has the same name but starts with \lstinline§\draw...§. 
+The \lstinline§\draw§ macros, however, do not support an optional argument (since this can be specified directly in a TikZ picture) and they also do not have any short hand macros ending in \lstinline§P§, \lstinline§L§ or \lstinline§X§. 
+The ouput of the \lstinline§\draw§ macros has the point (0,0) in the center, so to shift it, we can enclose it in a TikZ scope, for example: 
+\begin{lstlisting}
+\causetsSetSizesLarge
+\begin{tikzpicture}
+	\begin{scope}[xshift=3cm, yshift=-1cm]
+		\causetsDrawPermutationtrue
+		\drawpcauset{2,4,5,1,3}
+		\draw[red, double] (0, 0) circle[radius=0.1];
+	\end{scope}
+	\node[draw=red] (centerLabel) at (0.5, -0.5) {center};
+	\node[draw=green!50!black] (myEventLabel) at (5.8, -1.5) {event (e2)};
+	\draw[ultra thick, red, ->] (centerLabel)  -- (3, -1);
+	\draw[ultra thick, green!50!black, ->] (myEventLabel)  -- (e2);
+\end{tikzpicture}
+\end{lstlisting}
+\causetsSetSizesLarge
+\begin{tikzpicture}
+	\begin{scope}[xshift=3cm, yshift=-1cm]
+		\causetsDrawPermutationtrue
+		\drawpcauset{2,4,5,1,3}
+		\draw[red, double] (0, 0) circle[radius=0.1];
+	\end{scope}
+	\node[draw=red] (centerLabel) at (0.5, -0.5) {center};
+	\node[draw=green!50!black] (myEventLabel) at (5.8, -1.5) {event (e2)};
+	\draw[ultra thick, red, ->] (centerLabel)  -- (3, -1);
+	\draw[ultra thick, green!50!black, ->] (myEventLabel)  -- (e2);
+\end{tikzpicture}
+
+Note that this example also shows how to use the event nodes that are generated by the \lstinline§\drawpcauset§ macro. 
+The green arrow points to the node of the second causet event \lstinline§(e2)§. 
+Similarly, all events of a causet with $n$ events are the nodes \lstinline§(ei)§, where $\smash{i \in [ 1, n ]}$. 
+
+\causetsSetSizesNormal
+It is also possible to use multiple causets in more complicated graphics, like a tree for example, but note that whenever a causet is actually a text of a node within a TikZ picture (like in the following), we need to use the \lstinline§\pcauset§ (and similar) commands without the \lstinline§draw§ prefix again: 
+\begin{lstlisting}
+\causetsSetColorsBlue
+\begin{tikzpicture}[-stealth, line width=2pt]
+	\matrix[nodes={draw, fill=yellow!10, thin, circle, inner sep=1.7ex}, row sep=1cm, column sep=1cm]
+	{
+		\node (C123) {\pcauset{1,2,3}}; 
+	& \node (C132) {\pcauset{1,3,2}}; 
+	& \node[fill=yellow!20] (C312) {\pcauset{3,1,2}}; 
+	& \node (C213) {\pcauset{2,1,3}}; 
+	& \node (C321) {\pcauset{3,2,1}}; 
+	\\
+	& \node (C12) {\pcauset{1,2}}; 
+	& 
+	& \node (C21) {\pcauset{2,1}}; 
+	\\
+	& 
+	& \node (C1) {\pcauset{1}}; 
+	\\
+	};
+	\draw (C1) -- node[below left] {$p_{12}$} (C12);
+	\draw (C12) -- node[below left] {$p_{123}$} (C123);
+	\draw (C12) -- node[left] {$p_{132}$} (C132);
+	\draw (C12) -- node[below right] {$p_{312}$} (C312);
+	\draw (C1) -- node[below right] {$p_{21}$} (C21);
+	\draw (C21) -- node[below left] {$p_{231}$} (C312);
+	\draw (C21) -- node[right] {$p_{213}$} (C213);
+	\draw (C21) -- node[below right] {$p_{321}$} (C321);
+\end{tikzpicture}
+\end{lstlisting}
+\causetsSetColorsBlue
+\begin{tikzpicture}[-stealth, line width=2pt]
+	\matrix[nodes={draw, fill=yellow!10, thin, circle, inner sep=1.7ex}, row sep=1cm, column sep=1cm]
+	{
+		\node (C123) {\pcauset{1,2,3}}; 
+	& \node (C132) {\pcauset{1,3,2}}; 
+	& \node[fill=yellow!20] (C312) {\pcauset{3,1,2}}; 
+	& \node (C213) {\pcauset{2,1,3}}; 
+	& \node (C321) {\pcauset{3,2,1}}; 
+	\\
+	& \node (C12) {\pcauset{1,2}}; 
+	& 
+	& \node (C21) {\pcauset{2,1}}; 
+	\\
+	& 
+	& \node (C1) {\pcauset{1}}; 
+	\\
+	};
+	\draw (C1) -- node[below left] {$p_{12}$} (C12);
+	\draw (C12) -- node[below left] {$p_{123}$} (C123);
+	\draw (C12) -- node[left] {$p_{132}$} (C132);
+	\draw (C12) -- node[below right] {$p_{312}$} (C312);
+	\draw (C1) -- node[below right] {$p_{21}$} (C21);
+	\draw (C21) -- node[below left] {$p_{231}$} (C312);
+	\draw (C21) -- node[right] {$p_{213}$} (C213);
+	\draw (C21) -- node[below right] {$p_{321}$} (C321);
+\end{tikzpicture}
+
+\end{document}
