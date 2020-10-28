@@ -4,11 +4,11 @@ This is a LaTeX package to create (Hasse) diagrams of causal sets - short causet
 
 The three main commands (macros) are 
 ```tex
-% a causet generated from a permutation:
+% causet generated from a permutation:
 \pcauset{..,i,..,j,..}
-% a causet generated from a permutation, but some links are removed:
+% causet generated from a permutation, but some links are removed:
 \rcauset{..,i,..,j,..}{..,i!j,..}
-% a causet with events positioned according by a permutation, links are specified explicitly:
+% causet with events positioned by a permutation, links are specified explicitly:
 \causet{..,i,..,j,..}{..,i-j,..}
 ```
 
