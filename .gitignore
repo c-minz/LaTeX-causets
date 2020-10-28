@@ -1,6 +1,5 @@
 /tmp/
+/.settings/
 .project
 .texlipse
-/causets_manual_en.aux
-/causets_manual_en.log
-/causets_manual_en.synctex.gz
+causets.synctex.gz
