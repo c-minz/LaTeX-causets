@@ -19,8 +19,6 @@
 \RequirePackage{tikz}
 \RequirePackage{listofitems}
 
-\makeatletter
-
 %% size options:
 \newcommand*{\causetsSetSizes}[5]{%
 	\def\causetTileSize{#1}%
@@ -84,7 +82,7 @@
 \newif\ifcausetsDrawLinks
 \newif\ifcausetsDrawSeparations
 
-%% execute (standard) options:
+%% delare and execute options:
 \causetsSetSizesNormal
 \causetsSetColorsGray
 \causetsDrawLinkstrue
@@ -121,7 +119,7 @@
 \tikzset{causetVLabelsStyle/.style={causetVLabelColor, left=-\causetTextScale*0.5ex, scale=\causetTextScale, rotate=45, align=right, causetVLabels}}
 
 %% functions:
-% loop counters:
+% loop variables:
 \newcounter{causet@i}
 \newcounter{causet@j}
 \newif\ifcauset@ItemFoundInList
@@ -374,5 +372,3 @@
 \newcommand*{\causetCrown}[1][causet]{%
 	\causetClosedFence[#1]{3}%
 }
-
-\makeatother
