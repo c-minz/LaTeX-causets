@@ -2,4 +2,6 @@
 /.settings/
 .project
 .texlipse
-causets.synctex.gz
+*.synctex.gz
+*.log
+*.aux

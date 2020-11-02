@@ -32,7 +32,7 @@ If you find a bug, please report it by including:
 
 Bug reports can be send to the maintainer:
   C. Minz
-  christoph{dot}minz[AT]alumni{dot}tu{dash}berlin{dot}de
+  christoph{dot}minz[AT]gmail{dot}com
 
 Information on Distribution
 ===========================
