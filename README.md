@@ -47,5 +47,9 @@ This work has the LPPL maintenance status "maintained".
 The current maintainer of this work is C. Minz.
 https://github.com/c-minz
 
+Current version: 1.0
+
+CTAN location: /graphics/pgf/contrib/causets/
+
 
 This work consists of the files causets.sty, causets.tex, causets.pdf, causet_tikz_example1.tex, causet_tikz_example1.pdf, causet_tikz_example2.tex, causet_tikz_example2.pdf
