@@ -28,12 +28,16 @@
 \def\causetLinkWidth{#5}%
 \def\causetTextScale{#6}%
 }
+\newcommand*{\tinycausets}{%
+\causetsSetSizes{0.30ex}{0.02ex}{0.01ex}{0.16ex}{0.05ex}{0.16}}
 \newcommand*{\smallcausets}{%
-\causetsSetSizes{0.45ex}{0.03ex}{0.01ex}{0.25ex}{0.06ex}{0.27}}
+\causetsSetSizes{0.60ex}{0.04ex}{0.02ex}{0.32ex}{0.10ex}{0.32}}
 \newcommand*{\normalcausets}{%
-\causetsSetSizes{0.90ex}{0.06ex}{0.02ex}{0.50ex}{0.12ex}{0.50}}
+\causetsSetSizes{0.90ex}{0.06ex}{0.03ex}{0.48ex}{0.15ex}{0.48}}
 \newcommand*{\largecausets}{%
-\causetsSetSizes{1.80ex}{0.12ex}{0.04ex}{1.00ex}{0.24ex}{1.00}}
+\causetsSetSizes{1.35ex}{0.09ex}{0.05ex}{0.75ex}{0.20ex}{0.75}}
+\newcommand*{\hugecausets}{%
+\causetsSetSizes{1.80ex}{0.12ex}{0.07ex}{1.00ex}{0.25ex}{1.00}}
 
 %% color options:
 \newcommand*{\causetsSetColorsBlack}{%
@@ -100,13 +104,15 @@
 \DeclareOption{labeled}{\causetsDrawLabelstrue}
 \DeclareOption{spacelike}{\causetsDrawSeparationstrue}
 \DeclareOption{unlinked}{\causetsDrawLinksfalse}
+\DeclareOption{tiny}{\tinycausets}
 \DeclareOption{small}{\smallcausets}
 \DeclareOption{large}{\largecausets}
+\DeclareOption{huge}{\hugecausets}
 \DeclareOption*{\PackageWarning{causets}{The package causets does not support the option: \CurrentOption}}
 \ProcessOptions\relax
 
 %% TikZ styles:
-\tikzset{causet/.style={baseline=-\causetTileSize/2}}
+\tikzset{causet/.style={baseline=-0.707*\causetTileSize}}
 \tikzset{causetRegion/.style={}}
 \tikzset{causetGrid/.style={}}
 \tikzset{causetTiles/.style={}}
