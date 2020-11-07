@@ -7,16 +7,16 @@ The three main commands (macros) are
 % causet generated from a permutation:
 \pcauset{..,i,..,j,..}
 % causet generated from a permutation, but some links are removed:
-\rcauset{..,i,..,j,..}{..,i!j,..}
+\rcauset{..,i,..,j,..}{..,i/j,..}
 % causet with events positioned by a permutation, links are specified explicitly:
-\causet{..,i,..,j,..}{..,i-j,..}
+\causet{..,i,..,j,..}{..,i/j,..}
 ```
 
 For a full documentation, please see causets.pdf.
 
 Additional Packages
 ===================
-This package is built on the packages `tikz` and `listofitems`. Please make sure that these are installed as well.
+This package is built on the package `tikz`, which is usually included in the standard LaTeX installations. 
 
 Bug Reports
 ===========

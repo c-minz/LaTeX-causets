@@ -18,7 +18,6 @@
 % causet_tikz_example2.tex, causet_tikz_example2.pdf
 
 \RequirePackage{tikz}
-\RequirePackage{listofitems}
 
 %% size options:
 \newcommand*{\causetsSetSizes}[6]{%
@@ -133,23 +132,19 @@
 \newcounter{causet@j}
 \newif\ifcauset@ItemFoundInList
 
-% convert the input permutation string to a list:
-\newcommand*{\causets@readPermutation}[1]{%
-\def\causet@PermutationStr{#1}
-\readlist*\causet@Permutation{\causet@PermutationStr}
-\def\causet@N{\causet@Permutationlen}
+% count the number of events:
+\newcommand*{\causets@readCausetSize}[1]{%
+\setcounter{causet@i}{0}%
+\foreach \causet@p in {#1}{%
+	\stepcounter{causet@i}%
+}%
+\pgfmathsetmacro\causet@N{\value{causet@i}}%
 }
 
-% convert the input link-pair string to a list:
-\newcommand*{\causets@readLinkPairs}[1]{%
-\def\causet@LinkPairsStr{#1}
-\readlist*\causet@LinkPairs{\causet@LinkPairsStr}
-}
-
-% define and draw events as (e#):
-\newcommand*{\causets@drawEvents}{%
+% define and draw events as (E#):
+\newcommand*{\causets@drawEvents}[1]{%
 \setcounter{causet@i}{0}
-\foreachitem \causet@p \in \causet@Permutation[]{
+\foreach \causet@p in {#1}{%
 	\stepcounter{causet@i}
 	\pgfmathsetmacro\causet@e@U{\causet@p - 1.0}
 	\pgfmathsetmacro\causet@e@V{\value{causet@i} - 1.0}
@@ -159,26 +154,26 @@
 	\fi
 	\pgfmathsetmacro\causet@e@U{\causet@p - 0.5}
 	\pgfmathsetmacro\causet@e@V{\value{causet@i} - 0.5}
-	\node[causetEventsStyle] (e\causet@p) 
+	\node[causetEventsStyle] (E\causet@p) 
 		at ( \causet@e@U * \causetTileSize, \causet@e@V * \causetTileSize ) 
 		{};
 }
 }
 
 % draw the permutation and the null coordinate labels:
-\newcommand*{\causets@drawPermutation}{%
+\newcommand*{\causets@drawPermutation}[1]{%
 \ifcausetsDrawPermutation
 	\draw[causetGridStyle] ( 0, 0 ) 
 		grid ( \causet@N * \causetTileSize, \causet@N * \causetTileSize );
 	\draw[causetRegionStyle] ( 0, 0 ) 
 		rectangle ( \causet@N * \causetTileSize, \causet@N * \causetTileSize );
 	\setcounter{causet@i}{0}
-	\foreachitem \causet@p \in \causet@Permutation[]{
+	\foreach \causet@p in {#1}{%
 		\stepcounter{causet@i}
-		\node[causetULabelsStyle] 
+		\node[causetULabelsStyle] (EUL\causet@p) 
 			at ( \value{causet@i} * \causetTileSize - 0.5 * \causetTileSize, 0 ) 
 			{\thecauset@i};
-		\node[causetVLabelsStyle] 
+		\node[causetVLabelsStyle] (EVL\causet@p) 
 			at ( 0, \value{causet@i} * \causetTileSize - 0.5 * \causetTileSize ) 
 			{\causet@p};
 	}
@@ -186,35 +181,36 @@
 }
 
 % draw event labels:
-\newcommand*{\causets@drawEventLabels}{%
+\newcommand*{\causets@drawEventLabels}[1]{%
 \ifcausetsDrawLabels
-	\foreachitem \causet@p \in \causet@Permutation[]{
-			\node[causetLabelsStyle] at (e\causet@p.south west) {\causet@p};
+	\foreach \causet@p in {#1}{%
+		\node[causetLabelsStyle] (EL\causet@p) 
+			at (E\causet@p.south west) {\causet@p};
 	}
 \fi
 }
 
 % draw a causet from a permutation:
 \newcommand*{\drawpcauset}[1]{%
-\causets@readPermutation{#1}
+\causets@readCausetSize{#1}
 \begin{scope}[rotate=45]
 	\begin{scope}[xshift=-\causet@N * \causetTileSize / 2, 
 	              yshift=-\causet@N * \causetTileSize / 2]
-		\causets@drawEvents
-		\causets@drawPermutation
+		\causets@drawEvents{#1}
+		\causets@drawPermutation{#1}
 		\ifcausetsDrawLinks
 			\setcounter{causet@i}{0}
-			\foreachitem \causet@p \in \causet@Permutation[]{
+			\foreach \causet@p in {#1}{%
 				\stepcounter{causet@i}
-				\pgfmathsetmacro\causet@qbound{int(\causet@N + 1)}
+				\pgfmathsetmacro\causet@qBound{int(\causet@N + 1)}
 				\setcounter{causet@j}{0}
-				\foreachitem \causet@q \in \causet@Permutation[]{
+				\foreach \causet@q in {#1}{%
 					\stepcounter{causet@j}
 					\ifnum\value{causet@j}>\value{causet@i}
-						\ifnum\causet@p<\causet@q
-							\ifnum\causet@q<\causet@qbound
-								\draw[causetLinksStyle] (e\causet@p) -- (e\causet@q);
-								\pgfmathsetmacro\causet@qbound{int(\causet@q)}
+						\ifnum\causet@q<\causet@qBound
+							\ifnum\causet@p<\causet@q
+								\draw[causetLinksStyle] (E\causet@p) -- (E\causet@q);
+								\xdef\causet@qBound{\causet@q}
 							\fi
 						\fi
 					\fi
@@ -223,77 +219,68 @@
 		\fi
 		\ifcausetsDrawSeparations
 			\setcounter{causet@i}{0}
-			\foreachitem \causet@p \in \causet@Permutation[]{
+			\foreach \causet@p in {#1}{%
 				\stepcounter{causet@i}
-				\edef\causet@qbound{0}
+				\edef\causet@qBound{0}
 				\setcounter{causet@j}{0}
-				\foreachitem \causet@q \in \causet@Permutation[]{
+				\foreach \causet@q in {#1}{%
 					\stepcounter{causet@j}
 					\ifnum\value{causet@j}>\value{causet@i}
-						\ifnum\causet@p>\causet@q
-							\ifnum\causet@q>\causet@qbound
-								\draw[causetSeparationsStyle] (e\causet@q) -- (e\causet@p);
-								\pgfmathsetmacro\causet@qbound{int(\causet@q)}
+						\ifnum\causet@q>\causet@qBound
+							\ifnum\causet@p>\causet@q
+								\draw[causetSeparationsStyle] (E\causet@q) -- (E\causet@p);
+								\xdef\causet@qBound{\causet@q}
 							\fi
 						\fi
 					\fi
 				}
 			}
 		\fi
-		\causets@drawEventLabels
+		\causets@drawEventLabels{#1}
 	\end{scope}
 \end{scope}
 }
 
 % draw a causet from a permutation and a link-pair list:
 \newcommand*{\drawcauset}[2]{%
-\causets@readPermutation{#1}
-\causets@readLinkPairs{#2}
+\causets@readCausetSize{#1}
 \begin{scope}[rotate=45]
 	\begin{scope}[xshift=-\causet@N * \causetTileSize / 2, 
 	              yshift=-\causet@N * \causetTileSize / 2]
-		\causets@drawEvents
-		\causets@drawPermutation
+		\causets@drawEvents{#1}
+		\causets@drawPermutation{#1}
 		\ifcausetsDrawLinks
-			\setsepchar{-}
-			\foreachitem \causet@LinkPairStr \in \causet@LinkPairs[]{
-				\readlist*\causet@LinkPair{\causet@LinkPairStr}
-				\pgfmathsetmacro\causet@From{int(\causet@LinkPair[1])}
-				\pgfmathsetmacro\causet@To{int(\causet@LinkPair[-1])}
-				\draw[causetLinksStyle] (e\causet@From) -- (e\causet@To);
+			\foreach \causet@From/\causet@To in {#2}{%
+				\draw[causetLinksStyle] (E\causet@From) -- (E\causet@To);
 			}
-			\setsepchar{,}
 		\fi
-		\causets@drawEventLabels
+		\causets@drawEventLabels{#1}
 	\end{scope}
 \end{scope}
 }
 
 % draw a causet from a permutation removes links given in a link-pair list:
 \newcommand*{\drawrcauset}[2]{%
-\causets@readPermutation{#1}
-\causets@readLinkPairs{#2}
+\causets@readCausetSize{#1}
 \begin{scope}[rotate=45]
 	\begin{scope}[xshift=-\causet@N * \causetTileSize / 2, 
 	              yshift=-\causet@N * \causetTileSize / 2]
-		\causets@drawEvents
-		\causets@drawPermutation
+		\causets@drawEvents{#1}
+		\causets@drawPermutation{#1}
 		\ifcausetsDrawLinks
-			\setsepchar{!}
 			\setcounter{causet@i}{0}
-			\foreachitem \causet@p \in \causet@Permutation[]{
+			\foreach \causet@p in {#1}{%
 				\stepcounter{causet@i}
-				\pgfmathsetmacro\causet@qbound{int(\causet@N + 1)}
+				\pgfmathsetmacro\causet@qBound{int(\causet@N + 1)}
 				\setcounter{causet@j}{0}
-				\foreachitem \causet@q \in \causet@Permutation[]{
+				\foreach \causet@q in {#1}{
 					\stepcounter{causet@j}
 					\ifnum\value{causet@j}>\value{causet@i}
-						\ifnum\causet@p<\causet@q
-							\ifnum\causet@q<\causet@qbound
+						\ifnum\causet@q<\causet@qBound
+							\ifnum\causet@p<\causet@q
 								\global\causet@ItemFoundInListfalse
-								\foreachitem \causet@LinkPairStr \in \causet@LinkPairs[]{
-									\readlist*\causet@LinkPair{\causet@LinkPairStr}
-									\pgfmathparse{and( equal( int(\causet@LinkPair[1]), int(\causet@p) ), equal( int(\causet@LinkPair[-1]), int(\causet@q) ) )}
+								\foreach \causet@From/\causet@To in {#2}{%
+									\pgfmathparse{and( equal( int(\causet@From), int(\causet@p) ), equal( int(\causet@To), int(\causet@q) ) )}
 									\ifnum\pgfmathresult=1
 										\global\causet@ItemFoundInListtrue
 									\fi
@@ -301,17 +288,16 @@
 								\ifcauset@ItemFoundInList
 									% skip link
 								\else
-									\draw[causetLinksStyle] (e\causet@p) -- (e\causet@q);
+									\draw[causetLinksStyle] (E\causet@p) -- (E\causet@q);
 								\fi
-								\pgfmathsetmacro\causet@qbound{int(\causet@q)}
+								\xdef\causet@qBound{\causet@q}
 							\fi
 						\fi
 					\fi
 				}
 			}
-			\setsepchar{,}
 		\fi
-		\causets@drawEventLabels
+		\causets@drawEventLabels{#1}
 	\end{scope}
 \end{scope}
 }
@@ -362,27 +348,55 @@
 
 %% some standard causets:
 \newcommand*{\causetFence}[2][causet]{%
-\ifnum#2=2%
-	\pcauset[#1]{3,1,4,2}%
-\else\ifnum#2=3%
-	\pcauset[#1]{5,3,6,1,4,2}%
-\else\ifnum#2=4%
-	\pcauset[#1]{7,5,8,3,6,1,4,2}%
-\else\ifnum#2=5%
-	\pcauset[#1]{9,7,10,5,8,3,6,1,4,2}%
-\fi\fi\fi\fi%
+\ifcase#2%
+\or%=1
+\pcauset[#1]{1,2}%
+\or%=2
+\pcauset[#1]{3,1,4,2}%
+\or%=3
+\pcauset[#1]{5,3,6,1,4,2}%
+\or%=4
+\pcauset[#1]{7,5,8,3,6,1,4,2}%
+\or%=5
+\pcauset[#1]{9,7,10,5,8,3,6,1,4,2}%
+\or%=6
+\pcauset[#1]{11,9,12,7,10,5,8,3,6,1,4,2}%
+\or%=7
+\pcauset[#1]{13,11,14,9,12,7,10,5,8,3,6,1,4,2}%
+\or%=8
+\pcauset[#1]{15,13,16,11,14,9,12,7,10,5,8,3,6,1,4,2}%
+\or%=9
+\pcauset[#1]{17,15,18,13,16,11,14,9,12,7,10,5,8,3,6,1,4,2}%
+\or%=10
+\pcauset[#1]{19,17,20,15,18,13,16,11,14,9,12,7,10,5,8,3,6,1,4,2}%
+\fi%
 }
 
 \newcommand*{\causetClosedFence}[2][causet]{%
-	\ifnum#2=2%
-		\pcauset[#1]{2,1,4,3}%
-	\else\ifnum#2=3%
-		\rcauset[#1]{4,2,6,1,5,3}{2!5}%
-	\else\ifnum#2=4%
-		\rcauset[#1]{6,4,8,2,7,1,5,3}{2!5,4!7}%
-	\fi\fi\fi%
+\ifcase#2%
+\or%=1
+\pcauset[#1]{1,2}%
+\or%=2
+\pcauset[#1]{2,1,4,3}%
+\or%=3
+\rcauset[#1]{4,2,6,1,5,3}{2/5}%
+\or%=4
+\rcauset[#1]{6,4,8,2,7,1,5,3}{2/5,4/7}%
+\or%=5
+\rcauset[#1]{8,6,10,4,9,2,7,1,5,3}{2/5,4/7,6/9}%
+\or%=6
+\rcauset[#1]{10,8,12,6,11,4,9,2,7,1,5,3}{2/5,4/7,6/9,8/11}%
+\or%=7
+\rcauset[#1]{12,10,14,8,13,6,11,4,9,2,7,1,5,3}{2/5,4/7,6/9,8/11,10/13}%
+\or%=8
+\rcauset[#1]{14,12,16,10,15,8,13,6,11,4,9,2,7,1,5,3}{2/5,4/7,6/9,8/11,10/13,12/15}%
+\or%=9
+\rcauset[#1]{16,14,18,12,17,10,15,8,13,6,11,4,9,2,7,1,5,3}{2/5,4/7,6/9,8/11,10/13,12/15,14/17}%
+\or%=10
+\rcauset[#1]{18,16,20,14,19,12,17,10,15,8,13,6,11,4,9,2,7,1,5,3}{2/5,4/7,6/9,8/11,10/13,12/15,14/17,16/19}%
+\fi%
 }
 
 \newcommand*{\causetCrown}[1][causet]{%
-	\causetClosedFence[#1]{3}%
+\causetClosedFence[#1]{3}%
 }
