@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{causets}[2020/11/07 v1.0 Package to draw causal set diagrams]
+\ProvidesPackage{causets}[2020/12/13 v1.1 Package to draw causal set diagrams]
 %% Copyright 2020 by C. Minz
 %
 % This work may be distributed and/or modified under the
@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status "maintained".
 % 
-% The current version of this package is 1.0.
+% The current version of this package is 1.1.
 %
 % The current maintainer of this work is C. Minz.
 % https://github.com/c-minz
@@ -21,118 +21,196 @@
 
 \RequirePackage{tikz}
 
-%% size options:
-\newcommand*{\causetsSetSizes}[6]{%
-\def\causetTileSize{#1}%
-\def\causetRegionLine{#2}%
-\def\causetGridLine{#3}%
-\def\causetEventSize{#4}%
-\def\causetLinkWidth{#5}%
-\def\causetTextScale{#6}%
+%% PGF keys:
+\def\tikzcausetsset#1{\pgfqkeys{/tikz/causets}{#1}}
+\pgfkeys{/tikz/causets/.search also={/tikz}}
+% size options:
+\tikzcausetsset{%
+	tile size/.store in=\causetTileSize,
+	tile size/.value required,
+	region line width/.store in=\causetRegionLine,
+	region line width/.value required,
+	grid line width/.store in=\causetGridLine,
+	grid line width/.value required,
+	event size/.store in=\causetEventSize,
+	event size/.value required,
+	link width/.store in=\causetLinkWidth,
+	link width/.value required,
+	text scale/.store in=\causetTextScale,
+	text scale/.value required,
+	tiny/.value forbidden,
+	small/.value forbidden,
+	normal/.value forbidden,
+	large/.value forbidden,
+	huge/.value forbidden,
+	tiny/.style={%
+		tile size=0.30ex,
+		region line width=0.02ex,
+		grid line width=0.01ex,
+		event size=0.16ex,
+		link width=0.05ex,
+		text scale=0.16},
+	small/.style={%
+		tile size=0.60ex,
+		region line width=0.04ex,
+		grid line width=0.02ex,
+		event size=0.32ex,
+		link width=0.10ex,
+		text scale=0.32},
+	normal/.style={%
+		tile size=0.90ex,
+		region line width=0.06ex,
+		grid line width=0.03ex,
+		event size=0.48ex,
+		link width=0.15ex,
+		text scale=0.48},
+	large/.style={%
+		tile size=1.35ex,
+		region line width=0.09ex,
+		grid line width=0.05ex,
+		event size=0.75ex,
+		link width=0.20ex,
+		text scale=0.75},
+	huge/.style={%
+		tile size=1.80ex,
+		region line width=0.12ex,
+		grid line width=0.07ex,
+		event size=1.00ex,
+		link width=0.25ex,
+		text scale=1.00}
 }
-\newcommand*{\tinycausets}{%
-\causetsSetSizes{0.30ex}{0.02ex}{0.01ex}{0.16ex}{0.05ex}{0.16}}
-\newcommand*{\smallcausets}{%
-\causetsSetSizes{0.60ex}{0.04ex}{0.02ex}{0.32ex}{0.10ex}{0.32}}
-\newcommand*{\normalcausets}{%
-\causetsSetSizes{0.90ex}{0.06ex}{0.03ex}{0.48ex}{0.15ex}{0.48}}
-\newcommand*{\largecausets}{%
-\causetsSetSizes{1.35ex}{0.09ex}{0.05ex}{0.75ex}{0.20ex}{0.75}}
-\newcommand*{\hugecausets}{%
-\causetsSetSizes{1.80ex}{0.12ex}{0.07ex}{1.00ex}{0.25ex}{1.00}}
-
-%% color options:
-\newcommand*{\causetsSetColorsBlack}{%
-	\colorlet{causetRegionColor}{black}%
-	\colorlet{causetGridColor}{black}%
-	\colorlet{causetTileColor}{white}%
-	\colorlet{causetEventColor}{black}%
-	\colorlet{causetLabelColor}{black}%
-	\colorlet{causetLinkColor}{black}%
-	\colorlet{causetSeparationColor}{black}%
-	\colorlet{causetULabelColor}{black}%
-	\colorlet{causetVLabelColor}{black}%
+% color options:
+\tikzcausetsset{%
+	region color/.initial=black!75,
+	grid color/.initial=black!25,
+	tile color/.initial=black!10!white,
+	event color/.initial=black,
+	label color/.initial=black,
+	link color/.initial=black!65!white,
+	spatial link color/.initial=black!50!white,
+	ulabel color/.initial=black!65!white,
+	vlabel color/.initial=black!65!white,
+	black colors/.style={%
+		region color=black,
+		grid color=black,
+		tile color=white,
+		event color=black,
+		label color=black,
+		link color=black,
+		spatial link color=black,
+		ulabel color=black,
+		vlabel color=black},
+	gray colors/.style={%
+		region color=black!75,
+		grid color=black!25,
+		tile color=black!10!white,
+		event color=black,
+		label color=black,
+		link color=black!65!white,
+		spatial link color=black!50!white,
+		ulabel color=black!65!white,
+		vlabel color=black!65!white},
+	blue colors/.style={%
+		region color=black!75,
+		grid color=black!25,
+		tile color=yellow!75!black!50!white,
+		event color=blue!50!black,
+		label color=blue!50!black,
+		link color=cyan!75!black,
+		spatial link color=red!65!black,
+		ulabel color=black!50,
+		vlabel color=black!50},
+	neon colors/.style={%
+		region color=green,
+		grid color=green,
+		tile color=yellow,
+		event color=blue,
+		label color=blue,
+		link color=cyan,
+		spatial link color=red,
+		ulabel color=magenta,
+		vlabel color=magenta}
 }
-\newcommand*{\causetsSetColorsGray}{%
-	\colorlet{causetRegionColor}{black!75}%
-	\colorlet{causetGridColor}{black!25}%
-	\colorlet{causetTileColor}{black!10!white}%
-	\colorlet{causetEventColor}{black}%
-	\colorlet{causetLabelColor}{black}%
-	\colorlet{causetLinkColor}{black!65!white}%
-	\colorlet{causetSeparationColor}{black!50!white}%
-	\colorlet{causetULabelColor}{black!65!white}%
-	\colorlet{causetVLabelColor}{black!65!white}%
-}
-\newcommand*{\causetsSetColorsBlue}{%
-	\colorlet{causetRegionColor}{black!75}%
-	\colorlet{causetGridColor}{black!25}%
-	\colorlet{causetTileColor}{yellow!75!black!50!white}%
-	\colorlet{causetEventColor}{blue!50!black}%
-	\colorlet{causetLabelColor}{blue!50!black}%
-	\colorlet{causetLinkColor}{cyan!75!black}%
-	\colorlet{causetSeparationColor}{red!65!black}%
-	\colorlet{causetULabelColor}{black!50}%
-	\colorlet{causetVLabelColor}{black!50}%
-}
-\newcommand*{\causetsSetColorsNeon}{%
-	\colorlet{causetRegionColor}{black}%
-	\colorlet{causetGridColor}{green}%
-	\colorlet{causetTileColor}{yellow}%
-	\colorlet{causetEventColor}{blue}%
-	\colorlet{causetLabelColor}{blue}%
-	\colorlet{causetLinkColor}{cyan}%
-	\colorlet{causetSeparationColor}{red}%
-	\colorlet{causetULabelColor}{magenta}%
-	\colorlet{causetVLabelColor}{magenta}%
-}
-
-%% switches:
+% styles:
 \newif\ifcausetsDrawPermutation
-\newif\ifcausetsDrawLabels
 \newif\ifcausetsDrawLinks
-\newif\ifcausetsDrawSeparations
+\newif\ifcausetsDrawSpatialLinks
+\newif\ifcausetsDrawLabels
+\newif\ifcausetsDrawULabels
+\newif\ifcausetsDrawVLabels
+\tikzcausetsset{%
+	show permutation/.is if=causetsDrawPermutation,
+	show links/.is if=causetsDrawLinks,
+	show spatial links/.is if=causetsDrawSpatialLinks,
+	show labels/.is if=causetsDrawLabels,
+	show ulabels/.is if=causetsDrawULabels,
+	show vlabels/.is if=causetsDrawVLabels,
+	permutation/.code={\causetsDrawPermutationtrue},
+	linked/.code={\causetsDrawLinkstrue},
+	unlinked/.code={\causetsDrawLinksfalse},
+	spatially linked/.code={\causetsDrawSpatialLinkstrue},
+	spatially unlinked/.code={\causetsDrawSpatialLinksfalse},
+	labeled/.code={\causetsDrawLabelstrue},
+	unlabeled/.code={\causetsDrawLabelsfalse},
+	labeled u/.code={\causetsDrawULabelstrue},
+	unlabeled u/.code={\causetsDrawULabelsfalse},
+	labeled v/.code={\causetsDrawVLabelstrue},
+	unlabeled v/.code={\causetsDrawVLabelsfalse},
+	every region/.value forbidden,
+	every region/.style={color=\pgfkeysvalueof{/tikz/causets/region color}, line width=\causetRegionLine},
+	region/.style={show permutation, every region/.append style={#1}},
+	every grid/.style={color=\pgfkeysvalueof{/tikz/causets/grid color}, line width=\causetGridLine, step=\causetTileSize},
+	grid/.style={show permutation, every grid/.append style={#1}},
+	every tile/.style={color=\pgfkeysvalueof{/tikz/causets/tile color}, line width=\causetGridLine, fill},
+	tiles/.style={show permutation, every tile/.append style={#1}},
+	every event/.style={color=\pgfkeysvalueof{/tikz/causets/event color}, circle, fill, inner sep=0pt, minimum size=\causetEventSize},
+	events/.value required,
+	events/.style={every event/.append style={#1}},
+	every link/.style={color=\pgfkeysvalueof{/tikz/causets/link color}, line width=\causetLinkWidth, arrows=-},
+	links/.style={show links, every link/.append style={#1}},
+	every spatial link/.style={every link, color=\pgfkeysvalueof{/tikz/causets/spatial link color}, dashed},
+	spatial links/.style={show spatial links, every spatial link/.append style={#1}},
+	every label base/.style={text opacity=1.0, scale=\causetTextScale, inner sep=0.5*\causetTextScale ex},
+	all labels/.style={every label base/.append style={#1}},
+	every label/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/label color}, below left, inner sep=0pt},
+	labels/.style={show labels, every label/.append style={#1}},
+	every ulabel/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/ulabel color}, right, rotate=-45, align=left},
+	ulabels/.style={show ulabels, every ulabel/.append style={#1}},
+	every vlabel/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/vlabel color}, left, rotate=45, align=right}, 
+	vlabels/.style={show vlabels, every vlabel/.append style={#1}},
+	every causet/.style={baseline=-0.707*\causetTileSize}
+}
 
 %% delare and execute options:
-\providecommand{\causetsDirectory}{causets.standalone}
-\normalcausets
-\causetsSetColorsGray
+\tikzcausetsset{normal}
 \causetsDrawLinkstrue
-\DeclareOption{gray}{\causetsSetColorsGray}
-\DeclareOption{black}{\causetsSetColorsBlack}
-\DeclareOption{blue}{\causetsSetColorsBlue}
-\DeclareOption{neon}{\causetsSetColorsNeon}
+\causetsDrawULabelstrue
+\causetsDrawVLabelstrue
+\DeclareOption{tiny}{\tikzcausetsset{tiny}}
+\DeclareOption{small}{\tikzcausetsset{small}}
+\DeclareOption{large}{\tikzcausetsset{large}}
+\DeclareOption{huge}{\tikzcausetsset{huge}}
+\DeclareOption{gray}{\tikzcausetsset{gray colors}}
+\DeclareOption{black}{\tikzcausetsset{black colors}}
+\DeclareOption{blue}{\tikzcausetsset{blue colors}}
+\DeclareOption{neon}{\tikzcausetsset{neon colors}}
+\DeclareOption{gray colors}{\tikzcausetsset{gray colors}}
+\DeclareOption{black colors}{\tikzcausetsset{black colors}}
+\DeclareOption{blue colors}{\tikzcausetsset{blue colors}}
+\DeclareOption{neon colors}{\tikzcausetsset{neon colors}}
+\DeclareOption{linked}{\causetsDrawLinkstrue}
+\DeclareOption{unlinked}{\causetsDrawLinksfalse}
+\DeclareOption{spatially linked}{\causetsDrawSpatialLinkstrue}
+\DeclareOption{spatially unlinked}{\causetsDrawSpatialLinksfalse}
 \DeclareOption{permutation}{\causetsDrawPermutationtrue}
 \DeclareOption{labeled}{\causetsDrawLabelstrue}
-\DeclareOption{spacelike}{\causetsDrawSeparationstrue}
-\DeclareOption{unlinked}{\causetsDrawLinksfalse}
-\DeclareOption{tiny}{\tinycausets}
-\DeclareOption{small}{\smallcausets}
-\DeclareOption{large}{\largecausets}
-\DeclareOption{huge}{\hugecausets}
+\DeclareOption{unlabeled}{\causetsDrawLabelsfalse}
+\DeclareOption{labeled u}{\causetsDrawULabelstrue}
+\DeclareOption{unlabeled u}{\causetsDrawULabelsfalse}
+\DeclareOption{labeled v}{\causetsDrawVLabelstrue}
+\DeclareOption{unlabeled v}{\causetsDrawVLabelsfalse}
 \DeclareOption*{\PackageWarning{causets}{The package causets does not support the option: \CurrentOption}}
 \ProcessOptions\relax
-
-%% TikZ styles:
-\tikzset{causet/.style={baseline=-0.707*\causetTileSize}}
-\tikzset{causetRegion/.style={}}
-\tikzset{causetGrid/.style={}}
-\tikzset{causetTiles/.style={}}
-\tikzset{causetEvents/.style={}}
-\tikzset{causetLabels/.style={}}
-\tikzset{causetLinks/.style={}}
-\tikzset{causetSeparations/.style={}}
-\tikzset{causetULabels/.style={}}
-\tikzset{causetVLabels/.style={}}
-\tikzset{causetRegionStyle/.style={causetRegionColor, line width=\causetRegionLine, causetRegion}}
-\tikzset{causetGridStyle/.style={causetGridColor, line width=\causetGridLine, step=\causetTileSize, causetGrid}}
-\tikzset{causetTilesStyle/.style={causetTileColor, line width=\causetGridLine, fill, causetTiles}}
-\tikzset{causetEventsStyle/.style={causetEventColor, circle, fill, inner sep=0pt, minimum size=\causetEventSize, causetEvents}}
-\tikzset{causetLabelsStyle/.style={causetLabelColor, below left, text opacity=1.0, inner sep=0pt, scale=\causetTextScale, causetLabels}}
-\tikzset{causetLinksStyle/.style={causetLinkColor, line width=\causetLinkWidth, arrows=-, causetLinks}}
-\tikzset{causetSeparationsStyle/.style={causetSeparationColor, line width=\causetLinkWidth, dashed, causetSeparations}}
-\tikzset{causetULabelsStyle/.style={causetULabelColor, right=-\causetTextScale*0.5ex, scale=\causetTextScale, rotate=-45, align=left, causetULabels}}
-\tikzset{causetVLabelsStyle/.style={causetVLabelColor, left=-\causetTextScale*0.5ex, scale=\causetTextScale, rotate=45, align=right, causetVLabels}}
 
 %% functions:
 % variables:
@@ -157,12 +235,12 @@
 	\pgfmathsetmacro\causet@e@U{\causet@p - 1.0}
 	\pgfmathsetmacro\causet@e@V{\value{causet@i} - 1.0}
 	\ifcausetsDrawPermutation
-		\path[causetTilesStyle] ( \causet@e@U * \causetTileSize, \causet@e@V * \causetTileSize ) 
+		\path[causets/.cd, every tile] ( \causet@e@U * \causetTileSize, \causet@e@V * \causetTileSize ) 
 			rectangle +( \causetTileSize, \causetTileSize );
 	\fi
 	\pgfmathsetmacro\causet@e@U{\causet@p - 0.5}
 	\pgfmathsetmacro\causet@e@V{\value{causet@i} - 0.5}
-	\node[causetEventsStyle] (E\causet@p) 
+	\node[causets/.cd, every event] (E\causet@p) 
 		at ( \causet@e@U * \causetTileSize, \causet@e@V * \causetTileSize ) 
 		{};
 }
@@ -171,19 +249,23 @@
 % draw the permutation and the null coordinate labels:
 \newcommand*{\causets@drawPermutation}[1]{%
 \ifcausetsDrawPermutation
-	\draw[causetGridStyle] ( 0, 0 ) 
+	\draw[causets/.cd, every grid] ( 0, 0 ) 
 		grid ( \causet@N * \causetTileSize, \causet@N * \causetTileSize );
-	\draw[causetRegionStyle] ( 0, 0 ) 
+	\draw[causets/.cd, every region] ( 0, 0 ) 
 		rectangle ( \causet@N * \causetTileSize, \causet@N * \causetTileSize );
 	\setcounter{causet@i}{0}
 	\foreach \causet@p in {#1}{%
 		\stepcounter{causet@i}
-		\node[causetULabelsStyle] (EUL\causet@p) 
-			at ( \value{causet@i} * \causetTileSize - 0.5 * \causetTileSize, 0 ) 
-			{\thecauset@i};
-		\node[causetVLabelsStyle] (EVL\causet@p) 
-			at ( 0, \value{causet@i} * \causetTileSize - 0.5 * \causetTileSize ) 
-			{\causet@p};
+		\ifcausetsDrawULabels
+			\node[causets/.cd, every ulabel] (EUL\causet@p) 
+				at ( \value{causet@i} * \causetTileSize - 0.5 * \causetTileSize, 0 ) 
+				{\thecauset@i};
+		\fi
+		\ifcausetsDrawVLabels
+			\node[causets/.cd, every vlabel] (EVL\causet@p) 
+				at ( 0, \value{causet@i} * \causetTileSize - 0.5 * \causetTileSize ) 
+				{\causet@p};
+		\fi
 	}
 \fi
 }
@@ -192,7 +274,7 @@
 \newcommand*{\causets@drawEventLabels}[1]{%
 \ifcausetsDrawLabels
 	\foreach \causet@p in {#1}{%
-		\node[causetLabelsStyle] (EL\causet@p) 
+		\node[causets/.cd, every label] (EL\causet@p) 
 			at (E\causet@p.south west) {\causet@p};
 	}
 \fi
@@ -217,7 +299,7 @@
 					\ifnum\value{causet@j}>\value{causet@i}
 						\ifnum\causet@q<\causet@qBound
 							\ifnum\causet@p<\causet@q
-								\draw[causetLinksStyle] (E\causet@p) -- (E\causet@q);
+								\draw[causets/.cd, every link] (E\causet@p) -- (E\causet@q);
 								\xdef\causet@qBound{\causet@q}
 							\fi
 						\fi
@@ -225,7 +307,7 @@
 				}
 			}
 		\fi
-		\ifcausetsDrawSeparations
+		\ifcausetsDrawSpatialLinks
 			\setcounter{causet@i}{0}
 			\foreach \causet@p in {#1}{%
 				\stepcounter{causet@i}
@@ -236,7 +318,7 @@
 					\ifnum\value{causet@j}>\value{causet@i}
 						\ifnum\causet@q>\causet@qBound
 							\ifnum\causet@p>\causet@q
-								\draw[causetSeparationsStyle] (E\causet@q) -- (E\causet@p);
+								\draw[causets/.cd, every spatial link] (E\causet@q) -- (E\causet@p);
 								\xdef\causet@qBound{\causet@q}
 							\fi
 						\fi
@@ -259,7 +341,7 @@
 		\causets@drawPermutation{#1}
 		\ifcausetsDrawLinks
 			\foreach \causet@From/\causet@To in {#2}{%
-				\draw[causetLinksStyle] (E\causet@From) -- (E\causet@To);
+				\draw[causets/.cd, every link] (E\causet@From) -- (E\causet@To);
 			}
 		\fi
 		\causets@drawEventLabels{#1}
@@ -296,7 +378,7 @@
 								\ifcauset@ItemFoundInList
 									% skip link
 								\else
-									\draw[causetLinksStyle] (E\causet@p) -- (E\causet@q);
+									\draw[causets/.cd, every link] (E\causet@p) -- (E\causet@q);
 								\fi
 								\xdef\causet@qBound{\causet@q}
 							\fi
@@ -311,51 +393,53 @@
 }
 
 % insert a TikZ picture with a causet from a permutation:
-\newcommand*{\pcauset}[2][causet]{%
-\begin{tikzpicture}[#1]\drawpcauset{#2}\end{tikzpicture}}
+\newcommand*{\pcauset}[2][]{%
+\begin{tikzpicture}[causets/.cd, every causet, #1]\drawpcauset{#2}\end{tikzpicture}}
 
 % insert a TikZ picture with a causet from a permutation and a link-pair list:
-\newcommand*{\causet}[3][causet]{%
-\begin{tikzpicture}[#1]\drawcauset{#2}{#3}\end{tikzpicture}}
+\newcommand*{\causet}[3][]{%
+\begin{tikzpicture}[causets/.cd, every causet, #1]\drawcauset{#2}{#3}\end{tikzpicture}}
 
 % insert a TikZ picture with a causet from a permutation removes links given 
 % in a link-pair list:
-\newcommand*{\rcauset}[3][causet]{%
-\begin{tikzpicture}[#1]\drawrcauset{#2}{#3}\end{tikzpicture}}
+\newcommand*{\rcauset}[3][]{%
+\begin{tikzpicture}[causets/.cd, every causet, #1]\drawrcauset{#2}{#3}\end{tikzpicture}}
 
 %% short-hand functions:
-\newcommand*{\causetfile}[2][]{%
-\includegraphics[#1]{\causetsDirectory/#2}}
+\providecommand{\causetspath}{.}
 
-\newcommand*{\pcausetP}[2][causet]{%
+\newcommand*{\causetfile}[2][]{%
+\includegraphics[#1]{\causetspath/#2}}
+
+\newcommand*{\pcausetP}[2][]{%
 {\causetsDrawPermutationtrue\pcauset[#1]{#2}}}
 
-\newcommand*{\pcausetL}[2][causet]{%
+\newcommand*{\pcausetL}[2][]{%
 {\causetsDrawLabelstrue\pcauset[#1]{#2}}}
 
-\newcommand*{\pcausetX}[2][causet]{%
+\newcommand*{\pcausetX}[2][]{%
 {\causetsDrawPermutationtrue\pcausetL[#1]{#2}}}
 	
-\newcommand*{\causetP}[3][causet]{%
+\newcommand*{\causetP}[3][]{%
 {\causetsDrawPermutationtrue\causet[#1]{#2}{#3}}}
 
-\newcommand*{\causetL}[3][causet]{%
+\newcommand*{\causetL}[3][]{%
 {\causetsDrawLabelstrue\causet[#1]{#2}{#3}}}
 
-\newcommand*{\causetX}[3][causet]{%
+\newcommand*{\causetX}[3][]{%
 {\causetsDrawPermutationtrue\causetL[#1]{#2}{#3}}}
 	
-\newcommand*{\rcausetP}[3][causet]{%
+\newcommand*{\rcausetP}[3][]{%
 {\causetsDrawPermutationtrue\rcauset[#1]{#2}{#3}}}
 
-\newcommand*{\rcausetL}[3][causet]{%
+\newcommand*{\rcausetL}[3][]{%
 {\causetsDrawLabelstrue\rcauset[#1]{#2}{#3}}}
 
-\newcommand*{\rcausetX}[3][causet]{%
+\newcommand*{\rcausetX}[3][]{%
 {\causetsDrawPermutationtrue\rcausetL[#1]{#2}{#3}}}
 
 %% some standard causets:
-\newcommand*{\causetFence}[2][causet]{%
+\newcommand*{\causetFence}[2][]{%
 \ifcase#2%
 \or%=1
 \pcauset[#1]{1,2}%
@@ -380,7 +464,7 @@
 \fi%
 }
 
-\newcommand*{\causetClosedFence}[2][causet]{%
+\newcommand*{\causetClosedFence}[2][]{%
 \ifcase#2%
 \or%=1
 \pcauset[#1]{1,2}%
@@ -405,6 +489,6 @@
 \fi%
 }
 
-\newcommand*{\causetCrown}[1][causet]{%
+\newcommand*{\causetCrown}[1][]{%
 \causetClosedFence[#1]{3}%
 }
