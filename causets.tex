@@ -158,7 +158,7 @@ Any causet that can be embedded in $1 + 1$ dimensional Minkowski spacetime can a
 Let the causets elements be labeled by an increasing null coordinate $u$ (pointing upwards along the right axis of the grids under the diagrams below), then the causal relation (partial order) implies a label permutation along the null coordinate $v$ (pointing upwards along the left axis of the grids under the diagrams below). 
 This permutation is the input of the \lstinline§\pcauset§ command that computes the causal relation from the permutation. 
 See example 1 in \autoref{tab:MainCommandsExamples}. 
-\tikzcausetsset{black, show permutation}
+\tikzcausetsset{black colors, show permutation}
 \begin{table}[h!]
 	\begin{tabular*}{\textwidth}{lp{0.72\textwidth}c}
 		\toprule
@@ -181,7 +181,7 @@ See example 1 in \autoref{tab:MainCommandsExamples}.
 	\end{tabular*}
 	\caption{\label{tab:MainCommandsExamples} Examples for the three main commands of the package.}
 \end{table}
-\tikzcausetsset{gray, show permutation=false}
+\tikzcausetsset{gray colors, show permutation=false}
 
 Every causet that does not embed in $1 + 1$ dimensional Minkowski spacetime can be made embeddable by adding links to it. 
 Adding the minimal number of links yields permutations that should be used to determine the coordinates of the diagram. 
@@ -224,7 +224,7 @@ For example, you may write \lstinline§\pcauset{3,1,2}§, \pcauset{3,1,2}, as oppo
 It is possible to use dots in a permutation so that TikZ will auto-complete the list. 
 For example, the command \lstinline§\pcauset{14,...,10,8,2,1,9,3,4,...,7}§ will generate the diagram 
 \begin{align*}
-	\pcauset[black, show permutation]{14,...,10,8,2,1,9,3,4,...,7}
+	\pcauset[black colors, show permutation]{14,...,10,8,2,1,9,3,4,...,7}
 \end{align*}
 which is the same as \lstinline§\pcauset{14,13,12,11,10,8,2,1,9,3,4,5,6,7}§. (This graphic uses the package options \lstinline§black§ and \lstinline§permutation§ again.) 
 
@@ -509,12 +509,12 @@ In the same way, it is possible to modify the existing styles of all parts of th
 \end{enumerate}
 In order to manually define the full style of the parts in the diagram - not extending, but \emph{overwriting all} drawing options - set the style of the following keys: \vspace{-1ex}
 \begin{enumerate}\itemsep=-1ex
-  \item \lstinline§every causet§ the general style of the causet diagram (like \lstinline§baseline§), 
+  \item \lstinline§every causet§ for the general style of the causet diagram (like \lstinline§baseline§), 
   \item \lstinline§every tile§ for the occupied permutation tiles, 
   \item \lstinline§every event§ for the event nodes (graph vertices), 
   \item \lstinline§every grid§ for the permutation grid, 
   \item \lstinline§every region§ for the permutation region, 
-  \item \lstinline§every label base§ for the all text labels, 
+  \item \lstinline§every label base§ for all text labels, 
   \item \lstinline§every ulabel§ for the permutation $u$ labels, 
   \item \lstinline§every vlabel§ for the permutation $v$ labels, 
   \item \lstinline§every link§ for the links (graph edges), 
