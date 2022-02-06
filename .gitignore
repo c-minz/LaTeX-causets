@@ -6,3 +6,5 @@
 *.log
 *.aux
 causets_development.sty
+/causets.out
+/causets.pdf
