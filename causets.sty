@@ -1,16 +1,16 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{causets}[2022/02/07 v1.2 Package to draw causal set diagrams]
+\ProvidesPackage{causets}[2022/04/30 v1.3 Package to draw causal set diagrams]
 %% Copyright 2020-2022 by C. Minz
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3
-% of this license or (at your option) any later version.
-% The latest version of this license is in
+% of this licence or (at your option) any later version.
+% The latest version of this licence is in
 % http://www.latex-project.org/lppl.txt
 %
 % This work has the LPPL maintenance status "maintained".
 % 
-% The current version of this package is 1.2.
+% The current version of this package is 1.3.
 %
 % The current maintainer of this work is C. Minz.
 % https://github.com/c-minz
@@ -22,10 +22,10 @@
 \RequirePackage{tikz}
 \usepgflibrary{arrows.meta}
 
-%% PGF keys:
+%% PGF keys and style macros:
 \def\tikzcausetsset#1{\pgfqkeys{/tikz/causets}{#1}}
 \pgfkeys{/tikz/causets/.search also={/tikz}}
-% size options:
+% Size options:
 \tikzcausetsset{%
 	tile size/.store in=\causetTileSize,
 	tile size/.value required,
@@ -39,13 +39,11 @@
 	link width/.value required,
 	broken link gap/.store in=\causetBrokenLinkGap,
 	broken link gap/.value required,
+	text font/.store in=\causetTextFont,
+	text font/.value required,
 	text scale/.store in=\causetTextScale,
 	text scale/.value required,
 	tiny/.value forbidden,
-	small/.value forbidden,
-	normal/.value forbidden,
-	large/.value forbidden,
-	huge/.value forbidden,
 	tiny/.style={%
 		tile size=0.30ex,
 		region line width=0.02ex,
@@ -53,7 +51,9 @@
 		event size=0.16ex,
 		link width=0.05ex,
 		broken link gap=0.15ex,
-		text scale=0.16},
+		text font=\tiny,
+		text scale=0.30},
+	small/.value forbidden,
 	small/.style={%
 		tile size=0.60ex,
 		region line width=0.04ex,
@@ -61,7 +61,9 @@
 		event size=0.32ex,
 		link width=0.10ex,
 		broken link gap=0.30ex,
-		text scale=0.32},
+		text font=\scriptsize,
+		text scale=0.43},
+	normal/.value forbidden,
 	normal/.style={%
 		tile size=0.90ex,
 		region line width=0.06ex,
@@ -69,7 +71,9 @@
 		event size=0.48ex,
 		link width=0.15ex,
 		broken link gap=0.45ex,
-		text scale=0.48},
+		text font=\footnotesize,
+		text scale=0.56},
+	large/.value forbidden,
 	large/.style={%
 		tile size=1.35ex,
 		region line width=0.09ex,
@@ -77,7 +81,9 @@
 		event size=0.75ex,
 		link width=0.20ex,
 		broken link gap=0.60ex,
+		text font=\small,
 		text scale=0.75},
+	huge/.value forbidden,
 	huge/.style={%
 		tile size=1.80ex,
 		region line width=0.12ex,
@@ -85,61 +91,81 @@
 		event size=1.00ex,
 		link width=0.25ex,
 		broken link gap=0.75ex,
-		text scale=1.00}
+		text font=\normalsize,
+		text scale=0.90}
 }
-% color options:
+% Colour options:
 \tikzcausetsset{%
-	region color/.initial=black!75,
-	grid color/.initial=black!25,
-	tile color/.initial=black!10!white,
-	event color/.initial=black,
-	label color/.initial=black,
-	link color/.initial=black!65!white,
-	spatial link color/.initial=black!50!white,
-	ulabel color/.initial=black!65!white,
-	vlabel color/.initial=black!65!white,
-	black colors/.style={%
-		region color=black,
-		grid color=black,
-		tile color=white,
-		event color=black,
-		label color=black,
-		link color=black,
-		spatial link color=black,
-		ulabel color=black,
-		vlabel color=black},
-	gray colors/.style={%
-		region color=black!75,
-		grid color=black!25,
-		tile color=black!10!white,
-		event color=black,
-		label color=black,
-		link color=black!65!white,
-		spatial link color=black!50!white,
-		ulabel color=black!65!white,
-		vlabel color=black!65!white},
-	blue colors/.style={%
-		region color=black!75,
-		grid color=black!25,
-		tile color=cyan!25!black!25!white,
-		event color=blue!50!black,
-		label color=blue!50!black,
-		link color=cyan!75!black,
-		spatial link color=blue!75!white,
-		ulabel color=black!50,
-		vlabel color=black!50},
-	neon colors/.style={%
-		region color=green,
-		grid color=green,
-		tile color=yellow,
-		event color=blue,
-		label color=blue,
-		link color=cyan,
-		spatial link color=red,
-		ulabel color=magenta,
-		vlabel color=magenta}
+	region colour/.initial=black!75,
+	grid colour/.initial=black!25,
+	tile colour/.initial=black!10!white,
+	event colour/.initial=black,
+	label colour/.initial=black,
+	link colour/.initial=black!65!white,
+	spatial link colour/.initial=black!50!white,
+	ulabel colour/.initial=black!65!white,
+	vlabel colour/.initial=black!65!white,
+	black colours/.style={%
+		region colour=black,
+		grid colour=black,
+		tile colour=white,
+		event colour=black,
+		label colour=black,
+		link colour=black,
+		spatial link colour=black,
+		ulabel colour=black,
+		vlabel colour=black},
+	grey colours/.style={%
+		region colour=black!75,
+		grid colour=black!25,
+		tile colour=black!10!white,
+		event colour=black,
+		label colour=black,
+		link colour=black!65!white,
+		spatial link colour=black!50!white,
+		ulabel colour=black!65!white,
+		vlabel colour=black!65!white},
+	blue colours/.style={%
+		region colour=black!75,
+		grid colour=black!25,
+		tile colour=cyan!25!black!25!white,
+		event colour=blue!50!black,
+		label colour=blue!50!black,
+		link colour=cyan!75!black,
+		spatial link colour=blue!75!white,
+		ulabel colour=black!50,
+		vlabel colour=black!50},
+	neon colours/.style={%
+		region colour=green,
+		grid colour=green,
+		tile colour=yellow,
+		event colour=blue,
+		label colour=blue,
+		link colour=cyan,
+		spatial link colour=red,
+		ulabel colour=magenta,
+		vlabel colour=magenta},
+	region color/.style={region colour=#1},
+	grid color/.style={grid colour=#1},
+	tile color/.style={tile colour=#1},
+	event color/.style={event colour=#1},
+	label color/.style={label colour=#1},
+	link color/.style={link colour=#1},
+	spatial link color/.style={spatial link colour=#1},
+	ulabel color/.style={ulabel colour=#1},
+	vlabel color/.style={vlabel colour=#1},
+	black colors/.style={black colours={#1}},
+	gray colors/.style={grey colours={#1}},
+	blue colors/.style={blue colours={#1}},
+	neon colors/.style={neon colours={#1}}
 }
-% styles:
+% Causet modification options:
+\tikzcausetsset{%
+	offset/.store in=\causet@Offset,
+	every causet/.value forbidden,
+	every causet/.style={baseline=-0.707*\causetTileSize}
+}
+% Graphic component switches:
 \newif\ifcausetsDrawPermutation
 \newif\ifcausetsDrawLinks
 \newif\ifcausetsBreakLinks
@@ -162,31 +188,69 @@
 	continuously linked/.code={\causetsBreakLinksfalse},
 	spatially linked/.code={\causetsDrawSpatialLinkstrue},
 	spatially unlinked/.code={\causetsDrawSpatialLinksfalse},
+	labelled/.code={\causetsDrawLabelstrue},
+	unlabelled/.code={\causetsDrawLabelsfalse},
+	labelled u/.code={\causetsDrawULabelstrue},
+	unlabelled u/.code={\causetsDrawULabelsfalse},
+	labelled v/.code={\causetsDrawVLabelstrue},
+	unlabelled v/.code={\causetsDrawVLabelsfalse},
 	labeled/.code={\causetsDrawLabelstrue},
 	unlabeled/.code={\causetsDrawLabelsfalse},
 	labeled u/.code={\causetsDrawULabelstrue},
 	unlabeled u/.code={\causetsDrawULabelsfalse},
 	labeled v/.code={\causetsDrawVLabelstrue},
-	unlabeled v/.code={\causetsDrawVLabelsfalse},
+	unlabeled v/.code={\causetsDrawVLabelsfalse}
+}
+% Permutation grid styles:
+\tikzcausetsset{%
 	every region/.value forbidden,
-	every region/.style={color=\pgfkeysvalueof{/tikz/causets/region color}, line width=\causetRegionLine},
+	every region/.style={color=\pgfkeysvalueof{/tikz/causets/region colour}, line width=\causetRegionLine},
 	region/.style={show permutation, every region/.append style={#1}},
 	every grid/.value forbidden,
-	every grid/.style={color=\pgfkeysvalueof{/tikz/causets/grid color}, line width=\causetGridLine, step=\causetTileSize},
+	every grid/.style={color=\pgfkeysvalueof{/tikz/causets/grid colour}, line width=\causetGridLine, step=\causetTileSize},
 	grid/.style={show permutation, every grid/.append style={#1}},
 	every tile/.value forbidden,
-	every tile/.style={color=\pgfkeysvalueof{/tikz/causets/tile color}, line width=\causetGridLine, fill},
-	tiles/.style={show permutation, every tile/.append style={#1}},
+	every tile/.style={color=\pgfkeysvalueof{/tikz/causets/tile colour}, line width=\causetGridLine, fill},
+	tiles/.style={show permutation, every tile/.append style={#1}}
+}
+% Label styles:
+\tikzcausetsset{%
+	every label base/.value forbidden,
+	every label base/.style={text opacity=1, scale=\causetTextScale, font=\causetTextFont, inner sep=0pt},
+	all labels/.style={every label base/.append style={#1}},
+	at/.initial=center,
+	every label/.value forbidden,
+	every label/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/label colour}, below left, at=south west},
+	labels/.style={show labels, every label/.append style={#1}},
+	every ulabel/.value forbidden,
+	every ulabel/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/ulabel colour}, right, rotate=-45, inner sep=1pt, align=left},
+	ulabels/.style={show ulabels, every ulabel/.append style={#1}},
+	every vlabel/.value forbidden,
+	every vlabel/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/vlabel colour}, left, rotate=45, inner sep=1pt, align=right}, 
+	vlabels/.style={show vlabels, every vlabel/.append style={#1}},
+	every replaced label/.value forbidden,
+	every replaced label/.style={every label},
+	replaced labels/.style={every replaced label/.append style={#1}}
+}
+% Event styles:
+\tikzcausetsset{%
 	every event/.value forbidden,
-	every event/.style={color=\pgfkeysvalueof{/tikz/causets/event color}, circle, fill, inner sep=0pt, minimum size=\causetEventSize},
+	every event/.style={color=\pgfkeysvalueof{/tikz/causets/event colour}, circle, fill, inner sep=0pt, minimum size=\causetEventSize},
 	events/.value required,
 	events/.style={every event/.append style={#1}},
+	every replaced event/.value forbidden,
+	every replaced event/.style={every label base, circle, minimum size=\causetEventSize},
+	replaced events/.value required,
+	replaced events/.style={every replaced event/.append style={#1}}
+}
+% Link styles:
+\tikzcausetsset{%
 	Link Start/.tip={},
 	Link Pause/.tip={Triangle Cap[] . Fast Triangle[] . Fast Triangle[]},
 	Link Resume/.tip={Triangle Cap[reversed] . Fast Triangle[reversed] . Fast Triangle[reversed]},
 	Link End/.tip={},
 	every link/.value forbidden,
-	every link/.style={color=\pgfkeysvalueof{/tikz/causets/link color}, line width=\causetLinkWidth, {Link Start[]}-{Link End[]}},
+	every link/.style={color=\pgfkeysvalueof{/tikz/causets/link colour}, line width=\causetLinkWidth, {Link Start[]}-{Link End[]}},
 	links/.style={show links, every link/.append style={#1}},
 	link starts/.value required,
 	link starts/.style={Link Start/.tip={#1}},
@@ -201,26 +265,12 @@
 	arrow links/.value forbidden,
 	arrow links/.style={link ends={Stealth[round, open, length=4*\causetLinkWidth, line width=\causetLinkWidth/3]}},
 	every spatial link/.value forbidden,
-	every spatial link/.style={every link, color=\pgfkeysvalueof{/tikz/causets/spatial link color}, dashed},
-	spatial links/.style={show spatial links, every spatial link/.append style={#1}},
-	every label base/.value forbidden,
-	every label base/.style={text opacity=1.0, scale=\causetTextScale, inner sep=0.5*\causetTextScale ex},
-	all labels/.style={every label base/.append style={#1}},
-	every label/.value forbidden,
-	every label/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/label color}, below left},
-	labels/.style={show labels, every label/.append style={#1}},
-	every ulabel/.value forbidden,
-	every ulabel/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/ulabel color}, right, rotate=-45, align=left},
-	ulabels/.style={show ulabels, every ulabel/.append style={#1}},
-	every vlabel/.value forbidden,
-	every vlabel/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/vlabel color}, left, rotate=45, align=right}, 
-	vlabels/.style={show vlabels, every vlabel/.append style={#1}},
-	every causet/.value forbidden,
-	every causet/.style={baseline=-0.707*\causetTileSize}
+	every spatial link/.style={every link, color=\pgfkeysvalueof{/tikz/causets/spatial link colour}, dashed},
+	spatial links/.style={show spatial links, every spatial link/.append style={#1}}
 }
 
-%% delare and execute options:
-\tikzcausetsset{normal}
+%% Package options:
+\tikzcausetsset{normal, offset=0}
 \causetsDrawLinkstrue
 \causetsBreakLinkstrue
 \causetsDrawULabelstrue
@@ -229,14 +279,19 @@
 \DeclareOption{small}{\tikzcausetsset{small}}
 \DeclareOption{large}{\tikzcausetsset{large}}
 \DeclareOption{huge}{\tikzcausetsset{huge}}
-\DeclareOption{gray}{\tikzcausetsset{gray colors}}
-\DeclareOption{black}{\tikzcausetsset{black colors}}
-\DeclareOption{blue}{\tikzcausetsset{blue colors}}
-\DeclareOption{neon}{\tikzcausetsset{neon colors}}
-\DeclareOption{gray colors}{\tikzcausetsset{gray colors}}
-\DeclareOption{black colors}{\tikzcausetsset{black colors}}
-\DeclareOption{blue colors}{\tikzcausetsset{blue colors}}
-\DeclareOption{neon colors}{\tikzcausetsset{neon colors}}
+\DeclareOption{gray}{\tikzcausetsset{grey colours}}
+\DeclareOption{grey}{\tikzcausetsset{grey colours}}
+\DeclareOption{black}{\tikzcausetsset{black colours}}
+\DeclareOption{blue}{\tikzcausetsset{blue colours}}
+\DeclareOption{neon}{\tikzcausetsset{neon colours}}
+\DeclareOption{grey colours}{\tikzcausetsset{gray colours}}
+\DeclareOption{black colours}{\tikzcausetsset{black colours}}
+\DeclareOption{blue colours}{\tikzcausetsset{blue colours}}
+\DeclareOption{neon colours}{\tikzcausetsset{neon colours}}
+\DeclareOption{gray colors}{\tikzcausetsset{gray colours}}
+\DeclareOption{black colors}{\tikzcausetsset{black colours}}
+\DeclareOption{blue colors}{\tikzcausetsset{blue colours}}
+\DeclareOption{neon colors}{\tikzcausetsset{neon colours}}
 \DeclareOption{linked}{\causetsDrawLinkstrue}
 \DeclareOption{unlinked}{\causetsDrawLinksfalse}
 \DeclareOption{cap linked}{\tikzcausetsset{cap links}}
@@ -246,6 +301,12 @@
 \DeclareOption{spatially linked}{\causetsDrawSpatialLinkstrue}
 \DeclareOption{spatially unlinked}{\causetsDrawSpatialLinksfalse}
 \DeclareOption{permutation}{\causetsDrawPermutationtrue}
+\DeclareOption{labelled}{\causetsDrawLabelstrue}
+\DeclareOption{unlabelled}{\causetsDrawLabelsfalse}
+\DeclareOption{labelled u}{\causetsDrawULabelstrue}
+\DeclareOption{unlabelled u}{\causetsDrawULabelsfalse}
+\DeclareOption{labelled v}{\causetsDrawVLabelstrue}
+\DeclareOption{unlabelled v}{\causetsDrawVLabelsfalse}
 \DeclareOption{labeled}{\causetsDrawLabelstrue}
 \DeclareOption{unlabeled}{\causetsDrawLabelsfalse}
 \DeclareOption{labeled u}{\causetsDrawULabelstrue}
@@ -255,79 +316,90 @@
 \DeclareOption*{\PackageWarning{causets}{The package causets does not support the option: \CurrentOption}}
 \ProcessOptions\relax
 
-%% functions:
-% variables:
-\newcounter{causet@i}
-\newcounter{causet@j}
+%% Package functions:
 \newif\ifcauset@ItemFoundInList
 
-% count the number of events:
-\newcommand*{\causets@readCausetSize}[1]{%
-\setcounter{causet@i}{0}%
-\foreach \causet@p in {#1}{%
-	\stepcounter{causet@i}%
-}%
-\pgfmathsetmacro\causet@N{\value{causet@i}}%
+\newcommand*{\causets@prepareCauset}[1]{%
+% Count the number of events (\causet@N) and find the minimal value in the list argument (\causet@Start).
+\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
+	\ifnum\causet@i=1
+		\pgfmathparse{int(\causet@E@i)}
+	\else
+		\pgfmathparse{int(min(\causet@Start, \causet@E@i))}
+	\fi
+	\xdef\causet@Start{\pgfmathresult}
+	\xdef\causet@N{\causet@i}
+}
+\pgfmathsetmacro\causet@Start{int(\causet@Start + \causet@Offset)}
 }
 
-% define and draw events as (E#):
+\newcommand*{\causets@drawEvent}[2][every event]{%
+% Draws the event node for \causet@E@i. By default the event style (optional argument #1) is that of every event. The text of the node is #2.
+\pgfmathsetmacro\causet@u{\causet@E@i - \causet@Start + 0.5}
+\pgfmathsetmacro\causet@v{\causet@i - 0.5}
+\node[causets/.cd, #1] (E\causet@E@i) 
+	at ( \causet@u * \causetTileSize, \causet@v * \causetTileSize ) 
+	{#2};
+}
+
 \newcommand*{\causets@drawEvents}[1]{%
-\setcounter{causet@i}{0}
-\foreach \causet@p in {#1}{%
-	\stepcounter{causet@i}
-	\pgfmathsetmacro\causet@e@U{\causet@p - 1.0}
-	\pgfmathsetmacro\causet@e@V{\value{causet@i} - 1.0}
+% Draws a permutation tile and defines and draws an event node (E#) on top of the tile, for each event number # in the list argument.
+\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
+	\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
+	\pgfmathsetmacro\causet@u{\causet@E@i - \causet@Start}
+	\pgfmathsetmacro\causet@v{\causet@i - 1.0}
 	\ifcausetsDrawPermutation
-		\path[causets/.cd, every tile] ( \causet@e@U * \causetTileSize, \causet@e@V * \causetTileSize ) 
+		\path[causets/.cd, every tile] 
+			( \causet@u * \causetTileSize, \causet@v * \causetTileSize ) 
 			rectangle +( \causetTileSize, \causetTileSize );
 	\fi
-	\pgfmathsetmacro\causet@e@U{\causet@p - 0.5}
-	\pgfmathsetmacro\causet@e@V{\value{causet@i} - 0.5}
-	\node[causets/.cd, every event] (E\causet@p) 
-		at ( \causet@e@U * \causetTileSize, \causet@e@V * \causetTileSize ) 
-		{};
+	\ifx\causet@Text\causet@Label
+		\causets@drawEvent{}
+	\else
+		\causets@drawEvent[every replaced event]{\causet@Text}
+	\fi
 }
 }
 
-% draw the permutation and the null coordinate labels:
 \newcommand*{\causets@drawPermutation}[1]{%
+% Draws the permutation grid and adds the u- and v-coordinate labels.
 \ifcausetsDrawPermutation
 	\draw[causets/.cd, every grid] ( 0, 0 ) 
 		grid ( \causet@N * \causetTileSize, \causet@N * \causetTileSize );
 	\draw[causets/.cd, every region] ( 0, 0 ) 
 		rectangle ( \causet@N * \causetTileSize, \causet@N * \causetTileSize );
-	\setcounter{causet@i}{0}
-	\foreach \causet@p in {#1}{%
-		\stepcounter{causet@i}
+	\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
+		\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
 		\ifcausetsDrawULabels
-			\node[causets/.cd, every ulabel] (EUL\causet@p) 
-				at ( \value{causet@i} * \causetTileSize - 0.5 * \causetTileSize, 0 ) 
-				{\thecauset@i};
+			\pgfmathsetmacro\causet@u{int(\causet@i + \causet@Start - 1)}
+			\node[causets/.cd, every ulabel] (EUL\causet@E@i) 
+				at ( \causet@i * \causetTileSize - 0.5 * \causetTileSize, 0 ) 
+				{\causet@u};
 		\fi
 		\ifcausetsDrawVLabels
-			\node[causets/.cd, every vlabel] (EVL\causet@p) 
-				at ( 0, \value{causet@i} * \causetTileSize - 0.5 * \causetTileSize ) 
-				{\causet@p};
+			\node[causets/.cd, every vlabel] (EVL\causet@E@i) 
+				at ( 0, \causet@i * \causetTileSize - 0.5 * \causetTileSize ) 
+				{\causet@E@i};
 		\fi
 	}
 \fi
 }
 
-% draw the spatial links from the permutation:
 \newcommand*{\causets@drawSpatialLinks}[1]{%
+% Draws the spatial links between the events (only for \drawpcauset and \drawrcauset).
 \ifcausetsDrawSpatialLinks
-	\setcounter{causet@i}{0}
-	\foreach \causet@p in {#1}{%
-		\stepcounter{causet@i}
-		\edef\causet@qBound{0}
-		\setcounter{causet@j}{0}
-		\foreach \causet@q in {#1}{%
-			\stepcounter{causet@j}
-			\ifnum\value{causet@j}>\value{causet@i}
-				\ifnum\causet@q>\causet@qBound
-					\ifnum\causet@p>\causet@q
-						\draw[causets/.cd, every spatial link] (E\causet@q) -- (E\causet@p);
-						\xdef\causet@qBound{\causet@q}
+	\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
+		\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
+		% \causet@Bound stores the lower bound to find spatially linked events.
+		\edef\causet@Bound{\causet@Offset}
+		\foreach \causet@E@j/\causet@Label/\causet@Text [count=\causet@j] in {#1}{%
+			\ifnum\causet@j>\causet@i
+				\pgfmathsetmacro\causet@E@j{int(\causet@E@j + \causet@Offset)}
+				\ifnum\causet@E@j>\causet@Bound
+					\ifnum\causet@E@i>\causet@E@j
+						% Add spatial link and remember new lower bound:
+						\draw[causets/.cd, every spatial link] (E\causet@E@j) -- (E\causet@E@i);
+						\xdef\causet@Bound{\causet@E@j}
 					\fi
 				\fi
 			\fi
@@ -336,37 +408,51 @@
 \fi
 }
 
-% draw event labels:
-\newcommand*{\causets@drawEventLabels}[1]{%
-\ifcausetsDrawLabels
-	\foreach \causet@p in {#1}{%
-		\node[causets/.cd, every label] (EL\causet@p) 
-			at (E\causet@p) {\causet@p};
-	}
-\fi
+\newcommand*{\causets@drawEventLabel}[1][every label]{%
+% Draws the event label for \causet@E@i (shifted by \causet@Offset). By default the label style is assumed that of a standard event label.
+\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
+\node[causets/.cd, #1] (EL\causet@E@i)
+	at (E\causet@E@i.\pgfkeysvalueof{/tikz/causets/at}) {\causet@Label};
 }
 
-% draw a causet from a permutation:
+\newcommand*{\causets@drawEventLabels}[1]{%
+% Adds event labels to the events.
+\foreach \causet@E@i/\causet@Label/\causet@Text in {#1}{%
+	\ifx\causet@E@i\causet@Label
+		\ifcausetsDrawLabels
+			\causets@drawEventLabel
+		\fi
+	\else
+		\ifx\causet@Label\empty
+			\relax% Skip empty labels
+		\else
+			\causets@drawEventLabel[every replaced label]
+		\fi
+	\fi
+}
+}
+
 \newcommand*{\drawpcauset}[1]{%
-\causets@readCausetSize{#1}
+% Draws a causet from a permutation.
+\causets@prepareCauset{#1}
 \begin{scope}[rotate=45]
 	\begin{scope}[xshift=-\causet@N * \causetTileSize / 2, 
 	              yshift=-\causet@N * \causetTileSize / 2]
 		\causets@drawEvents{#1}
 		\causets@drawPermutation{#1}
 		\ifcausetsDrawLinks
-			\setcounter{causet@i}{0}
-			\foreach \causet@p in {#1}{%
-				\stepcounter{causet@i}
-				\pgfmathsetmacro\causet@qBound{int(\causet@N + 1)}
-				\setcounter{causet@j}{0}
-				\foreach \causet@q in {#1}{%
-					\stepcounter{causet@j}
-					\ifnum\value{causet@j}>\value{causet@i}
-						\ifnum\causet@q<\causet@qBound
-							\ifnum\causet@p<\causet@q
-								\draw[causets/.cd, every link] (E\causet@p) -- (E\causet@q);
-								\xdef\causet@qBound{\causet@q}
+			\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
+				\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
+				% \causet@Bound stores the upper bound to find linked events.
+				\pgfmathsetmacro\causet@Bound{int(\causet@N + \causet@Start)}
+				\foreach \causet@E@j/\causet@Label/\causet@Text [count=\causet@j] in {#1}{%
+					\ifnum\causet@j>\causet@i
+						\pgfmathsetmacro\causet@E@j{int(\causet@E@j + \causet@Offset)}
+						\ifnum\causet@E@j<\causet@Bound
+							\ifnum\causet@E@i<\causet@E@j
+								% Add link and remember new upper bound:
+								\draw[causets/.cd, every link] (E\causet@E@i) -- (E\causet@E@j);
+								\xdef\causet@Bound{\causet@E@j}
 							\fi
 						\fi
 					\fi
@@ -379,9 +465,9 @@
 \end{scope}
 }
 
-% draw a causet from a permutation and a link-pair list:
 \newcommand*{\drawcauset}[2]{%
-\causets@readCausetSize{#1}
+% Draws a causet from a permutation and a link-pair list.
+\causets@prepareCauset{#1}
 \begin{scope}[rotate=45]
 	\begin{scope}[xshift=-\causet@N * \causetTileSize / 2, 
 	              yshift=-\causet@N * \causetTileSize / 2]
@@ -389,55 +475,67 @@
 		\causets@drawPermutation{#1}
 		\ifcausetsDrawLinks
 			\ifcausetsBreakLinks
+				% Broken links are allowed, so test every link if it crosses over an unlinked event:
 				\foreach \causet@From/\causet@To in {#2}{%
-					\pgfmathsetmacro\causet@dU{int(\causet@To) - int(\causet@From)}
-					\setcounter{causet@i}{0}
-					\foreach \causet@p in {#1}{%
-						\ifnum\causet@p=\causet@To
-							\pgfmathparse{int(\value{causet@i})}
-							\xdef\causet@dV{\pgfmathresult}
+					% In this function, \causet@u and \causet@v store the link distance in the u- and in the v-direction, respectively. Since these are coordinate differences, they are computed without adding the offset.
+					\pgfmathsetmacro\causet@u{int(\causet@To) - int(\causet@From)}
+					\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
+						\ifnum\causet@E@i=\causet@From
+							\xdef\causet@v{\causet@i}
 						\fi
-						\ifnum\value{causet@i}>0
-							\stepcounter{causet@i}
-						\fi
-						\ifnum\causet@p=\causet@From
-							\stepcounter{causet@i}
+						\ifnum\causet@E@i=\causet@To
+							\pgfmathparse{int(\causet@i - \causet@v)}
+							\xdef\causet@v{\pgfmathresult}
+							\breakforeach
 						\fi
 					}
-					\def\causet@LastBreak{0}
-					\setcounter{causet@i}{0}
-					\foreach \causet@p in {#1}{%
-						\ifnum\causet@p=\causet@To
-							\setcounter{causet@i}{0}
+					% Now add offset to events:
+					\pgfmathsetmacro\causet@From{int(\causet@From + \causet@Offset)}
+					\pgfmathsetmacro\causet@To{int(\causet@To + \causet@Offset)}
+					% In this function, \causet@E@j stores the last breaking point and \causet@j the index of \causet@From.
+					\pgfmathsetmacro\causet@E@j{int(\causet@From - 1)}
+					\edef\causet@j{0}
+					\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
+						\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
+						\ifnum\causet@E@i=\causet@To
+							\edef\causet@j{0}
+							\breakforeach
 						\fi
-						\pgfmathparse{and(\value{causet@i} > 0, int((\causet@p - \causet@From) * \causet@dV) == int(\causet@dU * \value{causet@i}))}
-						\ifnum\pgfmathresult=1
-							\ifnum\causet@LastBreak=0
-								\draw[causets/.cd, every link, {Link Start}-{Link Pause}, shorten >=\causetBrokenLinkGap]
-									(E\causet@From) -- (E\causet@p);
-							\else
-								\draw[causets/.cd, every link, {Link Resume}-{Link Pause}, shorten <=\causetBrokenLinkGap, shorten >=\causetBrokenLinkGap]
-									(E\causet@LastBreak) -- (E\causet@p);
+						\ifnum\causet@j>0
+							% If the u-/v-coordinate ratio is the same, the event \causet@E@i falls along the link and the link needs to break. The ratios are compared via cross-multiplication, which is faster and does not cause rounding errors:
+							\pgfmathequal{int((\causet@E@i - \causet@From) * \causet@v)}{int(\causet@u * (\causet@i - \causet@j)))}
+							\ifnum\pgfmathresult=1
+								\ifnum\causet@E@j<\causet@From
+									% Link is crossing over another event, so draw the link up to the (first) breaking point:
+									\draw[causets/.cd, every link, {Link Start}-{Link Pause}, shorten >=\causetBrokenLinkGap]
+										(E\causet@From) -- (E\causet@E@i);
+								\else
+									% Link is crossing over yet another event, so continue from last breaking point to next breaking point:
+									\draw[causets/.cd, every link, {Link Resume}-{Link Pause}, shorten <=\causetBrokenLinkGap, shorten >=\causetBrokenLinkGap]
+										(E\causet@E@j) -- (E\causet@E@i);
+								\fi
+								\xdef\causet@E@j{\causet@E@i}
 							\fi
-							\xdef\causet@LastBreak{\causet@p}
 						\fi
-						\ifnum\value{causet@i}>0
-							\stepcounter{causet@i}
-						\fi
-						\ifnum\causet@p=\causet@From
-							\setcounter{causet@i}{1}
+						\ifnum\causet@E@i=\causet@From
+							\xdef\causet@j{\causet@i}
 						\fi
 					}
-					\ifnum\causet@LastBreak>0
+					\ifnum\causet@E@j>\causet@From
+						% Link did cross over another event, so finish the link from last breaking point to final event:
 						\draw[causets/.cd, every link, {Link Resume}-{Link End}, shorten <=\causetBrokenLinkGap]
-							(E\causet@LastBreak) -- (E\causet@To);
+							(E\causet@E@j) -- (E\causet@To);
 					\else
+						% Link does not cross over another event, so just draw it:
 						\draw[causets/.cd, every link]
 							(E\causet@From) -- (E\causet@To);
 					\fi
 				}
 			\else
+				% Broken links are not allowed, so just draw the links:
 				\foreach \causet@From/\causet@To in {#2}{%
+					\pgfmathsetmacro\causet@From{int(\causet@From + \causet@Offset)}
+					\pgfmathsetmacro\causet@To{int(\causet@To + \causet@Offset)}
 					\draw[causets/.cd, every link] (E\causet@From) -- (E\causet@To);
 				}
 			\fi
@@ -447,38 +545,40 @@
 \end{scope}
 }
 
-% draw a causet from a permutation removes links given in a link-pair list:
 \newcommand*{\drawrcauset}[2]{%
-\causets@readCausetSize{#1}
+% Draws a causet from a permutation and ignoring links given in the second list argument (of link-pairs).
+\causets@prepareCauset{#1}
 \begin{scope}[rotate=45]
 	\begin{scope}[xshift=-\causet@N * \causetTileSize / 2, 
 	              yshift=-\causet@N * \causetTileSize / 2]
 		\causets@drawEvents{#1}
 		\causets@drawPermutation{#1}
 		\ifcausetsDrawLinks
-			\setcounter{causet@i}{0}
-			\foreach \causet@p in {#1}{%
-				\stepcounter{causet@i}
-				\pgfmathsetmacro\causet@qBound{int(\causet@N + 1)}
-				\setcounter{causet@j}{0}
-				\foreach \causet@q in {#1}{
-					\stepcounter{causet@j}
-					\ifnum\value{causet@j}>\value{causet@i}
-						\ifnum\causet@q<\causet@qBound
-							\ifnum\causet@p<\causet@q
+			\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
+				\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
+				% \causet@Bound stores the upper bound to find linked events.
+				\pgfmathsetmacro\causet@Bound{int(\causet@N + \causet@Start)}
+				\foreach \causet@E@j/\causet@Label/\causet@Text [count=\causet@j] in {#1}{%
+					\ifnum\causet@j>\causet@i
+						\pgfmathsetmacro\causet@E@j{int(\causet@E@j + \causet@Offset)}
+						\ifnum\causet@E@j<\causet@Bound
+							\ifnum\causet@E@i<\causet@E@j
+								% Check second list argument if the link has to be ignored:
 								\global\causet@ItemFoundInListfalse
 								\foreach \causet@From/\causet@To in {#2}{%
-									\pgfmathparse{and(int(\causet@From) == int(\causet@p), int(\causet@To) == int(\causet@q))}
+									\pgfmathparse{and(int(\causet@From + \causet@Offset) == int(\causet@E@i), int(\causet@To + \causet@Offset) == int(\causet@E@j))}
 									\ifnum\pgfmathresult=1
 										\global\causet@ItemFoundInListtrue
 									\fi
 								}
 								\ifcauset@ItemFoundInList
-									% skip link
+									\relax% Skip link as it is included in the second argument.
 								\else
-									\draw[causets/.cd, every link] (E\causet@p) -- (E\causet@q);
+									% Draw link as it is not included in the second argument:
+									\draw[causets/.cd, every link] (E\causet@E@i) -- (E\causet@E@j);
 								\fi
-								\xdef\causet@qBound{\causet@q}
+								% Remember new upper bound:
+								\xdef\causet@Bound{\causet@E@j}
 							\fi
 						\fi
 					\fi
@@ -486,8 +586,11 @@
 			}
 		\fi
 		\causets@drawSpatialLinks{#1}
+		% Add omitted links as spatial links:
 		\ifcausetsDrawSpatialLinks
 			\foreach \causet@From/\causet@To in {#2}{%
+				\pgfmathsetmacro\causet@From{int(\causet@From + \causet@Offset)}
+				\pgfmathsetmacro\causet@To{int(\causet@To + \causet@Offset)}
 				\draw[causets/.cd, every spatial link] (E\causet@From) -- (E\causet@To);
 			}
 		\fi
@@ -496,53 +599,51 @@
 \end{scope}
 }
 
-% insert a TikZ picture with a causet from a permutation:
 \newcommand*{\pcauset}[2][]{%
+% Inserts a TikZ picture with a causet, created from a permutation.
 \begin{tikzpicture}[causets/.cd, every causet, #1]\drawpcauset{#2}\end{tikzpicture}}
 
-% insert a TikZ picture with a causet from a permutation and a link-pair list:
 \newcommand*{\causet}[3][]{%
+% Inserts a TikZ picture with a causet, created from a permutation and a link-pair list.
 \begin{tikzpicture}[causets/.cd, every causet, #1]\drawcauset{#2}{#3}\end{tikzpicture}}
 
-% insert a TikZ picture with a causet from a permutation removes links given 
-% in a link-pair list:
 \newcommand*{\rcauset}[3][]{%
+% Inserts a TikZ picture with a causet, created from a permutation and a link-pair list of links to remove.
 \begin{tikzpicture}[causets/.cd, every causet, #1]\drawrcauset{#2}{#3}\end{tikzpicture}}
 
-%% short-hand functions:
+%% Short-hand and pre-computed causet functions:
 \providecommand{\causetspath}{.}
 
 \newcommand*{\causetfile}[2][]{%
 \includegraphics[#1]{\causetspath/#2}}
 
 \newcommand*{\pcausetP}[2][]{%
-{\causetsDrawPermutationtrue\pcauset[#1]{#2}}}
+{\causetsDrawPermutationtrue\causetsDrawLabelsfalse\pcauset[#1]{#2}}}
 
 \newcommand*{\pcausetL}[2][]{%
-{\causetsDrawLabelstrue\pcauset[#1]{#2}}}
+{\causetsDrawPermutationfalse\causetsDrawLabelstrue\pcauset[#1]{#2}}}
 
 \newcommand*{\pcausetX}[2][]{%
-{\causetsDrawPermutationtrue\pcausetL[#1]{#2}}}
+{\causetsDrawPermutationtrue\causetsDrawLabelstrue\pcauset[#1]{#2}}}
 	
 \newcommand*{\causetP}[3][]{%
-{\causetsDrawPermutationtrue\causet[#1]{#2}{#3}}}
+{\causetsDrawPermutationtrue\causetsDrawLabelsfalse\causet[#1]{#2}{#3}}}
 
 \newcommand*{\causetL}[3][]{%
-{\causetsDrawLabelstrue\causet[#1]{#2}{#3}}}
+{\causetsDrawPermutationfalse\causetsDrawLabelstrue\causet[#1]{#2}{#3}}}
 
 \newcommand*{\causetX}[3][]{%
-{\causetsDrawPermutationtrue\causetL[#1]{#2}{#3}}}
+{\causetsDrawPermutationtrue\causetsDrawLabelstrue\causet[#1]{#2}{#3}}}
 	
 \newcommand*{\rcausetP}[3][]{%
-{\causetsDrawPermutationtrue\rcauset[#1]{#2}{#3}}}
+{\causetsDrawPermutationtrue\causetsDrawLabelsfalse\rcauset[#1]{#2}{#3}}}
 
 \newcommand*{\rcausetL}[3][]{%
-{\causetsDrawLabelstrue\rcauset[#1]{#2}{#3}}}
+{\causetsDrawPermutationfalse\causetsDrawLabelstrue\rcauset[#1]{#2}{#3}}}
 
 \newcommand*{\rcausetX}[3][]{%
-{\causetsDrawPermutationtrue\rcausetL[#1]{#2}{#3}}}
+{\causetsDrawPermutationtrue\causetsDrawLabelstrue\rcauset[#1]{#2}{#3}}}
 
-%% some standard causets:
 \newcommand*{\causetFence}[2][]{%
 \ifcase#2%
 \or%=1
