@@ -1,6 +1,7 @@
 /tmp/
 /.settings/
 examples/*.sty
+.pydevproject
 .project
 .texlipse
 *.synctex.gz
