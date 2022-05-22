@@ -13,6 +13,9 @@ The three main commands (macros) are
 ```
 
 For a full documentation, please see causets.pdf.
+The documentation includes some examples.
+More examples are included at
+https://github.com/c-minz/LaTeX-causets/tree/main/examples
 
 ## Bug reports
 Problems with the package are reported here:

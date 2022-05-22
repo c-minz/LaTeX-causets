@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{causets}[2022/04/30 v1.3 Package to draw causal set diagrams]
+\ProvidesPackage{causets}[2022/05/23 v1.3 Package to draw causal set diagrams]
 %% Copyright 2020-2022 by C. Minz
 %
 % This work may be distributed and/or modified under the
@@ -27,143 +27,113 @@
 \pgfkeys{/tikz/causets/.search also={/tikz}}
 % Size options:
 \tikzcausetsset{%
+	size unit/.store in=\causetTileSize,
+	size unit/.value required,
 	tile size/.store in=\causetTileSize,
 	tile size/.value required,
-	region line width/.store in=\causetRegionLine,
-	region line width/.value required,
-	grid line width/.store in=\causetGridLine,
-	grid line width/.value required,
-	event size/.store in=\causetEventSize,
-	event size/.value required,
-	link width/.store in=\causetLinkWidth,
-	link width/.value required,
-	broken link gap/.store in=\causetBrokenLinkGap,
-	broken link gap/.value required,
 	text font/.store in=\causetTextFont,
 	text font/.value required,
 	text scale/.store in=\causetTextScale,
 	text scale/.value required,
+	region line width/.initial=0.07*\causetTileSize,
+	grid line width/.initial=0.04*\causetTileSize,
+	event size/.initial=0.56*\causetTileSize,
+	event outline/.initial=0.04*\causetTileSize,
+	link width/.initial=0.14*\causetTileSize,
+	broken link gap/.initial=0.42*\causetTileSize,
 	tiny/.value forbidden,
 	tiny/.style={%
-		tile size=0.30ex,
-		region line width=0.02ex,
-		grid line width=0.01ex,
-		event size=0.16ex,
-		link width=0.05ex,
-		broken link gap=0.15ex,
+		size unit=0.30ex,
 		text font=\tiny,
 		text scale=0.30},
+	very small/.value forbidden,
+	very small/.style={%
+		size unit=0.40ex,
+		text font=\tiny,
+		text scale=0.40},
 	small/.value forbidden,
 	small/.style={%
-		tile size=0.60ex,
-		region line width=0.04ex,
-		grid line width=0.02ex,
-		event size=0.32ex,
-		link width=0.10ex,
-		broken link gap=0.30ex,
+		size unit=0.60ex,
 		text font=\scriptsize,
 		text scale=0.43},
 	normal/.value forbidden,
 	normal/.style={%
-		tile size=0.90ex,
-		region line width=0.06ex,
-		grid line width=0.03ex,
-		event size=0.48ex,
-		link width=0.15ex,
-		broken link gap=0.45ex,
+		size unit=0.90ex,
 		text font=\footnotesize,
 		text scale=0.56},
 	large/.value forbidden,
 	large/.style={%
-		tile size=1.35ex,
-		region line width=0.09ex,
-		grid line width=0.05ex,
-		event size=0.75ex,
-		link width=0.20ex,
-		broken link gap=0.60ex,
+		size unit=1.35ex,
 		text font=\small,
 		text scale=0.75},
+	very large/.value forbidden,
+	very large/.style={%
+		size unit=2.025ex,
+		text font=\normalsize,
+		text scale=1.02},
 	huge/.value forbidden,
 	huge/.style={%
-		tile size=1.80ex,
-		region line width=0.12ex,
-		grid line width=0.07ex,
-		event size=1.00ex,
-		link width=0.25ex,
-		broken link gap=0.75ex,
-		text font=\normalsize,
-		text scale=0.90}
+		size unit=2.70ex,
+		text font=\Large,
+		text scale=0.97}
 }
 % Colour options:
 \tikzcausetsset{%
-	region colour/.initial=black!75,
-	grid colour/.initial=black!25,
-	tile colour/.initial=black!10!white,
-	event colour/.initial=black,
-	label colour/.initial=black,
-	link colour/.initial=black!65!white,
-	spatial link colour/.initial=black!50!white,
-	ulabel colour/.initial=black!65!white,
-	vlabel colour/.initial=black!65!white,
-	black colours/.style={%
-		region colour=black,
-		grid colour=black,
-		tile colour=white,
-		event colour=black,
-		label colour=black,
-		link colour=black,
-		spatial link colour=black,
-		ulabel colour=black,
-		vlabel colour=black},
-	grey colours/.style={%
-		region colour=black!75,
-		grid colour=black!25,
-		tile colour=black!10!white,
-		event colour=black,
-		label colour=black,
-		link colour=black!65!white,
-		spatial link colour=black!50!white,
-		ulabel colour=black!65!white,
-		vlabel colour=black!65!white},
-	blue colours/.style={%
-		region colour=black!75,
-		grid colour=black!25,
-		tile colour=cyan!25!black!25!white,
-		event colour=blue!50!black,
-		label colour=blue!50!black,
-		link colour=cyan!75!black,
-		spatial link colour=blue!75!white,
-		ulabel colour=black!50,
-		vlabel colour=black!50},
-	neon colours/.style={%
-		region colour=green,
-		grid colour=green,
-		tile colour=yellow,
-		event colour=blue,
-		label colour=blue,
-		link colour=cyan,
-		spatial link colour=red,
-		ulabel colour=magenta,
-		vlabel colour=magenta},
-	region color/.style={region colour=#1},
-	grid color/.style={grid colour=#1},
-	tile color/.style={tile colour=#1},
-	event color/.style={event colour=#1},
-	label color/.style={label colour=#1},
-	link color/.style={link colour=#1},
-	spatial link color/.style={spatial link colour=#1},
-	ulabel color/.style={ulabel colour=#1},
-	vlabel color/.style={vlabel colour=#1},
-	black colors/.style={black colours={#1}},
-	gray colors/.style={grey colours={#1}},
-	blue colors/.style={blue colours={#1}},
-	neon colors/.style={neon colours={#1}}
+	region color/.initial=black!75,
+	grid color/.initial=black!25,
+	tile color/.initial=black!10!white,
+	event color/.initial=black,
+	label color/.initial=black,
+	link color/.initial=black!65!white,
+	spatial link color/.initial=black!50!white,
+	ulabel color/.initial=black!65!white,
+	vlabel color/.initial=black!65!white,
+	black colors/.style={%
+		region color=black,
+		grid color=black,
+		tile color=white,
+		event color=black,
+		label color=black,
+		link color=black,
+		spatial link color=black,
+		ulabel color=black,
+		vlabel color=black},
+	gray colors/.style={%
+		region color=black!75,
+		grid color=black!25,
+		tile color=black!10!white,
+		event color=black,
+		label color=black,
+		link color=black!65!white,
+		spatial link color=black!50!white,
+		ulabel color=black!65!white,
+		vlabel color=black!65!white},
+	blue colors/.style={%
+		region color=black!75,
+		grid color=black!25,
+		tile color=cyan!25!black!25!white,
+		event color=blue!50!black,
+		label color=blue!50!black,
+		link color=cyan!75!black,
+		spatial link color=blue!75!white,
+		ulabel color=black!50,
+		vlabel color=black!50},
+	neon colors/.style={%
+		region color=green,
+		grid color=green,
+		tile color=yellow,
+		event color=blue,
+		label color=blue,
+		link color=cyan,
+		spatial link color=red,
+		ulabel color=magenta,
+		vlabel color=magenta}
 }
 % Causet modification options:
 \tikzcausetsset{%
 	offset/.store in=\causet@Offset,
 	every causet/.value forbidden,
-	every causet/.style={baseline=-0.707*\causetTileSize}
+	every causet/.style={baseline=(baseline point)}
 }
 % Graphic component switches:
 \newif\ifcausetsDrawPermutation
@@ -188,12 +158,6 @@
 	continuously linked/.code={\causetsBreakLinksfalse},
 	spatially linked/.code={\causetsDrawSpatialLinkstrue},
 	spatially unlinked/.code={\causetsDrawSpatialLinksfalse},
-	labelled/.code={\causetsDrawLabelstrue},
-	unlabelled/.code={\causetsDrawLabelsfalse},
-	labelled u/.code={\causetsDrawULabelstrue},
-	unlabelled u/.code={\causetsDrawULabelsfalse},
-	labelled v/.code={\causetsDrawVLabelstrue},
-	unlabelled v/.code={\causetsDrawVLabelsfalse},
 	labeled/.code={\causetsDrawLabelstrue},
 	unlabeled/.code={\causetsDrawLabelsfalse},
 	labeled u/.code={\causetsDrawULabelstrue},
@@ -204,13 +168,13 @@
 % Permutation grid styles:
 \tikzcausetsset{%
 	every region/.value forbidden,
-	every region/.style={color=\pgfkeysvalueof{/tikz/causets/region colour}, line width=\causetRegionLine},
+	every region/.style={color=\pgfkeysvalueof{/tikz/causets/region color}, line width=\pgfkeysvalueof{/tikz/causets/region line width}},
 	region/.style={show permutation, every region/.append style={#1}},
 	every grid/.value forbidden,
-	every grid/.style={color=\pgfkeysvalueof{/tikz/causets/grid colour}, line width=\causetGridLine, step=\causetTileSize},
+	every grid/.style={color=\pgfkeysvalueof{/tikz/causets/grid color}, line width=\pgfkeysvalueof{/tikz/causets/grid line width}, step=\causetTileSize},
 	grid/.style={show permutation, every grid/.append style={#1}},
 	every tile/.value forbidden,
-	every tile/.style={color=\pgfkeysvalueof{/tikz/causets/tile colour}, line width=\causetGridLine, fill},
+	every tile/.style={color=\pgfkeysvalueof{/tikz/causets/tile color}, line width=\pgfkeysvalueof{/tikz/causets/grid line width}, fill},
 	tiles/.style={show permutation, every tile/.append style={#1}}
 }
 % Label styles:
@@ -220,13 +184,13 @@
 	all labels/.style={every label base/.append style={#1}},
 	at/.initial=center,
 	every label/.value forbidden,
-	every label/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/label colour}, below left, at=south west},
+	every label/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/label color}, below left, at=south west},
 	labels/.style={show labels, every label/.append style={#1}},
 	every ulabel/.value forbidden,
-	every ulabel/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/ulabel colour}, right, rotate=-45, inner sep=1pt, align=left},
+	every ulabel/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/ulabel color}, right, rotate=-45, inner sep=1pt, align=left},
 	ulabels/.style={show ulabels, every ulabel/.append style={#1}},
 	every vlabel/.value forbidden,
-	every vlabel/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/vlabel colour}, left, rotate=45, inner sep=1pt, align=right}, 
+	every vlabel/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/vlabel color}, left, rotate=45, inner sep=1pt, align=right}, 
 	vlabels/.style={show vlabels, every vlabel/.append style={#1}},
 	every replaced label/.value forbidden,
 	every replaced label/.style={every label},
@@ -235,11 +199,11 @@
 % Event styles:
 \tikzcausetsset{%
 	every event/.value forbidden,
-	every event/.style={color=\pgfkeysvalueof{/tikz/causets/event colour}, circle, fill, inner sep=0pt, minimum size=\causetEventSize},
+	every event/.style={color=\pgfkeysvalueof{/tikz/causets/event color}, circle, fill, inner sep=0pt, minimum size=\pgfkeysvalueof{/tikz/causets/event size}, line width=\pgfkeysvalueof{/tikz/causets/event outline}},
 	events/.value required,
 	events/.style={every event/.append style={#1}},
 	every replaced event/.value forbidden,
-	every replaced event/.style={every label base, circle, minimum size=\causetEventSize},
+	every replaced event/.style={every label base, circle, minimum size=\pgfkeysvalueof{/tikz/causets/event size}},
 	replaced events/.value required,
 	replaced events/.style={every replaced event/.append style={#1}}
 }
@@ -250,7 +214,7 @@
 	Link Resume/.tip={Triangle Cap[reversed] . Fast Triangle[reversed] . Fast Triangle[reversed]},
 	Link End/.tip={},
 	every link/.value forbidden,
-	every link/.style={color=\pgfkeysvalueof{/tikz/causets/link colour}, line width=\causetLinkWidth, {Link Start[]}-{Link End[]}},
+	every link/.style={color=\pgfkeysvalueof{/tikz/causets/link color}, line width=\pgfkeysvalueof{/tikz/causets/link width}, {Link Start[]}-{Link End[]}},
 	links/.style={show links, every link/.append style={#1}},
 	link starts/.value required,
 	link starts/.style={Link Start/.tip={#1}},
@@ -263,9 +227,9 @@
 	cap links/.value forbidden,
 	cap links/.style={link starts={Triangle Cap[reversed]}, link ends={Triangle Cap[]}},
 	arrow links/.value forbidden,
-	arrow links/.style={link ends={Stealth[round, open, length=4*\causetLinkWidth, line width=\causetLinkWidth/3]}},
+	arrow links/.style={link ends={Stealth[round, open, length=4*\pgfkeysvalueof{/tikz/causets/link width}, line width=\pgfkeysvalueof{/tikz/causets/link width}/3]}},
 	every spatial link/.value forbidden,
-	every spatial link/.style={every link, color=\pgfkeysvalueof{/tikz/causets/spatial link colour}, dashed},
+	every spatial link/.style={every link, color=\pgfkeysvalueof{/tikz/causets/spatial link color}, dashed},
 	spatial links/.style={show spatial links, every spatial link/.append style={#1}}
 }
 
@@ -276,43 +240,28 @@
 \causetsDrawULabelstrue
 \causetsDrawVLabelstrue
 \DeclareOption{tiny}{\tikzcausetsset{tiny}}
+\DeclareOption{smaller}{\tikzcausetsset{very small}}
 \DeclareOption{small}{\tikzcausetsset{small}}
 \DeclareOption{large}{\tikzcausetsset{large}}
+\DeclareOption{larger}{\tikzcausetsset{very large}}
 \DeclareOption{huge}{\tikzcausetsset{huge}}
-\DeclareOption{gray}{\tikzcausetsset{grey colours}}
-\DeclareOption{grey}{\tikzcausetsset{grey colours}}
-\DeclareOption{black}{\tikzcausetsset{black colours}}
-\DeclareOption{blue}{\tikzcausetsset{blue colours}}
-\DeclareOption{neon}{\tikzcausetsset{neon colours}}
-\DeclareOption{grey colours}{\tikzcausetsset{gray colours}}
-\DeclareOption{black colours}{\tikzcausetsset{black colours}}
-\DeclareOption{blue colours}{\tikzcausetsset{blue colours}}
-\DeclareOption{neon colours}{\tikzcausetsset{neon colours}}
-\DeclareOption{gray colors}{\tikzcausetsset{gray colours}}
-\DeclareOption{black colors}{\tikzcausetsset{black colours}}
-\DeclareOption{blue colors}{\tikzcausetsset{blue colours}}
-\DeclareOption{neon colors}{\tikzcausetsset{neon colours}}
+\DeclareOption{gray}{\tikzcausetsset{gray colors}}
+\DeclareOption{black}{\tikzcausetsset{black colors}}
+\DeclareOption{blue}{\tikzcausetsset{blue colors}}
+\DeclareOption{neon}{\tikzcausetsset{neon colors}}
 \DeclareOption{linked}{\causetsDrawLinkstrue}
 \DeclareOption{unlinked}{\causetsDrawLinksfalse}
-\DeclareOption{cap linked}{\tikzcausetsset{cap links}}
-\DeclareOption{arrow linked}{\tikzcausetsset{arrow links}}
-\DeclareOption{brokenly linked}{\causetsBreakLinkstrue}
-\DeclareOption{continuously linked}{\causetsBreakLinksfalse}
-\DeclareOption{spatially linked}{\causetsDrawSpatialLinkstrue}
-\DeclareOption{spatially unlinked}{\causetsDrawSpatialLinksfalse}
+\DeclareOption{caps}{\tikzcausetsset{cap links}}
+\DeclareOption{arrows}{\tikzcausetsset{arrow links}}
+\DeclareOption{continuous}{\causetsBreakLinksfalse}
+\DeclareOption{spatial}{\causetsDrawSpatialLinkstrue}
 \DeclareOption{permutation}{\causetsDrawPermutationtrue}
-\DeclareOption{labelled}{\causetsDrawLabelstrue}
-\DeclareOption{unlabelled}{\causetsDrawLabelsfalse}
-\DeclareOption{labelled u}{\causetsDrawULabelstrue}
-\DeclareOption{unlabelled u}{\causetsDrawULabelsfalse}
-\DeclareOption{labelled v}{\causetsDrawVLabelstrue}
-\DeclareOption{unlabelled v}{\causetsDrawVLabelsfalse}
 \DeclareOption{labeled}{\causetsDrawLabelstrue}
 \DeclareOption{unlabeled}{\causetsDrawLabelsfalse}
-\DeclareOption{labeled u}{\causetsDrawULabelstrue}
-\DeclareOption{unlabeled u}{\causetsDrawULabelsfalse}
-\DeclareOption{labeled v}{\causetsDrawVLabelstrue}
-\DeclareOption{unlabeled v}{\causetsDrawVLabelsfalse}
+\DeclareOption{ulabeled}{\causetsDrawULabelstrue}
+\DeclareOption{uunlabeled}{\causetsDrawULabelsfalse}
+\DeclareOption{vlabeled}{\causetsDrawVLabelstrue}
+\DeclareOption{vunlabeled}{\causetsDrawVLabelsfalse}
 \DeclareOption*{\PackageWarning{causets}{The package causets does not support the option: \CurrentOption}}
 \ProcessOptions\relax
 
@@ -320,7 +269,7 @@
 \newif\ifcauset@ItemFoundInList
 
 \newcommand*{\causets@prepareCauset}[1]{%
-% Count the number of events (\causet@N) and find the minimal value in the list argument (\causet@Start).
+% Count the number of events (\causet@N), find the minimal value in the list argument (\causet@Start), and define baseline point.
 \foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
 	\ifnum\causet@i=1
 		\pgfmathparse{int(\causet@E@i)}
@@ -331,6 +280,7 @@
 	\xdef\causet@N{\causet@i}
 }
 \pgfmathsetmacro\causet@Start{int(\causet@Start + \causet@Offset)}
+\coordinate (baseline point) at (0, -0.707*\causetTileSize);
 }
 
 \newcommand*{\causets@drawEvent}[2][every event]{%
@@ -507,11 +457,11 @@
 							\ifnum\pgfmathresult=1
 								\ifnum\causet@E@j<\causet@From
 									% Link is crossing over another event, so draw the link up to the (first) breaking point:
-									\draw[causets/.cd, every link, {Link Start}-{Link Pause}, shorten >=\causetBrokenLinkGap]
+									\draw[causets/.cd, every link, {Link Start}-{Link Pause}, shorten >=\pgfkeysvalueof{/tikz/causets/broken link gap}]
 										(E\causet@From) -- (E\causet@E@i);
 								\else
 									% Link is crossing over yet another event, so continue from last breaking point to next breaking point:
-									\draw[causets/.cd, every link, {Link Resume}-{Link Pause}, shorten <=\causetBrokenLinkGap, shorten >=\causetBrokenLinkGap]
+									\draw[causets/.cd, every link, {Link Resume}-{Link Pause}, shorten <=\pgfkeysvalueof{/tikz/causets/broken link gap}, shorten >=\pgfkeysvalueof{/tikz/causets/broken link gap}]
 										(E\causet@E@j) -- (E\causet@E@i);
 								\fi
 								\xdef\causet@E@j{\causet@E@i}
@@ -523,7 +473,7 @@
 					}
 					\ifnum\causet@E@j>\causet@From
 						% Link did cross over another event, so finish the link from last breaking point to final event:
-						\draw[causets/.cd, every link, {Link Resume}-{Link End}, shorten <=\causetBrokenLinkGap]
+						\draw[causets/.cd, every link, {Link Resume}-{Link End}, shorten <=\pgfkeysvalueof{/tikz/causets/broken link gap}]
 							(E\causet@E@j) -- (E\causet@To);
 					\else
 						% Link does not cross over another event, so just draw it:

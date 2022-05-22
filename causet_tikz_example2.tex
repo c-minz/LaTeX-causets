@@ -1,5 +1,5 @@
 \documentclass[tikz]{standalone}
-\usepackage[blue]{causets}
+\usepackage[black]{causets}
 \usetikzlibrary{fit,shapes.geometric}
 % Set colours and style:
 \colorlet{future colour}{green!50!black}
@@ -7,6 +7,8 @@
 \colorlet{anywhere colour}{red!80!black}
 \tikzset{prob arrow/.style={line width=1.5pt}}
 % Define some helper functions:
+\def\defCevents#1#2#3{\xdef\Ea{#1}\xdef\Eb{#2}\xdef\Ec{#3}}
+\def\defDevents#1#2#3#4{\expandafter\defCevents#1#2#3\xdef\Ed{#4}}
 \newcommand*{\semiopaque}[1]{% Adds a transparency group.
 \begin{scope}[transparency group, opacity=0.5]
 	#1
@@ -36,16 +38,20 @@
 		\node (C1) at ( 0,  0) {\pcauset{1}};
 		\node (C12) at (-4*\xstep,  1*\ystep) {\pcauset{1,2}};
 		\node (C21) at ( 4*\xstep,  1*\ystep) {\pcauset{2,1}};
-		\foreach \CPoint/\CXPos/\CPerm in {C123/-8/{{1,2,3}}, C132/-4/{{1,3,2}}, C312/0/{{3,1,2}}, C213/4/{{2,1,3}}, C321/8/{{3,2,1}}}
-			\node (\CPoint) at (\CXPos*\xstep,  2*\ystep) {\expandafter\pcauset\CPerm};
-		\foreach \CPoint/\CXPos/\CPerm in {C1234/-15/{{1,2,3,4}}, C1243/-13/{{1,2,4,3}}, C1423/-11/{{1,4,2,3}}, C1324/-9/{{1,3,2,4}}, C1432/-7/{{1,4,3,2}}, C4123/-5/{{4,1,2,3}}, C4132/-3/{{4,1,3,2}}, C3124/-1/{{3,1,2,4}}, C3412/1/{{3,4,1,2}}, C3142/3/{{3,1,4,2}}, C4312/5/{{4,3,1,2}}, C2134/7/{{2,1,3,4}}, C2143/9/{{2,1,4,3}}, C4213/11/{{4,2,1,3}}, C3214/13/{{3,2,1,4}}, C4321/15/{{4,3,2,1}}}
-			\node (\CPoint) at (\CXPos*\xstep,  3.75*\ystep) {\expandafter\pcauset\CPerm};
+		\foreach \perm [count=\i from 0] in {123, 132, 312, 213, 321}{%
+			\expandafter\defCevents\perm
+			\node (C\perm) at (4*\i*\xstep-8*\xstep, 2*\ystep) {\pcauset{\Ea,\Eb,\Ec}};
+		}
+		\foreach \perm [count=\i from 0] in {1234, 1243, 1423, 1324, 1432, 4123, 4132, 3124, 3412, 3142, 4312, 2134, 2143, 4213, 3214, 4321}{%
+			\expandafter\defDevents\perm
+			\node (C\perm) at (2*\i*\xstep-15*\xstep, 3.75*\ystep) {\pcauset{\Ea,\Eb,\Ec,\Ed}};
+		}
 	\end{scope}
 	% Add graph edges for expandings ...
 	% ... to the past (additionally):
 	\begin{scope}[past colour]
-		\foreach \StartPoint/\EndPoint in {C12/C213, C123/C3124, C123/C2134, C132/C1243, C132/C3142, C132/C2143, C312/C1423, C312/C4213, C213/C1324, C213/C3124, C213/C3214, C321/C1432, C321/C4132, C21/C132}
-			\semiopaque{\drawprobarrow{\StartPoint}{}{\EndPoint}};
+		\foreach \perma/\permb in {12/213, 123/3124, 123/2134, 132/1243, 132/3142, 132/2143, 312/1423, 312/4213, 213/1324, 213/3124, 213/3214, 321/1432, 321/4132, 21/132}
+			\semiopaque{\drawprobarrow{C\perma}{}{C\permb}};
 	\end{scope}
 	% ... to anywhere (additionally, further):
 	\begin{scope}[anywhere colour]
@@ -87,7 +93,7 @@
 	% Add legend:
 	\node[above left, align=left, draw, inner sep=3ex, fill=gray!05]
 		at (15*\xstep, 0)
-		{Expanding into\\
+		{Expanding towards\\
 		 \bfseries\color{future colour}\legendsymbol{0}\ the future\\
 		 \bfseries\color{past colour}\legendsymbol{1}\ + the past\\
 		 \bfseries\color{anywhere colour}\legendsymbol{1}\ + anywhere};
