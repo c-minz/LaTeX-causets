@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{causets}[2022/05/23 v1.3 Package to draw causal set diagrams]
+\ProvidesPackage{causets}[2022/07/27 v1.3.1 Package to draw causal set diagrams]
 %% Copyright 2020-2022 by C. Minz
 %
 % This work may be distributed and/or modified under the
@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status "maintained".
 % 
-% The current version of this package is 1.3.
+% The current version of this package is 1.3.1.
 %
 % The current maintainer of this work is C. Minz.
 % https://github.com/c-minz
@@ -358,25 +358,22 @@
 \fi
 }
 
-\newcommand*{\causets@drawEventLabel}[1][every label]{%
-% Draws the event label for \causet@E@i (shifted by \causet@Offset). By default the label style is assumed that of a standard event label.
-\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
-\node[causets/.cd, #1] (EL\causet@E@i)
-	at (E\causet@E@i.\pgfkeysvalueof{/tikz/causets/at}) {\causet@Label};
-}
-
 \newcommand*{\causets@drawEventLabels}[1]{%
 % Adds event labels to the events.
 \foreach \causet@E@i/\causet@Label/\causet@Text in {#1}{%
 	\ifx\causet@E@i\causet@Label
 		\ifcausetsDrawLabels
-			\causets@drawEventLabel
+			\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
+			\node[causets/.cd, every label] (EL\causet@E@i)
+				at (E\causet@E@i.\pgfkeysvalueof{/tikz/causets/at}) {\causet@E@i};
 		\fi
 	\else
 		\ifx\causet@Label\empty
 			\relax% Skip empty labels
 		\else
-			\causets@drawEventLabel[every replaced label]
+			\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
+			\node[causets/.cd, every replaced label] (EL\causet@E@i)
+				at (E\causet@E@i.\pgfkeysvalueof{/tikz/causets/at}) {\causet@Label};
 		\fi
 	\fi
 }

@@ -44,7 +44,7 @@ This work has the LPPL maintenance status "maintained".
 The current maintainer of this work is C. Minz.
 https://github.com/c-minz
 
-**Current version: v1.3**
+**Current version: v1.3.1**
 
 CTAN location: /graphics/pgf/contrib/causets/
 

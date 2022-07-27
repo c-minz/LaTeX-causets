@@ -83,9 +83,9 @@
 	\path (pic cs:#2) -- ++(-1cm, 0.5em) -- ++(#1, 0) node {#3};%
 }% version causet
 
-\title{{\small package}\\[0.5cm] \huge causets \\[0.2cm]{\small version 1.3\\[0.5cm]}}
+\title{{\small package}\\[0.5cm] \huge causets \\[0.2cm]{\small version 1.3.1\\[0.5cm]}}
 \author{Christoph Minz}
-\date{May 23, 2022}
+\date{July 27, 2022}
 
 \begin{document}
 
@@ -878,7 +878,12 @@ More examples can be found at \\
 
 %\clearpage
 \section{Release notes}
-\tikzcausetsset{large, events={black!20}, links={black!10}, cap links, label color={black!30}}
+\tikzcausetsset{large, events={black!20}, links={black!10}, label color={black!30}}
+\subsection{v1.3.1, 2022-07-27}
+\begin{itemize}\itemsep=-1ex
+  \item Bug fix: Automatic event labels are now correctly printed when using \lstinline§offset=§\PH.
+\end{itemize}
+
 \subsection{v1.3, 2022-05-23}
 \begin{itemize}\itemsep=-1ex
   \item \versioncauset{v1-3}{\pcauset[replaced labels={left=0.5ex, at=west}]{1,4,2,3/.3}}%
@@ -899,7 +904,7 @@ text font=\fontsize{20}{24}\selectfont
 
 \subsection{v1.2, 2022-02-07}
 \begin{itemize}\itemsep=-1ex
-  \item \versioncauset{v1-2}{\pcauset{1,3,2}}%
+  \item \versioncauset{v1-2}{\pcauset[cap links]{1,3,2}}%
   	The colour option \lstinline§blue§ has been modified so that a blue diagram is now only coloured in different shades of blue, gray and black.
   \item Every event label is now positioned relative to the centre point of an event, so that the position of event labels can be modified with \lstinline§left=§\PH, \lstinline§right=§\PH, etc.
   \item Arrow tips may now be added to the start and end of links via the style settings \lstinline§link starts=§\PH\ and \lstinline§link ends=§\PH, or via the pre-defined styles \lstinline§cap links§ and \lstinline§arrow links§.
@@ -909,7 +914,6 @@ The style of the start and end of the link interruption are set with \lstinline§
 \end{itemize}
 
 \subsection{v1.1, 2020-12-15}
-\tikzcausetsset{link starts={}, link ends={}}
 \begin{itemize}\itemsep=-1ex
 	\item \versioncauset{v1-1}{\pcauset{1,2}}%
 		All colours, size and style options have been moved to PGF keys in the path
