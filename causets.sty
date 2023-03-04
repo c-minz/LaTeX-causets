@@ -1,6 +1,6 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{causets}[2022/07/27 v1.3.1 Package to draw causal set diagrams]
-%% Copyright 2020-2022 by C. Minz
+\ProvidesPackage{causets}[2023/03/06 v1.4 Package to draw causal set diagrams]
+%% Copyright 2020-2023 by C. Minz
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3
@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status "maintained".
 % 
-% The current version of this package is 1.3.1.
+% The current version of this package is 1.4.
 %
 % The current maintainer of this work is C. Minz.
 % https://github.com/c-minz
@@ -131,9 +131,12 @@
 }
 % Causet modification options:
 \tikzcausetsset{%
+	padding/.store in=\causets@Padding,
 	offset/.store in=\causet@Offset,
 	every causet/.value forbidden,
-	every causet/.style={baseline=(baseline point)}
+	every causet/.style={baseline=(baseline point)},
+	local style/.style={#1},
+	set local style/.style={local style/.expand once={#1}}
 }
 % Graphic component switches:
 \newif\ifcausetsDrawPermutation
@@ -182,7 +185,6 @@
 	every label base/.value forbidden,
 	every label base/.style={text opacity=1, scale=\causetTextScale, font=\causetTextFont, inner sep=0pt},
 	all labels/.style={every label base/.append style={#1}},
-	at/.initial=center,
 	every label/.value forbidden,
 	every label/.style={every label base, color=\pgfkeysvalueof{/tikz/causets/label color}, below left, at=south west},
 	labels/.style={show labels, every label/.append style={#1}},
@@ -194,7 +196,10 @@
 	vlabels/.style={show vlabels, every vlabel/.append style={#1}},
 	every replaced label/.value forbidden,
 	every replaced label/.style={every label},
-	replaced labels/.style={every replaced label/.append style={#1}}
+	replaced labels/.style={every replaced label/.append style={#1}},
+	at/.initial=center,
+	label/.store in=\causet@EventLabel,
+	label/.value required
 }
 % Event styles:
 \tikzcausetsset{%
@@ -205,7 +210,9 @@
 	every replaced event/.value forbidden,
 	every replaced event/.style={every label base, circle, minimum size=\pgfkeysvalueof{/tikz/causets/event size}},
 	replaced events/.value required,
-	replaced events/.style={every replaced event/.append style={#1}}
+	replaced events/.style={every replaced event/.append style={#1}},
+	event/.store in=\causet@EventText,
+	event/.value required
 }
 % Link styles:
 \tikzcausetsset{%
@@ -227,18 +234,28 @@
 	cap links/.value forbidden,
 	cap links/.style={link starts={Triangle Cap[reversed]}, link ends={Triangle Cap[]}},
 	arrow links/.value forbidden,
-	arrow links/.style={link ends={Stealth[round, open, length=4*\pgfkeysvalueof{/tikz/causets/link width}, line width=\pgfkeysvalueof{/tikz/causets/link width}/3]}},
+	arrow links/.style={link ends={Stealth[round, length=4*\pgfkeysvalueof{/tikz/causets/link width}, line width=\pgfkeysvalueof{/tikz/causets/link width}/3]}},
 	every spatial link/.value forbidden,
 	every spatial link/.style={every link, color=\pgfkeysvalueof{/tikz/causets/spatial link color}, dashed},
 	spatial links/.style={show spatial links, every spatial link/.append style={#1}}
 }
+% Causet externalisation:
+\newif\ifcausets@External
+\newif\ifcausetsNameExternal
+\tikzcausetsset{%
+	name/.store in=\causet@Name,
+	name prefix/.store in=\causets@NamePrefix,
+	set prefix/.style={name prefix=#1, /tikz/external/prefix=#1},
+	name external/.is if=causetsNameExternal
+}
 
 %% Package options:
-\tikzcausetsset{normal, offset=0}
+\tikzcausetsset{normal, offset=0, padding=\thinspace, name prefix={./}}
 \causetsDrawLinkstrue
 \causetsBreakLinkstrue
 \causetsDrawULabelstrue
 \causetsDrawVLabelstrue
+\causets@Externalfalse
 \DeclareOption{tiny}{\tikzcausetsset{tiny}}
 \DeclareOption{smaller}{\tikzcausetsset{very small}}
 \DeclareOption{small}{\tikzcausetsset{small}}
@@ -262,15 +279,34 @@
 \DeclareOption{uunlabeled}{\causetsDrawULabelsfalse}
 \DeclareOption{vlabeled}{\causetsDrawVLabelstrue}
 \DeclareOption{vunlabeled}{\causetsDrawVLabelsfalse}
+\DeclareOption{external}{\causets@Externaltrue}
 \DeclareOption*{\PackageWarning{causets}{The package causets does not support the option: \CurrentOption}}
-\ProcessOptions\relax
+\ProcessOptions*
+\ifcausets@External
+	\usetikzlibrary{external}%
+	\tikzcausetsset{name prefix=causets/, name external=true}%
+	\tikzexternalize[prefix=causets/]
+\fi
 
 %% Package functions:
 \newif\ifcauset@ItemFoundInList
 
+\newcommand*{\causets@setCausetName}[1]{%
+{%
+\def\causet@Name{}%
+\tikzcausetsset{#1}%
+\ifx\causet@Name\empty%
+	\relax%
+\else%
+	\expandafter\tikzsetnextfilename\expandafter{\causet@Name}%
+\fi%
+}%
+}
+
 \newcommand*{\causets@prepareCauset}[1]{%
-% Count the number of events (\causet@N), find the minimal value in the list argument (\causet@Start), and define baseline point.
-\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
+% Count the number of events (\causet@N), find the minimal value in the list 
+% argument (\causet@Start), and define baseline point.
+\foreach \causet@E@i/\causet@LocalStyle [count=\causet@i] in {#1}{%
 	\ifnum\causet@i=1
 		\pgfmathparse{int(\causet@E@i)}
 	\else
@@ -284,29 +320,35 @@
 }
 
 \newcommand*{\causets@drawEvent}[2][every event]{%
-% Draws the event node for \causet@E@i. By default the event style (optional argument #1) is that of every event. The text of the node is #2.
+% Draws an event tile and the event on top.
+\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
+\pgfmathsetmacro\causet@u{\causet@E@i - \causet@Start}
+\pgfmathsetmacro\causet@v{\causet@i - 1.0}
+\ifcausetsDrawPermutation
+	\path[causets/.cd, every tile] 
+		( \causet@u * \causetTileSize, \causet@v * \causetTileSize ) 
+		rectangle +( \causetTileSize, \causetTileSize );
+\fi
 \pgfmathsetmacro\causet@u{\causet@E@i - \causet@Start + 0.5}
 \pgfmathsetmacro\causet@v{\causet@i - 0.5}
 \node[causets/.cd, #1] (E\causet@E@i) 
-	at ( \causet@u * \causetTileSize, \causet@v * \causetTileSize ) 
-	{#2};
+	at ( \causet@u * \causetTileSize, \causet@v * \causetTileSize ) {#2};
 }
 
 \newcommand*{\causets@drawEvents}[1]{%
-% Draws a permutation tile and defines and draws an event node (E#) on top of the tile, for each event number # in the list argument.
-\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
-	\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
-	\pgfmathsetmacro\causet@u{\causet@E@i - \causet@Start}
-	\pgfmathsetmacro\causet@v{\causet@i - 1.0}
-	\ifcausetsDrawPermutation
-		\path[causets/.cd, every tile] 
-			( \causet@u * \causetTileSize, \causet@v * \causetTileSize ) 
-			rectangle +( \causetTileSize, \causetTileSize );
-	\fi
-	\ifx\causet@Text\causet@Label
+% Draws a permutation tile and defines and draws an event node (E#) on top of 
+% the tile, for each event number # in the list argument.
+\foreach \causet@E@i/\causet@LocalStyle [count=\causet@i] in {#1}{%
+	\ifx\causet@E@i\causet@LocalStyle
 		\causets@drawEvent{}
 	\else
-		\causets@drawEvent[every replaced event]{\causet@Text}
+		\def\causet@EventText{}
+		\tikzcausetsset{set local style=\causet@LocalStyle}
+		\ifx\causet@EventText\empty
+			\causets@drawEvent[every event, set local style=\causet@LocalStyle]{}
+		\else
+			\causets@drawEvent[every replaced event, set local style=\causet@LocalStyle]{\causet@EventText}
+		\fi
 	\fi
 }
 }
@@ -318,7 +360,7 @@
 		grid ( \causet@N * \causetTileSize, \causet@N * \causetTileSize );
 	\draw[causets/.cd, every region] ( 0, 0 ) 
 		rectangle ( \causet@N * \causetTileSize, \causet@N * \causetTileSize );
-	\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
+	\foreach \causet@E@i/\causet@LocalStyle [count=\causet@i] in {#1}{%
 		\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
 		\ifcausetsDrawULabels
 			\pgfmathsetmacro\causet@u{int(\causet@i + \causet@Start - 1)}
@@ -336,19 +378,21 @@
 }
 
 \newcommand*{\causets@drawSpatialLinks}[1]{%
-% Draws the spatial links between the events (only for \drawpcauset and \drawrcauset).
+% Draws the spatial links between the events (only for \drawpcauset and 
+% \drawrcauset).
 \ifcausetsDrawSpatialLinks
-	\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
+	\foreach \causet@E@i/\causet@LocalStyle [count=\causet@i] in {#1}{%
 		\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
 		% \causet@Bound stores the lower bound to find spatially linked events.
 		\edef\causet@Bound{\causet@Offset}
-		\foreach \causet@E@j/\causet@Label/\causet@Text [count=\causet@j] in {#1}{%
+		\foreach \causet@E@j/\causet@LocalStyle [count=\causet@j] in {#1}{%
 			\ifnum\causet@j>\causet@i
 				\pgfmathsetmacro\causet@E@j{int(\causet@E@j + \causet@Offset)}
 				\ifnum\causet@E@j>\causet@Bound
 					\ifnum\causet@E@i>\causet@E@j
 						% Add spatial link and remember new lower bound:
-						\draw[causets/.cd, every spatial link] (E\causet@E@j) -- (E\causet@E@i);
+						\draw[causets/.cd, every spatial link]
+							(E\causet@E@j) -- (E\causet@E@i);
 						\xdef\causet@Bound{\causet@E@j}
 					\fi
 				\fi
@@ -358,23 +402,114 @@
 \fi
 }
 
+\newcommand*{\causets@drawEventLabel}[2][every label]{%
+% Draws an event label.
+\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
+\node[causets/.cd, #1] (EL\causet@E@i)
+	at (E\causet@E@i.\pgfkeysvalueof{/tikz/causets/at}) {#2};
+}
+
 \newcommand*{\causets@drawEventLabels}[1]{%
 % Adds event labels to the events.
-\foreach \causet@E@i/\causet@Label/\causet@Text in {#1}{%
-	\ifx\causet@E@i\causet@Label
+\foreach \causet@E@i/\causet@LocalStyle in {#1}{%
+	\ifx\causet@E@i\causet@LocalStyle
 		\ifcausetsDrawLabels
-			\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
-			\node[causets/.cd, every label] (EL\causet@E@i)
-				at (E\causet@E@i.\pgfkeysvalueof{/tikz/causets/at}) {\causet@E@i};
+			\causets@drawEventLabel{\causet@E@i}
 		\fi
 	\else
-		\ifx\causet@Label\empty
-			\relax% Skip empty labels
+		\def\causet@EventLabel{}
+		\tikzcausetsset{set local style=\causet@LocalStyle}
+		\ifx\causet@EventLabel\empty
+			\ifcausetsDrawLabels
+				\causets@drawEventLabel{\causet@E@i}
+			\fi
 		\else
-			\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
-			\node[causets/.cd, every replaced label] (EL\causet@E@i)
-				at (E\causet@E@i.\pgfkeysvalueof{/tikz/causets/at}) {\causet@Label};
+			\causets@drawEventLabel[every replaced label]{\causet@EventLabel}
 		\fi
+	\fi
+}
+}
+
+\newcommand*{\causets@drawContinuousLinks}[2][]{%
+% Draws the links in full even if they cross over events.
+\foreach \causet@From/\causet@To/\causet@LocalLinkStyle in {#2}{%
+	\ifx\causet@To\causet@LocalLinkStyle
+		\gdef\causet@LocalLinkStyle{#1}
+	\fi
+	\pgfmathsetmacro\causet@From{int(\causet@From + \causet@Offset)}
+	\pgfmathsetmacro\causet@To{int(\causet@To + \causet@Offset)}
+	\draw[causets/.cd, every link, set local style=\causet@LocalLinkStyle]
+		(E\causet@From) -- (E\causet@To);
+}
+}
+
+\newcommand*{\causets@drawBrokenLinks}[3][]{%
+% Tests every link if it crosses over an unlinked event and breaks the link.
+\foreach \causet@From/\causet@To/\causet@LocalLinkStyle in {#3}{%
+	\ifx\causet@To\causet@LocalLinkStyle
+		\gdef\causet@LocalLinkStyle{#1}
+	\fi
+	% In this function, \causet@u and \causet@v store the link distance in 
+	% the u- and in the v-direction, respectively. Since these are coordinate 
+	% differences, they are computed without adding the offset.
+	\pgfmathsetmacro\causet@u{int(\causet@To) - int(\causet@From)}
+	\foreach \causet@E@i/\causet@LocalStyle [count=\causet@i] in {#2}{%
+		\ifnum\causet@E@i=\causet@From
+			\xdef\causet@v{\causet@i}
+		\fi
+		\ifnum\causet@E@i=\causet@To
+			\pgfmathparse{int(\causet@i - \causet@v)}
+			\xdef\causet@v{\pgfmathresult}
+			\breakforeach
+		\fi
+	}
+	% Now add offset to events:
+	\pgfmathsetmacro\causet@From{int(\causet@From + \causet@Offset)}
+	\pgfmathsetmacro\causet@To{int(\causet@To + \causet@Offset)}
+	% In this function, \causet@E@j stores the last breaking point and 
+	% \causet@j the index of \causet@From.
+	\pgfmathsetmacro\causet@E@j{int(\causet@From - 1)}
+	\edef\causet@j{0}
+	\foreach \causet@E@i/\causet@LocalStyle [count=\causet@i] in {#2}{%
+		\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
+		\ifnum\causet@E@i=\causet@To
+			\edef\causet@j{0}
+			\breakforeach
+		\fi
+		\ifnum\causet@j>0
+			% If the u-/v-coordinate ratio is the same, the event \causet@E@i falls 
+			% along the link and the link needs to break. The ratios are compared 
+			% via cross-multiplication, which is faster and does not cause 
+			% rounding errors:
+			\pgfmathequal{int((\causet@E@i - \causet@From) * \causet@v)}{int(\causet@u * (\causet@i - \causet@j)))}
+			\ifnum\pgfmathresult=1
+				\ifnum\causet@E@j<\causet@From
+					% Link is crossing over another event, so draw the link up to the 
+					% (first) breaking point:
+					\draw[causets/.cd, every link, {Link Start}-{Link Pause}, shorten >=\pgfkeysvalueof{/tikz/causets/broken link gap}, set local style=\causet@LocalLinkStyle]
+						(E\causet@From) -- (E\causet@E@i);
+				\else
+					% Link is crossing over yet another event, so continue from last 
+					% breaking point to next breaking point:
+					\draw[causets/.cd, every link, {Link Resume}-{Link Pause}, shorten <=\pgfkeysvalueof{/tikz/causets/broken link gap}, shorten >=\pgfkeysvalueof{/tikz/causets/broken link gap}, set local style=\causet@LocalLinkStyle]
+						(E\causet@E@j) -- (E\causet@E@i);
+				\fi
+				\xdef\causet@E@j{\causet@E@i}
+			\fi
+		\fi
+		\ifnum\causet@E@i=\causet@From
+			\xdef\causet@j{\causet@i}
+		\fi
+	}
+	\ifnum\causet@E@j>\causet@From
+		% Link did cross over another event, so finish the link from last 
+		% breaking point to final event:
+		\draw[causets/.cd, every link, {Link Resume}-{Link End}, shorten <=\pgfkeysvalueof{/tikz/causets/broken link gap}, set local style=\causet@LocalLinkStyle]
+			(E\causet@E@j) -- (E\causet@To);
+	\else
+		% Link does not cross over another event, so just draw it:
+		\draw[causets/.cd, every link, set local style=\causet@LocalLinkStyle]
+			(E\causet@From) -- (E\causet@To);
 	\fi
 }
 }
@@ -387,18 +522,20 @@
 	              yshift=-\causet@N * \causetTileSize / 2]
 		\causets@drawEvents{#1}
 		\causets@drawPermutation{#1}
+		\causets@drawSpatialLinks{#1}
 		\ifcausetsDrawLinks
-			\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
+			\foreach \causet@E@i/\causet@LocalStyle [count=\causet@i] in {#1}{%
 				\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
 				% \causet@Bound stores the upper bound to find linked events.
 				\pgfmathsetmacro\causet@Bound{int(\causet@N + \causet@Start)}
-				\foreach \causet@E@j/\causet@Label/\causet@Text [count=\causet@j] in {#1}{%
+				\foreach \causet@E@j/\causet@LocalStyle [count=\causet@j] in {#1}{%
 					\ifnum\causet@j>\causet@i
 						\pgfmathsetmacro\causet@E@j{int(\causet@E@j + \causet@Offset)}
 						\ifnum\causet@E@j<\causet@Bound
 							\ifnum\causet@E@i<\causet@E@j
 								% Add link and remember new upper bound:
-								\draw[causets/.cd, every link] (E\causet@E@i) -- (E\causet@E@j);
+								\draw[causets/.cd, every link]
+									(E\causet@E@i) -- (E\causet@E@j);
 								\xdef\causet@Bound{\causet@E@j}
 							\fi
 						\fi
@@ -406,7 +543,6 @@
 				}
 			}
 		\fi
-		\causets@drawSpatialLinks{#1}
 		\causets@drawEventLabels{#1}
 	\end{scope}
 \end{scope}
@@ -422,69 +558,9 @@
 		\causets@drawPermutation{#1}
 		\ifcausetsDrawLinks
 			\ifcausetsBreakLinks
-				% Broken links are allowed, so test every link if it crosses over an unlinked event:
-				\foreach \causet@From/\causet@To in {#2}{%
-					% In this function, \causet@u and \causet@v store the link distance in the u- and in the v-direction, respectively. Since these are coordinate differences, they are computed without adding the offset.
-					\pgfmathsetmacro\causet@u{int(\causet@To) - int(\causet@From)}
-					\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
-						\ifnum\causet@E@i=\causet@From
-							\xdef\causet@v{\causet@i}
-						\fi
-						\ifnum\causet@E@i=\causet@To
-							\pgfmathparse{int(\causet@i - \causet@v)}
-							\xdef\causet@v{\pgfmathresult}
-							\breakforeach
-						\fi
-					}
-					% Now add offset to events:
-					\pgfmathsetmacro\causet@From{int(\causet@From + \causet@Offset)}
-					\pgfmathsetmacro\causet@To{int(\causet@To + \causet@Offset)}
-					% In this function, \causet@E@j stores the last breaking point and \causet@j the index of \causet@From.
-					\pgfmathsetmacro\causet@E@j{int(\causet@From - 1)}
-					\edef\causet@j{0}
-					\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
-						\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
-						\ifnum\causet@E@i=\causet@To
-							\edef\causet@j{0}
-							\breakforeach
-						\fi
-						\ifnum\causet@j>0
-							% If the u-/v-coordinate ratio is the same, the event \causet@E@i falls along the link and the link needs to break. The ratios are compared via cross-multiplication, which is faster and does not cause rounding errors:
-							\pgfmathequal{int((\causet@E@i - \causet@From) * \causet@v)}{int(\causet@u * (\causet@i - \causet@j)))}
-							\ifnum\pgfmathresult=1
-								\ifnum\causet@E@j<\causet@From
-									% Link is crossing over another event, so draw the link up to the (first) breaking point:
-									\draw[causets/.cd, every link, {Link Start}-{Link Pause}, shorten >=\pgfkeysvalueof{/tikz/causets/broken link gap}]
-										(E\causet@From) -- (E\causet@E@i);
-								\else
-									% Link is crossing over yet another event, so continue from last breaking point to next breaking point:
-									\draw[causets/.cd, every link, {Link Resume}-{Link Pause}, shorten <=\pgfkeysvalueof{/tikz/causets/broken link gap}, shorten >=\pgfkeysvalueof{/tikz/causets/broken link gap}]
-										(E\causet@E@j) -- (E\causet@E@i);
-								\fi
-								\xdef\causet@E@j{\causet@E@i}
-							\fi
-						\fi
-						\ifnum\causet@E@i=\causet@From
-							\xdef\causet@j{\causet@i}
-						\fi
-					}
-					\ifnum\causet@E@j>\causet@From
-						% Link did cross over another event, so finish the link from last breaking point to final event:
-						\draw[causets/.cd, every link, {Link Resume}-{Link End}, shorten <=\pgfkeysvalueof{/tikz/causets/broken link gap}]
-							(E\causet@E@j) -- (E\causet@To);
-					\else
-						% Link does not cross over another event, so just draw it:
-						\draw[causets/.cd, every link]
-							(E\causet@From) -- (E\causet@To);
-					\fi
-				}
+				\causets@drawBrokenLinks{#1}{#2}
 			\else
-				% Broken links are not allowed, so just draw the links:
-				\foreach \causet@From/\causet@To in {#2}{%
-					\pgfmathsetmacro\causet@From{int(\causet@From + \causet@Offset)}
-					\pgfmathsetmacro\causet@To{int(\causet@To + \causet@Offset)}
-					\draw[causets/.cd, every link] (E\causet@From) -- (E\causet@To);
-				}
+				\causets@drawContinuousLinks{#2}
 			\fi
 		\fi
 		\causets@drawEventLabels{#1}
@@ -493,26 +569,39 @@
 }
 
 \newcommand*{\drawrcauset}[2]{%
-% Draws a causet from a permutation and ignoring links given in the second list argument (of link-pairs).
+% Draws a causet from a permutation and ignoring links given in the second 
+% list argument (of link-pairs).
 \causets@prepareCauset{#1}
 \begin{scope}[rotate=45]
 	\begin{scope}[xshift=-\causet@N * \causetTileSize / 2, 
 	              yshift=-\causet@N * \causetTileSize / 2]
 		\causets@drawEvents{#1}
 		\causets@drawPermutation{#1}
+		\causets@drawSpatialLinks{#1}
+		% Add omitted links as spatial links:
+		\ifcausetsDrawSpatialLinks
+			\foreach \causet@From/\causet@To/\causet@LocalLinkStyle in {#2}{%
+				\ifx\causet@To\causet@LocalLinkStyle
+					\pgfmathsetmacro\causet@From{int(\causet@From + \causet@Offset)}
+					\pgfmathsetmacro\causet@To{int(\causet@To + \causet@Offset)}
+					\draw[causets/.cd, every spatial link]
+						(E\causet@From) -- (E\causet@To);
+				\fi
+			}
+		\fi
 		\ifcausetsDrawLinks
-			\foreach \causet@E@i/\causet@Label/\causet@Text [count=\causet@i] in {#1}{%
+			\foreach \causet@E@i/\causet@LocalStyle [count=\causet@i] in {#1}{%
 				\pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
 				% \causet@Bound stores the upper bound to find linked events.
 				\pgfmathsetmacro\causet@Bound{int(\causet@N + \causet@Start)}
-				\foreach \causet@E@j/\causet@Label/\causet@Text [count=\causet@j] in {#1}{%
+				\foreach \causet@E@j/\causet@LocalStyle [count=\causet@j] in {#1}{%
 					\ifnum\causet@j>\causet@i
 						\pgfmathsetmacro\causet@E@j{int(\causet@E@j + \causet@Offset)}
 						\ifnum\causet@E@j<\causet@Bound
 							\ifnum\causet@E@i<\causet@E@j
 								% Check second list argument if the link has to be ignored:
 								\global\causet@ItemFoundInListfalse
-								\foreach \causet@From/\causet@To in {#2}{%
+								\foreach \causet@From/\causet@To/\causet@LocalLinkStyle in {#2}{%
 									\pgfmathparse{and(int(\causet@From + \causet@Offset) == int(\causet@E@i), int(\causet@To + \causet@Offset) == int(\causet@E@j))}
 									\ifnum\pgfmathresult=1
 										\global\causet@ItemFoundInListtrue
@@ -522,7 +611,8 @@
 									\relax% Skip link as it is included in the second argument.
 								\else
 									% Draw link as it is not included in the second argument:
-									\draw[causets/.cd, every link] (E\causet@E@i) -- (E\causet@E@j);
+									\draw[causets/.cd, every link]
+										(E\causet@E@i) -- (E\causet@E@j);
 								\fi
 								% Remember new upper bound:
 								\xdef\causet@Bound{\causet@E@j}
@@ -531,15 +621,11 @@
 					\fi
 				}
 			}
-		\fi
-		\causets@drawSpatialLinks{#1}
-		% Add omitted links as spatial links:
-		\ifcausetsDrawSpatialLinks
-			\foreach \causet@From/\causet@To in {#2}{%
-				\pgfmathsetmacro\causet@From{int(\causet@From + \causet@Offset)}
-				\pgfmathsetmacro\causet@To{int(\causet@To + \causet@Offset)}
-				\draw[causets/.cd, every spatial link] (E\causet@From) -- (E\causet@To);
-			}
+			\ifcausetsBreakLinks
+				\causets@drawBrokenLinks[draw=none]{#1}{#2}
+			\else
+				\causets@drawContinuousLinks[draw=none]{#2}
+			\fi
 		\fi
 		\causets@drawEventLabels{#1}
 	\end{scope}
@@ -548,21 +634,48 @@
 
 \newcommand*{\pcauset}[2][]{%
 % Inserts a TikZ picture with a causet, created from a permutation.
-\begin{tikzpicture}[causets/.cd, every causet, #1]\drawpcauset{#2}\end{tikzpicture}}
+\causets@Padding%
+\ifcausetsNameExternal%
+	\causets@setCausetName{#1}%
+\fi%
+\begin{tikzpicture}[causets/.cd, every causet, #1]%
+\drawpcauset{#2}%
+\end{tikzpicture}%
+\causets@Padding%
+}
 
 \newcommand*{\causet}[3][]{%
-% Inserts a TikZ picture with a causet, created from a permutation and a link-pair list.
-\begin{tikzpicture}[causets/.cd, every causet, #1]\drawcauset{#2}{#3}\end{tikzpicture}}
+% Inserts a TikZ picture with a causet, created from a permutation and a 
+% link-pair list.
+\causets@Padding%
+\ifcausetsNameExternal%
+	\causets@setCausetName{#1}%
+\fi%
+\begin{tikzpicture}[causets/.cd, every causet, #1]%
+\drawcauset{#2}{#3}%
+\end{tikzpicture}%
+\causets@Padding%
+}
 
 \newcommand*{\rcauset}[3][]{%
-% Inserts a TikZ picture with a causet, created from a permutation and a link-pair list of links to remove.
-\begin{tikzpicture}[causets/.cd, every causet, #1]\drawrcauset{#2}{#3}\end{tikzpicture}}
+% Inserts a TikZ picture with a causet, created from a permutation and a 
+% link-pair list of links to remove.
+\causets@Padding%
+\ifcausetsNameExternal%
+	\causets@setCausetName{#1}%
+\fi%
+\begin{tikzpicture}[causets/.cd, every causet, #1]%
+\drawrcauset{#2}{#3}%
+\end{tikzpicture}%
+\causets@Padding%
+}
 
-%% Short-hand and pre-computed causet functions:
-\providecommand{\causetspath}{.}
-
+%% Short-hand functions and external causets:
 \newcommand*{\causetfile}[2][]{%
-\includegraphics[#1]{\causetspath/#2}}
+\causets@Padding%
+\includegraphics[#1]{\causets@NamePrefix#2}%
+\causets@Padding%
+}
 
 \newcommand*{\pcausetP}[2][]{%
 {\causetsDrawPermutationtrue\causetsDrawLabelsfalse\pcauset[#1]{#2}}}
@@ -616,7 +729,7 @@
 \fi%
 }
 
-\newcommand*{\causetClosedFence}[2][]{%
+\newcommand*{\causetCrown}[2][]{%
 \ifcase#2%
 \or%=1
 \pcauset[#1]{1,2}%
@@ -639,8 +752,4 @@
 \or%=10
 \rcauset[#1]{18,16,20,14,19,12,17,10,15,8,13,6,11,4,9,2,7,1,5,3}{2/5,4/7,6/9,8/11,10/13,12/15,14/17,16/19}%
 \fi%
-}
-
-\newcommand*{\causetCrown}[1][]{%
-\causetClosedFence[#1]{3}%
 }
