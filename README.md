@@ -1,5 +1,5 @@
 # The `causets` package
-The LaTeX package `causets` lets you create (Hasse) diagrams of causal sets. Causal sets (causets) are locally finite, partially ordered sets and are consider as a framework for quantum gravity. This package is built on the package `tikz`, which is usually included in the standard LaTeX installations and loaded automatically with `\usepackage{causets}`.
+The LaTeX package `causets` lets you create (Hasse) diagrams of causal sets. Causal sets (causets) are locally finite, partially ordered sets (posets) and are consider as a framework for quantum gravity. This package is built on the package `tikz`, which is usually included in the standard LaTeX installations and loaded automatically with `\usepackage{causets}`.
 
 The diagrams can be used inline with text or mathematical expressions, or they may be included in a TikZ pictures. 
 The three main commands (macros) are 
@@ -13,9 +13,12 @@ The three main commands (macros) are
 ```
 
 For a full documentation, please see causets.pdf.
-The documentation includes some examples.
-More examples are included at
-https://github.com/c-minz/LaTeX-causets/tree/main/examples
+This documentation includes some examples.
+
+More diagram examples with corresponding LaTeX macros are listed in the [catalogue of finite posets on the project website](https://c-minz.github.io/projects/poset_diagrams).
+
+[Go to the PrOSET editor](https://c-minz.github.io/assets/html/proset-editor.html) (a free online tool) to create and modify diagrams visually before exporting them as LaTeX macros.
+
 
 ## Bug reports
 Problems with the package are reported here:
@@ -32,8 +35,9 @@ Bug reports can be send to the maintainer:
   C. Minz
   christoph{dot}minz[AT]gmail{dot}com
 
+
 ## License and distribution
-Copyright 2020-2023 by C. Minz
+Copyright 2020-2024 by C. Minz
 
 This work may be distributed and/or modified under the conditions of the LaTeX Project Public License, either version 1.3 of this licence or (at your option) any later version.
 The latest version of this licence is in
@@ -45,6 +49,8 @@ The current maintainer of this work is C. Minz.
 https://github.com/c-minz
 
 **Current package version: v1.4 (2023/03/06)**
+
+**In development: v1.5**
 
 CTAN location: /graphics/pgf/contrib/causets/
 

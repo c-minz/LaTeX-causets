@@ -1,7 +1,10 @@
 /tmp/
 /causets/
+/latexml/
 /.settings/
 examples/*.sty
+*.css
+*.html
 .pydevproject
 .project
 .texlipse
