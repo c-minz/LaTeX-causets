@@ -567,16 +567,12 @@ These results are also obtained by using the optional parameter, for example:
 Causets with permutations (and labels) \pcauset[permutation]{4,1,2,3}, \pcauset[permutation,labeled]{1,2,3,4}, \pcauset[labeled]{1,2,4,3}, and without any \pcauset{2,4,1,3}.
 \end{lstlisting}
 
-There are a few short hand macros for small common causets as shown here.
-\begin{lstlisting}
-\causetFence{1}, \causetFence{2}, \ldots, \causetFence{10},
-\causetCrown{1}, \causetCrown{2}, \ldots, \causetCrown{10}
-\end{lstlisting}
-\causetFence[name=2Chain]{1}, \causetFence[name=2Fence]{2}, \ldots, \causetFence[name=10Fence]{10},
-\causetCrown[name=2Chain]{1}, \causetCrown[name=2Crown]{2}, \ldots, \causetCrown[name=10Crown]{10}
+The short hand macros \lstinline§\causetFence§ and \lstinline§\causetCrown§ have been removed in version 1.5, because these commands may be unnecessary for most users and the \href{https://c-minz.github.io/assets/html/proset-editor.html}{PrOSET editor} provides a better way to get the \LaTeX\ code for more complex causets including fences, crowns and polygons.
+
 
 \section{Labeling and replacing events (also to represent infinite causets)}
 \label{sec:LabelingReplacing}
+
 Since version v1.3 of the package, it is possible to relabel and replace causet events.
 These features are useful for labelling events arbitrarily, and drawing diagrams of infinite causets using ellipsis.
 
@@ -690,8 +686,10 @@ As shown in the previous example, the position of labels is defined with a key w
 The \lstinline§at§ key holds a coordinate of the event note.
 The default positioning is \lstinline§below left, at=south west§.
 
+
 \section{Changing sizes and fonts (for mathematical expressions)}
 \label{sec:Sizes}
+
 The pre-defined size styles have the following scaling with respect to the normal size:\vspace{-1ex}
 \begin{itemize}\itemsep=-1ex
   \item \lstinline§tiny§ is $\frac{1}{3}$ times the normal size
@@ -796,8 +794,10 @@ changes the event color to purple and the link color to cyan.
 For the pre-defined color schemes, use the keys \lstinline§gray colors§ (or \lstinline§gray colors§, default), \lstinline§black colors§ (or \lstinline§black colors§, only black and white), \lstinline§blue colors§ (or \lstinline§blue colors§, blue color tones), or \lstinline§neon colors§ (or \lstinline§neon colors§, bright colors).
 These keys set all the colors listed above to pre-defined values.
 
+
 \section{Changing the styles of individual events and links}
 \label{sec:LocalStyles}
+
 The full supported formats of the three main commands are
 \\[1ex]
 \lstinline§\pcauset[§\PH[causet style]\lstinline§]{§\PH[index]\lstinline§/§\PH[event style]\lstinline§,...}§
@@ -886,7 +886,10 @@ The compiled diagram \pcauset[name=M, alt={M}]{4,2,5,1,3} is then included with 
 
 More examples on larger standalone graphics are given in \autoref{sec:TikZ}.
 
+
 \section{Style changes in detail}
+\label{sec:StyleDetails}
+
 In the optional argument of the causet macros, you may use other TikZ options to change the output of the macros, for example:
 \begin{lstlisting}
 \usepackage{causets}
@@ -985,6 +988,7 @@ It is also possible to use multiple causets in more complicated graphics, like a
 
 \section{Release notes}
 \label{sec:ReleaseNotes}
+
 \definecolor{XMLv1.5}{rgb}{0.44,0.12,0.6}
 \tikzcausetsset{large, events={black!30}, links={black!30}, label color={black!40}}
 
@@ -995,12 +999,13 @@ It is also possible to use multiple causets in more complicated graphics, like a
 
 \begin{itemize}\itemsep=-1ex
 \item \versioncauset{v1-5}{\pcauset{1,5,3,6/{XMLv1.5, label=XML, labels={XMLv1.5, above=1ex, at=north}},2,4}}%
-  Adding support for \LaTeXML\ with the alternative text key \lstinline§alt={§\PH\lstinline§}§.
+  Adding support for \LaTeXML\ including the key \lstinline§alt={§\PH\lstinline§}§ to define an alternative text representing a diagram for screen readers.
 \end{itemize}
 
 \subsubsection{Modifications and fixes}
 
 \begin{itemize}\itemsep=-1ex
+\item Removed the short hand macros \lstinline§\causetFence§ and \lstinline§\causetCrown§.
 \item Corrected typos in the manual and added reference to the PrOSET editor.
 \end{itemize}
 
