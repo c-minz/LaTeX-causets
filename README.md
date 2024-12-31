@@ -37,7 +37,7 @@ Bug reports can be send to the maintainer:
 
 
 ## License and distribution
-Copyright 2020-2024 by C. Minz
+Copyright 2020-2025 by C. Minz
 
 This work may be distributed and/or modified under the conditions of the LaTeX Project Public License, either version 1.3 of this licence or (at your option) any later version.
 The latest version of this licence is in
@@ -55,4 +55,4 @@ https://github.com/c-minz
 CTAN location: /graphics/pgf/contrib/causets/
 
 
-This work consists of the files causets.sty, causets.tex, causets.pdf, causet_tikz_example1.tex, causet_tikz_example1.pdf, causet_tikz_example2.tex, causet_tikz_example2.pdf
+This work consists of the files causets.sty, causets.tex, causets.pdf, causets_example1.tex, causets_example1.pdf, causets_example2.tex, causets_example2.pdf
