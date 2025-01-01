@@ -131,13 +131,12 @@
     vlabel color=magenta}
 }
 % Causet modification options:
-\def\causetDefaultAltText{causet}
 \tikzcausetsset{%
   padding/.store in=\causets@Padding,
   offset/.store in=\causet@Offset,
   alt/.estore in=\causetAltText,
   every causet/.value forbidden,
-  every causet/.style={baseline=(baseline point), alt=\causetDefaultAltText},
+  every causet/.style={baseline=(baseline point), alt={causet}},
   local style/.style={#1},
   set local style/.style={local style/.expand once={#1}}
 }
@@ -389,15 +388,15 @@
     % \causet@Bound stores the lower bound to find spatially linked events.
     \edef\causet@Bound{\causet@Offset}
     \foreach \causet@E@j/\causet@LocalStyle [count=\causet@j] in {#1}{%
-      \ifnum\causet@j>\causet@i
+      \pgfmathgreater{\causet@j}{\causet@i}
+      \ifnum1=\pgfmathresult
         \pgfmathsetmacro\causet@E@j{int(\causet@E@j + \causet@Offset)}
-        \ifnum\causet@E@j>\causet@Bound
-          \ifnum\causet@E@i>\causet@E@j
-            % Add spatial link and remember new lower bound:
-            \draw[causets/.cd, every spatial link]
-              (E\causet@E@j) -- (E\causet@E@i);
-            \xdef\causet@Bound{\causet@E@j}
-          \fi
+        \pgfmathparse{and(\causet@E@j > \causet@Bound, \causet@E@i > \causet@E@j)}
+        \ifnum1=\pgfmathresult
+          % Add spatial link and remember new lower bound:
+          \draw[causets/.cd, every spatial link]
+            (E\causet@E@j) -- (E\causet@E@i);
+          \xdef\causet@Bound{\causet@E@j}
         \fi
       \fi
     }
@@ -456,11 +455,14 @@
   % the u- and in the v-direction, respectively. Since these are coordinate 
   % differences, they are computed without adding the offset.
   \pgfmathsetmacro\causet@u{int(\causet@To) - int(\causet@From)}
+  \def\causet@v{0}
   \foreach \causet@E@i/\causet@LocalStyle [count=\causet@i] in {#2}{%
-    \ifnum\causet@E@i=\causet@From
+    \pgfmathequal{\causet@E@i}{\causet@From}
+    \ifnum1=\pgfmathresult
       \xdef\causet@v{\causet@i}
     \fi
-    \ifnum\causet@E@i=\causet@To
+    \pgfmathequal{\causet@E@i}{\causet@To}
+    \ifnum1=\pgfmathresult
       \pgfmathparse{int(\causet@i - \causet@v)}
       \xdef\causet@v{\pgfmathresult}
       \breakforeach
@@ -475,18 +477,20 @@
   \edef\causet@j{0}
   \foreach \causet@E@i/\causet@LocalStyle [count=\causet@i] in {#2}{%
     \pgfmathsetmacro\causet@E@i{int(\causet@E@i + \causet@Offset)}
-    \ifnum\causet@E@i=\causet@To
+    \pgfmathequal{\causet@E@i}{\causet@To}
+    \ifnum1=\pgfmathresult
       \edef\causet@j{0}
       \breakforeach
     \fi
-    \ifnum\causet@j>0
+    \ifnum0<\causet@j
       % If the u-/v-coordinate ratio is the same, the event \causet@E@i falls 
       % along the link and the link needs to break. The ratios are compared 
       % via cross-multiplication, which is faster and does not cause 
       % rounding errors:
       \pgfmathequal{int((\causet@E@i - \causet@From) * \causet@v)}{int(\causet@u * (\causet@i - \causet@j)))}
-      \ifnum\pgfmathresult=1
-        \ifnum\causet@E@j<\causet@From
+      \ifnum1=\pgfmathresult
+        \pgfmathless{\causet@E@j}{\causet@From}
+        \ifnum1=\pgfmathresult
           % Link is crossing over another event, so draw the link up to the 
           % (first) breaking point:
           \draw[causets/.cd, every link, {Link Start}-{Link Pause}, shorten >=\pgfkeysvalueof{/tikz/causets/broken link gap}, set local style=\causet@LocalLinkStyle]
@@ -500,11 +504,13 @@
         \xdef\causet@E@j{\causet@E@i}
       \fi
     \fi
-    \ifnum\causet@E@i=\causet@From
+    \pgfmathequal{\causet@E@i}{\causet@From}
+    \ifnum1=\pgfmathresult
       \xdef\causet@j{\causet@i}
     \fi
   }
-  \ifnum\causet@E@j>\causet@From
+  \pgfmathgreater{\causet@E@j}{\causet@From}
+  \ifnum1=\pgfmathresult
     % Link did cross over another event, so finish the link from last 
     % breaking point to final event:
     \draw[causets/.cd, every link, {Link Resume}-{Link End}, shorten <=\pgfkeysvalueof{/tikz/causets/broken link gap}, set local style=\causet@LocalLinkStyle]
@@ -532,15 +538,15 @@
         % \causet@Bound stores the upper bound to find linked events.
         \pgfmathsetmacro\causet@Bound{int(\causet@N + \causet@Start)}
         \foreach \causet@E@j/\causet@LocalStyle [count=\causet@j] in {#1}{%
-          \ifnum\causet@j>\causet@i
+          \pgfmathgreater{\causet@j}{\causet@i}
+          \ifnum1=\pgfmathresult
             \pgfmathsetmacro\causet@E@j{int(\causet@E@j + \causet@Offset)}
-            \ifnum\causet@E@j<\causet@Bound
-              \ifnum\causet@E@i<\causet@E@j
-                % Add link and remember new upper bound:
-                \draw[causets/.cd, every link]
-                  (E\causet@E@i) -- (E\causet@E@j);
-                \xdef\causet@Bound{\causet@E@j}
-              \fi
+            \pgfmathparse{and(\causet@E@j < \causet@Bound, \causet@E@i < \causet@E@j)}
+            \ifnum1=\pgfmathresult
+              % Add link and remember new upper bound:
+              \draw[causets/.cd, every link]
+                (E\causet@E@i) -- (E\causet@E@j);
+              \xdef\causet@Bound{\causet@E@j}
             \fi
           \fi
         }
@@ -598,28 +604,28 @@
         % \causet@Bound stores the upper bound to find linked events.
         \pgfmathsetmacro\causet@Bound{int(\causet@N + \causet@Start)}
         \foreach \causet@E@j/\causet@LocalStyle [count=\causet@j] in {#1}{%
-          \ifnum\causet@j>\causet@i
+          \pgfmathgreater{\causet@j}{\causet@i}
+          \ifnum1=\pgfmathresult
             \pgfmathsetmacro\causet@E@j{int(\causet@E@j + \causet@Offset)}
-            \ifnum\causet@E@j<\causet@Bound
-              \ifnum\causet@E@i<\causet@E@j
-                % Check second list argument if the link has to be ignored:
-                \global\causet@ItemFoundInListfalse
-                \foreach \causet@From/\causet@To/\causet@LocalLinkStyle in {#2}{%
-                  \pgfmathparse{and(int(\causet@From + \causet@Offset) == int(\causet@E@i), int(\causet@To + \causet@Offset) == int(\causet@E@j))}
-                  \ifnum\pgfmathresult=1
-                    \global\causet@ItemFoundInListtrue
-                  \fi
-                }
-                \ifcauset@ItemFoundInList
-                  \relax% Skip link as it is included in the second argument.
-                \else
-                  % Draw link as it is not included in the second argument:
-                  \draw[causets/.cd, every link]
-                    (E\causet@E@i) -- (E\causet@E@j);
+            \pgfmathparse{and(\causet@E@j < \causet@Bound, \causet@E@i < \causet@E@j)}
+            \ifnum1=\pgfmathresult
+              % Check second list argument if the link has to be ignored:
+              \global\causet@ItemFoundInListfalse
+              \foreach \causet@From/\causet@To/\causet@LocalLinkStyle in {#2}{%
+                \pgfmathparse{and(int(\causet@From + \causet@Offset) == int(\causet@E@i), int(\causet@To + \causet@Offset) == int(\causet@E@j))}
+                \ifnum1=\pgfmathresult
+                  \global\causet@ItemFoundInListtrue
                 \fi
-                % Remember new upper bound:
-                \xdef\causet@Bound{\causet@E@j}
+              }
+              \ifcauset@ItemFoundInList
+                \relax% Skip link as it is included in the second argument.
+              \else
+                % Draw link as it is not included in the second argument:
+                \draw[causets/.cd, every link]
+                  (E\causet@E@i) -- (E\causet@E@j);
               \fi
+              % Remember new upper bound:
+              \xdef\causet@Bound{\causet@E@j}
             \fi
           \fi
         }

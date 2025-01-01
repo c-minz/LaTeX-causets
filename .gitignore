@@ -4,7 +4,7 @@
 /.settings/
 examples/*.sty
 *.css
-*.html
+causets*.html
 .pydevproject
 .project
 .texlipse
