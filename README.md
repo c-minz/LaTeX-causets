@@ -27,7 +27,6 @@ https://github.com/c-minz/LaTeX-causets/issues
 If you find a bug, please report it by including:
 * Comprehensive problem description - including error or warning messages (if any).
 * Minimal test file that shows the problem.
-* Used drivers/programs with version informations.
 * Version information about used packages and programs.
 * Please no other files than the minimal test file (*.tex).
 
@@ -48,9 +47,7 @@ This work has the LPPL maintenance status "maintained".
 The current maintainer of this work is C. Minz.
 https://github.com/c-minz
 
-**Current package version: v1.4 (2023/03/06)**
-
-**In development: v1.5**
+**Current package version: v1.5 (2024/02/24)**
 
 CTAN location: /graphics/pgf/contrib/causets/
 

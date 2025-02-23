@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{causets}[2025/01/01 v1.5 Package to draw causal set diagrams]
+\ProvidesPackage{causets}[2025/02/24 v1.5 Package to draw causal set diagrams]
 %% Copyright 2020-2025 by C. Minz
 %
 % This work may be distributed and/or modified under the
@@ -10,8 +10,7 @@
 %
 % This work has the LPPL maintenance status "maintained".
 % 
-% The current version of this package is 1.4.
-% Version 1.5 is in development.
+% The current version of this package is 1.5.
 %
 % The current maintainer of this work is C. Minz.
 % https://github.com/c-minz
@@ -679,36 +678,30 @@
 \causets@Padding%
 }
 
-%% Short-hand functions and external causets:
+%% Import an external causets (to repeat it):
 \newcommand*{\causetfile}[2][]{%
 \causets@Padding%
 \includegraphics[#1]{\causets@NamePrefix#2}%
 \causets@Padding%
 }
 
+%% Short hand macros:
+% DEPRECIATED with v1.5 and will be removed in the future.
 \newcommand*{\pcausetP}[2][]{%
 {\causetsDrawPermutationtrue\causetsDrawLabelsfalse\pcauset[#1]{#2}}}
-
 \newcommand*{\pcausetL}[2][]{%
 {\causetsDrawPermutationfalse\causetsDrawLabelstrue\pcauset[#1]{#2}}}
-
 \newcommand*{\pcausetX}[2][]{%
 {\causetsDrawPermutationtrue\causetsDrawLabelstrue\pcauset[#1]{#2}}}
-
 \newcommand*{\causetP}[3][]{%
 {\causetsDrawPermutationtrue\causetsDrawLabelsfalse\causet[#1]{#2}{#3}}}
-
 \newcommand*{\causetL}[3][]{%
 {\causetsDrawPermutationfalse\causetsDrawLabelstrue\causet[#1]{#2}{#3}}}
-
 \newcommand*{\causetX}[3][]{%
 {\causetsDrawPermutationtrue\causetsDrawLabelstrue\causet[#1]{#2}{#3}}}
-
 \newcommand*{\rcausetP}[3][]{%
 {\causetsDrawPermutationtrue\causetsDrawLabelsfalse\rcauset[#1]{#2}{#3}}}
-
 \newcommand*{\rcausetL}[3][]{%
 {\causetsDrawPermutationfalse\causetsDrawLabelstrue\rcauset[#1]{#2}{#3}}}
-
 \newcommand*{\rcausetX}[3][]{%
 {\causetsDrawPermutationtrue\causetsDrawLabelstrue\rcauset[#1]{#2}{#3}}}

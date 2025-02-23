@@ -1,3 +1,5 @@
+%% Copyright 2020-2025 by C. Minz
+% Current package version: v1.5 (2024/02/24).
 \documentclass[12pt]{article}
 \usepackage[a4paper, left = 2.5cm, right = 2.5cm, top = 2.5cm, bottom = 2.5cm]{geometry}
 \usepackage[english]{babel}
@@ -91,7 +93,7 @@
 \huge causets\\[0.2cm]%
 {\small version 1.5\\[0.5cm]}}
 \author{Christoph Minz}
-\date{(in development)}
+\date{2025/02/24}
 
 \begin{document}
 
@@ -140,14 +142,14 @@ $$
 \vfill
 
 {\itshape
-The main purpose of this package is to typeset partial ordered sets (posets for short) as Hasse diagrams in a style that is particularly suited for causal set theory (a framework for quantum gravity).
+The purpose of this package is to typeset partial ordered sets (posets for short) as Hasse diagrams in a style that is particularly suited for causal set theory (a theory of quantum gravity).
 Causal sets (\textbf{causets} for short) are locally finite, partially ordered sets, where the partial order is the causal relation between elements.
 This relation forms a cone structure (light-cones) such that all past and future related elements of an element fall within a lower and upper cone, respectively, opening in 90 degree angles.
 
 The drawing algorithm (based on TikZ) makes use of the fact that every finite causet that embeds in $\smash{1 + 1}$ dimensional Minkowski spacetime is a product of two total orders (2-order), where one order is taken to be the standard total order of integers labelling all causet elements, while the other is a permutation of the labels\footnote{See \url{https://arxiv.org/abs/0706.0375} and \url{https://arxiv.org/abs/2011.02965} for more details on 2-orders and causal sets.}.
 Such a permutation is the main input for the macros.
 For any higher dimensional poset, there exists a 2-order such that the higher dimensional diagram is obtained by removing links from the 2-order.
-The online tool ``PrOSET editor'' helps to generate the macros starting from a visual representation.
+The online tool ``PrOSET editor'' helps to construct any Hasse diagram and export its macro for use in a \LaTeX\ document.
 }
 
 \clearpage
@@ -180,7 +182,7 @@ The permutation determines the event positions and causal structure such that ev
 The second command does the same, but removes (restyles) links between event pairs \lstinline§i/j§ as given in the second argument.
 The third command only uses the permutation to position the events, the links have to be explicitly specified by event pairs \lstinline§i/j§ in the second argument.
 
-Any causet that can be embedded in $1 + 1$ dimensional Minkowski spacetime can also be described by the product of two total orders (a 2D-order).
+Any causet that can be embedded in $1 + 1$ dimensional Minkowski spacetime can also be described by the product of two total orders (a 2-order).
 Let the causet elements be labeled by an increasing null coordinate $u$.
 In the first diagram of \autoref{tab:MainCommandsExamples}, the $u$-coordinate axis points upwards on the right hand side.
 The causal relation (partial order) implies a label permutation along the null coordinate $v$ (pointing upwards along the left axis).
@@ -189,7 +191,7 @@ See example 1 in \autoref{tab:MainCommandsExamples}.
 \begin{table}[h!]
   \centering
   \tikzcausetsset{black colors, show permutation}
-  \begin{tabular*}{\textwidth}{lp{0.73\textwidth}c}
+  \begin{tabular*}{\textwidth}{lp{0.75\textwidth}c}
     \toprule
     \#
   & command
@@ -279,15 +281,14 @@ Example diagrams together with their \LaTeX\ macros are included on the project 
 To help create and modify poset diagrams visually, I developed the PrOSET editor as an online tool, which exports the result as \LaTeX\ macros (and other data formats): \\
 \url{https://c-minz.github.io/assets/html/proset-editor.html}
 
-Whenever you use this package to compose a publication or a document that may be converted to XML or HTML, this package supports \LaTeXML.
-Especially for a conversion to HTML documents and for screen readers, the diagrams can be complemented with an alternative text string.
-Please use \lstinline§alt={§\PH\lstinline§}§ in the optional argument to add \PH\ as a very short description of the diagram if possible.
-Here are some examples:
+Whenever you use this package to compose a publication to be uploaded to the arXiv, or a document that may be converted to XML or HTML with \LaTeXML, this package provides special support.
+To replace the diagram figures especially for screen readers, add a short description with the key \lstinline§alt={§\PH\lstinline§}§ in the optional argument.
+For example, the code
 \begin{lstlisting}
 \pcauset[alt={N}]{2,4,1,3},
-\pcauset[alt={N and 2-chain}]{5,6,2,4,1,3}
+\pcauset[alt={union of an N and a 2-chain}]{5,6,2,4,1,3}
 \end{lstlisting}
-provides ``N'' as alternative text for \pcauset[name=N, alt={N}]{2,4,1,3}, and \pcauset[name=N_2-chain, alt={N and 2-chain}]{5,6,2,4,1,3} with alternative text ``N and 2-chain''.
+adds ``N'' as alternative text for \pcauset[name=N, alt={N}]{2,4,1,3}, and ``union of an N and a 2-chain'' as description for \pcauset[name=N_2-chain, alt={union of an N and a 2-chain}]{5,6,2,4,1,3}.
 If no alternative text is specified, the default value ``causet'' is used (which is set in the style \lstinline§every causet§).
 
 
@@ -374,7 +375,7 @@ If not specified otherwise, any package option also works with the command \lsti
   (\lstinline§\causetsDrawLabelsfalse§ deactivates labels)
 \\\midrule\midrule
   \lstinline§\usepackage[continuous]{causets}§ allows links to cross over events.
-  Link interruptions (default) only affect the \lstinline§\causet§ command and ``restyled'' links of \lstinline§\rcauset§, but not the examples of shown on the right.
+  Link interruptions (default) only affect the \lstinline§\causet§ command and ``restyled'' links of \lstinline§\rcauset§, but not the examples shown on the right.
 & \multirow{6}{5em}{%
   \causetsBreakLinkstrue \pcauset[name=Options_pcauset_continuous]{4,2,7,6,1,5,3}}
 & \multirow{6}{5em}{%
@@ -549,25 +550,77 @@ All main commands, the short hand macros (see \autoref{sec:ShortHandMacros}), an
 The padding is adjustable with \lstinline§padding=§\PH\ and stored in the macro \lstinline§\causets@Padding§ (by default, it is \lstinline§\thinspace§).
 
 
-\section{Short hand macros}
+\section{Changing the options for individual diagrams}
 \label{sec:ShortHandMacros}
 
-The permutations and labels for causets can be switched on globally with the package options \lstinline§permutation§ and \lstinline§labeled§, or at any point in the document with the switches \\
-\lstinline§\causetsDrawPermutationtrue§ (same as the command \lstinline§\tikzcausetsset{show permutation}§) and \lstinline§\causetsDrawLabelstrue§ (or \lstinline§\tikzcausetsset{labeled}§), respectively.
+Most of the package options introduced in the section before are also defined as keys that can be specified in the optional argument of the three main macros \lstinline§\pcauset§, \lstinline§\rcauset§ and \lstinline§\causet§.
 
-To show only single causets with either of these options, there exist short hand macros for all three main commands.
-Each main command can be followed by a capital letter \lstinline§P§ (to show the permutation only), \lstinline§L§ (to show event labels only), or \lstinline§X§ (to show both).
+Additionally, the package has short hand macros to switch on labels, the permutation grid, or both (\lstinline§\causetsDrawLabelstrue§, \lstinline§\causetsDrawPermutationtrue§, or \lstinline§\tikzcausetsset{ labeled, show permutation}§) to help compile diagrams.
+Since package version 1.5, these short hand macros ending in \lstinline§L§, \lstinline§P§ and \lstinline§X§ are depreciated, because diagrams can now be designed and exported to \LaTeX\ macros with the \href{https://c-minz.github.io/assets/html/proset-editor.html}{PrOSET editor}.
+To use these short hand macros nevertheless, add the following lines to the preamble after importing the package with \lstinline§\usepackage{causets}§:
 \begin{lstlisting}
-Causets with permutations (and labels) \pcausetP{4,1,2,3}, \pcausetX{1,2,3,4}, \pcausetL{1,2,4,3}, and without any \pcauset{2,4,1,3}.
+\providecommand*{\pcausetP}[2][]{%
+{\causetsDrawPermutationtrue\causetsDrawLabelsfalse
+\pcauset[#1]{#2}}}
+\providecommand*{\pcausetL}[2][]{%
+{\causetsDrawPermutationfalse\causetsDrawLabelstrue
+\pcauset[#1]{#2}}}
+\providecommand*{\pcausetX}[2][]{%
+{\causetsDrawPermutationtrue\causetsDrawLabelstrue
+\pcauset[#1]{#2}}}
+\providecommand*{\causetP}[3][]{%
+{\causetsDrawPermutationtrue\causetsDrawLabelsfalse
+\causet[#1]{#2}{#3}}}
+\providecommand*{\causetL}[3][]{%
+{\causetsDrawPermutationfalse\causetsDrawLabelstrue
+\causet[#1]{#2}{#3}}}
+\providecommand*{\causetX}[3][]{%
+{\causetsDrawPermutationtrue\causetsDrawLabelstrue
+\causet[#1]{#2}{#3}}}
+\providecommand*{\rcausetP}[3][]{%
+{\causetsDrawPermutationtrue\causetsDrawLabelsfalse
+\rcauset[#1]{#2}{#3}}}
+\providecommand*{\rcausetL}[3][]{%
+{\causetsDrawPermutationfalse\causetsDrawLabelstrue
+\rcauset[#1]{#2}{#3}}}
+\providecommand*{\rcausetX}[3][]{%
+{\causetsDrawPermutationtrue\causetsDrawLabelstrue
+\rcauset[#1]{#2}{#3}}}
 \end{lstlisting}
-Causets with permutations (and labels) \pcausetP[name=Macro_P]{4,1,2,3}, \pcausetX[name=Macro_X]{1,2,3,4}, \pcausetL[name=Macro_L]{1,2,4,3}, and without any \pcauset[name=Macro]{2,4,1,3}.
 
-These results are also obtained by using the optional parameter, for example:
-\begin{lstlisting}
-Causets with permutations (and labels) \pcauset[permutation]{4,1,2,3}, \pcauset[permutation,labeled]{1,2,3,4}, \pcauset[labeled]{1,2,4,3}, and without any \pcauset{2,4,1,3}.
-\end{lstlisting}
+To add labels or the permutation grid to a diagram, specify the respective option in the optional argument of the macro:
+\begin{table}[h!]
+  \centering
+  \begin{tabular*}{\textwidth}{p{0.35\textwidth}p{0.60\textwidth}}
+    \toprule
+    command with options
+  & functionality
+  \\\midrule
+    \lstinline§\pcauset[labeled]{1,2,4,3}§
+  & Draws a diagram of a 2-order from a permutation (here 1,2,4,3) and shows labels for the elements (\lstinline§\causetsDrawLabelstrue§). The output for this example is \pcauset[name=Macro_L, labeled]{1,2,4,3}.
+  \\
+    \lstinline§\rcauset[labeled]{...}{...}§
+  & Similar for a 2-order with removed links.
+  \\
+    \lstinline§\causet[labeled]{...}{...}§
+  & Similar for a generic diagram.
+  \\\midrule
+    \lstinline§\pcauset[permutation]{4,1,2,3}§
+  & Draws a diagram of a 2-order from a permutation (here 4,1,2,3) and shows the permutation grid (\lstinline§\causetsDrawPermutationtrue§). The output for this example is \pcauset[name=Macro_P, permutation]{4,1,2,3}.
+  \\
+    \lstinline§\rcauset[permutation]{...}{...}§
+  & Similar for a 2-order with removed links.
+  \\
+    \lstinline§\causet[permutation]{...}{...}§
+  & Similar for a generic diagram.
+  \\\midrule
+    \multicolumn{2}{l}{These options can be combined (also with other style keys, see below).}
+  \\\bottomrule
+  \end{tabular*}
+  \caption{\label{tab:MainCommandsWithOptions} Main commands with options.}
+\end{table}
 
-The short hand macros \lstinline§\causetFence§ and \lstinline§\causetCrown§ have been removed in version 1.5, because these commands may be unnecessary for most users and the \href{https://c-minz.github.io/assets/html/proset-editor.html}{PrOSET editor} provides a better way to get the \LaTeX\ code for more complex causets including fences, crowns and polygons.
+The short hand macros \lstinline§\causetFence§ and \lstinline§\causetCrown§ have been removed in version 1.5, since diagrams of fences, crowns, polygons and other posets are supported by the \href{https://c-minz.github.io/assets/html/proset-editor.html}{PrOSET editor} and can be exported as \LaTeX\ macros.
 
 
 \section{Labeling and replacing events (also to represent infinite causets)}
@@ -577,7 +630,7 @@ Since version v1.3 of the package, it is possible to relabel and replace causet 
 These features are useful for labelling events arbitrarily, and drawing diagrams of infinite causets using ellipsis.
 
 By default, all events get named and labeled by the integers given in the arguments of the commands.
-For example, \lstinline§\pcausetL{0,2,1}§ creates the diagram \pcausetL{0,2,1} where the event notes are named \lstinline§(E0)§, \lstinline§(E2)§, \lstinline§(E1)§, respectively, while the label nodes have the names \lstinline§(EL0)§, \lstinline§(EL2)§, \lstinline§(EL1)§.
+For example, \lstinline§\pcauset[labeled]{0,2,1}§ creates the diagram \pcauset[labeled]{0,2,1} where the event notes are named \lstinline§(E0)§, \lstinline§(E2)§, \lstinline§(E1)§ (which are always created), respectively, while the label nodes have the names \lstinline§(EL0)§, \lstinline§(EL2)§, \lstinline§(EL1)§ (which are only created with the \lstinline§labeled§ option).
 If the permutation is displayed as well, the $u$- and $v$-coordinate labels are the nodes \lstinline§(EUL§\PH\lstinline§)§ and \lstinline§(EVL§\PH\lstinline§)§, with \PH\ taking on the values $\{0, 2, 1 \}$.
 
 To offset the names of all causet events by an integer amount, use the key-value pair \lstinline§offset=§\PH\ to adjust the naming and labelling of events and get distinct event names, while the same integers are used in the command arguments.
@@ -586,21 +639,21 @@ Consider the following example.
 \begin{align*}
   \tikzcausetsset{large}
   \cdots\quad
-  \pcausetP[offset=-12]{0,2,1,3}\quad\cdots\quad
-  \pcausetL{0,2,1,3}\quad\cdots\quad
-  \pcausetL[offset=12]{0,2,1,3}\quad\cdots
+  \pcauset[permutation, offset=-12]{0,2,1,3}\quad\cdots\quad
+  \pcauset[labeled]{0,2,1,3}\quad\cdots\quad
+  \pcauset[labeled, offset=12]{0,2,1,3}\quad\cdots
 \end{align*}
 \end{lstlisting}
 \vspace{-1ex}
 \begin{align*}
   \tikzcausetsset{large}
   \cdots\quad
-  \pcausetP[name=Diamond_permoffset, offset=-12]{0,2,1,3}\quad\cdots\quad
-  \pcausetL[name=Diamond_labeled]{0,2,1,3}\quad\cdots\quad
-  \pcausetL[name=Diamond_labeledoffset, offset=12]{0,2,1,3}\quad\cdots
+  \pcauset[name=Diamond_permoffset, permutation, offset=-12]{0,2,1,3}\quad\cdots\quad
+  \pcauset[name=Diamond_labeled, labeled]{0,2,1,3}\quad\cdots\quad
+  \pcauset[name=Diamond_labeledoffset, labeled, offset=12]{0,2,1,3}\quad\cdots
 \end{align*}
-Here, the three commands have the same integer argument \lstinline§{0,2,1,3}§, but the events are named with the specified offsets for the sub-causets, and the labels are adjusted accordingly.
-In this way, it will be possible to address the event (and label) nodes of the sub-causets distinctively within a larger TikZ picture.
+Here, the three commands have the same integer argument \lstinline§{0,2,1,3}§, but the events are named with the specified offsets and the labels are adjusted accordingly.
+In this way, it will be possible to address the event (and label) nodes of the (sub-)causets distinctively within a larger TikZ picture.
 For more details on how to draw causets within a TikZ picture, see \autoref{sec:TikZ}.
 
 When you (only) want to change the labelling of an event to \PH, add a slash and \lstinline§label=§\PH\ directly after the event integer in the first command argument.
@@ -611,16 +664,16 @@ For example, the causet \pcauset{2,1,3} has six different labellings by (distinc
   \text{order-preserving:} &&
   L_{\mathrm{op}} &=
   \left\{
-    \pcausetL{1,0,2},
-    \pcausetL{1/label=0,0/label=1,2}
+    \pcauset[labeled]{1,0,2},
+    \pcauset[labeled]{1/label=0,0/label=1,2}
   \right\}
   , \\
   \text{not order-preserving:} &&
   L_{\mathrm{nop}} &=
   \left\{
     \pcauset{1/label=2,0/label=1,2/label=0},
-    \pcausetL{1,0/label=2,2/label=0},
-    \pcausetL{1/label=2,0,2/label=1},
+    \pcauset[labeled]{1,0/label=2,2/label=0},
+    \pcauset[labeled]{1/label=2,0,2/label=1},
     \pcauset{1/label=0,0/label=2,2/label=1}
   \right\}
   .
@@ -631,22 +684,22 @@ For example, the causet \pcauset{2,1,3} has six different labellings by (distinc
   \text{order-preserving:} &&
   L_{\mathrm{op}} &=
   \left\{
-    \pcausetL[name=Wedge_labeled102]{1,0,2},
-    \pcausetL[name=Wedge_labeled012]{1/label=0,0/label=1,2}
+    \pcauset[name=Wedge_labeled102, labeled]{1,0,2},
+    \pcauset[name=Wedge_labeled012, labeled]{1/label=0,0/label=1,2}
   \right\}
   , \\
   \text{not order-preserving:} &&
   L_{\mathrm{nop}} &=
   \left\{
-    \pcauset[name=Wedge_labeled210]{1/label=2,0/label=1,2/label=0},
-    \pcausetL[name=Wedge_labeled120]{1,0/label=2,2/label=0},
-    \pcausetL[name=Wedge_labeled201]{1/label=2,0,2/label=1},
-    \pcauset[name=Wedge_labeled021]{1/label=0,0/label=2,2/label=1}
+    \pcauset[name=Wedge_labeled210, labeled]{1/label=2,0/label=1,2/label=0},
+    \pcauset[name=Wedge_labeled120, labeled]{1,0/label=2,2/label=0},
+    \pcauset[name=Wedge_labeled201, labeled]{1/label=2,0,2/label=1},
+    \pcauset[name=Wedge_labeled021, labeled]{1/label=0,0/label=2,2/label=1}
   \right\}
   .
 \end{align}
 
-The replacing labels can be any text.
+You may use any text as a label.
 Longer text labels should be written in a \TeX\ group \lstinline§{...}§.
 Here is an example
 \begin{lstlisting}
@@ -761,10 +814,10 @@ The pre-defined size styles use the following font sizes, \vspace{-1ex}
 
 Below is an example for a diagram drawn with some sizes defined manually:
 \begin{lstlisting}
-\pcausetL[tile size=2ex, event size=1ex, link width=0.3ex, text scale=1]{13,8,14,9,3,15,12,1,6,16,5,11,7,2,10,4}
+\pcauset[labeled, tile size=2ex, event size=1ex, link width=0.3ex, text scale=1]{13,8,14,9,3,15,12,1,6,16,5,11,7,2,10,4}
 \end{lstlisting}
 \begin{center}
-  \pcausetL[name=Example_resized, tile size=2ex, event size=1ex, link width=0.3ex, text scale=1]{13,8,14,9,3,15,12,1,6,16,5,11,7,2,10,4}
+  \pcauset[name=Example_resized, labeled, tile size=2ex, event size=1ex, link width=0.3ex, text scale=1]{13,8,14,9,3,15,12,1,6,16,5,11,7,2,10,4}
 \end{center}
 \vspace{1ex}
 
@@ -812,11 +865,11 @@ The style values are all optional, where \PH[causet style] is applied to that ca
 
 The feature to apply styles only to individual events and links is to highlight or modify subsets of a causet, for example, by using different colors: 
 \begin{lstlisting}
-\rcausetL[large, subset A/.style={red, dotted}, subset B/.style=blue, replaced labels={text scale=1, at=east, right}]{2/{subset A, label=event $a$}, 5/subset B, 1, 3/{subset A, label=$b$, replaced labels=orange}, 4/subset B, 6/subset B}{2/3/subset A, 4/6/subset B, 5/6/subset B}
+\rcauset[labeled, large, subset A/.style={red, dotted}, subset B/.style=blue, replaced labels={text scale=1, at=east, right}]{2/{subset A, label=event $a$}, 5/subset B, 1, 3/{subset A, label=$b$, replaced labels=orange}, 4/subset B, 6/subset B}{2/3/subset A, 4/6/subset B, 5/6/subset B}
 \end{lstlisting}
 \vspace{-1ex}
 \begin{center}
-  \rcausetL[name=Example_locallystyled, large, subset A/.style={red, dotted}, subset B/.style=blue, replaced labels={text scale=1, at=east, right}]{2/{subset A, label=event $a$}, 5/subset B, 1, 3/{subset A, label=$b$, replaced labels=orange}, 4/subset B, 6/subset B}{2/3/subset A, 4/6/subset B, 5/6/subset B}
+  \rcauset[name=Example_locallystyled, labeled, large, subset A/.style={red, dotted}, subset B/.style=blue, replaced labels={text scale=1, at=east, right}]{2/{subset A, label=event $a$}, 5/subset B, 1, 3/{subset A, label=$b$, replaced labels=orange}, 4/subset B, 6/subset B}{2/3/subset A, 4/6/subset B, 5/6/subset B}
 \end{center}
 Note that \lstinline§label=event $a$§ and \lstinline§label=$b$§ adds (replaced) labels $a$ and $b$, respectively, but their style is not affected by \lstinline§subset A§.
 To change the style of the labels, we have to use the \lstinline§replaced labels§ key, see also \autoref{sec:LabelingReplacing}.
@@ -894,9 +947,9 @@ In the optional argument of the causet macros, you may use other TikZ options to
 \begin{lstlisting}
 \usepackage{causets}
 ... \begin{document} ...
-A labeled causet with red-framed semi-transparent labels, \pcausetL[labels={draw=red, fill=white, opacity=0.8, inner sep=1pt, scale=1.5}]{2,4,5,1,3}.
+A labeled causet with red-framed semi-transparent labels, \pcauset[labels={draw=red, fill=white, opacity=0.8, inner sep=1pt, scale=1.5}]{2,4,5,1,3}.
 \end{lstlisting}
-A labeled causet with red-framed semi-transparent labels, \pcausetL[name=NDash_redframedlabels, labels={draw=red, fill=white, opacity=0.8, inner sep=1pt, scale=1.5}]{2,4,5,1,3}.
+A labeled causet with red-framed semi-transparent labels, \pcauset[name=NDash_redframedlabels, labels={draw=red, fill=white, opacity=0.8, inner sep=1pt, scale=1.5}]{2,4,5,1,3}.
 
 In the same way, it is possible to modify the existing styles of all parts of the diagrams, which means that the default drawing styles are extended by the options passed as value to these keys: \vspace{-1ex}
 \begin{enumerate}\itemsep=-1ex
@@ -993,20 +1046,23 @@ It is also possible to use multiple causets in more complicated graphics, like a
 \tikzcausetsset{large, events={black!30}, links={black!30}, label color={black!40}}
 
 
-\subsection[v1.5 (Butterfly)]{v1.5, (in development)}
+\subsection[v1.5 (Butterfly)]{v1.5, 2025-02-24}
 
 \subsubsection{New features}
 
 \begin{itemize}\itemsep=-1ex
 \item \versioncauset{v1-5}{\pcauset{1,5,3,6/{XMLv1.5, label=XML, labels={XMLv1.5, above=1ex, at=north}},2,4}}%
-  Adding support for \LaTeXML\ including the key \lstinline§alt={§\PH\lstinline§}§ to define an alternative text representing a diagram for screen readers.
+  Added support for \LaTeXML\ including the key \lstinline§alt={§\PH\lstinline§}§ to define an alternative text representing a diagram for screen readers.
+\item Added references to a supporting online tool, the \href{https://c-minz.github.io/assets/html/proset-editor.html}{PrOSET editor}.
 \end{itemize}
 
 \subsubsection{Modifications and fixes}
 
 \begin{itemize}\itemsep=-1ex
+\item The short hand macros \lstinline§\pcausetL§, \lstinline§\pcausetP§, \lstinline§\pcausetX§, \lstinline§\rcausetL§, \lstinline§\rcausetP§, \\\lstinline§\rcausetX§, \lstinline§\causetL§, \lstinline§\causetP§ and \lstinline§\causetX§ are now depreciated.\\
+Write \lstinline§\pcauset[labeled]§, \lstinline§\pcauset[permutation]§, \lstinline§\pcauset[permutation, labeled]§, etc. instead, or use the PrOSET editor to design diagrams.
 \item Removed the short hand macros \lstinline§\causetFence§ and \lstinline§\causetCrown§.
-\item Corrected typos in the manual and added reference to the PrOSET editor.
+\item Corrected typos in the manual.
 \end{itemize}
 
 
