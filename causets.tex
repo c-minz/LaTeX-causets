@@ -158,14 +158,14 @@ The online tool ``PrOSET editor'' helps to construct any Hasse diagram and expor
 \section{The three main commands}
 \label{sec:Introduction}
 
-This package is built on the package \lstinline�tikz� to draw the diagrams.
-To import the \lstinline�causets� package into a \LaTeX\ file, write
+This package is built on the package \lstinline&tikz& to draw the diagrams.
+To import the \lstinline&causets& package into a \LaTeX\ file, write
 \begin{lstlisting}
 \usepackage{causets}
 \end{lstlisting}
-in the preamble of the document (this will automatically load the \lstinline�tikz� package as well).
+in the preamble of the document (this will automatically load the \lstinline&tikz& package as well).
 
-For the command introduction in \autoref{tab:MainCommandsExamples}, I use the package options \lstinline�black� (only black and white diagrams) and \lstinline�permutation� (also shows the permutation),
+For the command introduction in \autoref{tab:MainCommandsExamples}, I use the package options \lstinline&black& (only black and white diagrams) and \lstinline&permutation& (also shows the permutation),
 \begin{lstlisting}
 \usepackage[black,permutation]{causets}
 \end{lstlisting}
@@ -179,16 +179,16 @@ The three main commands of this package are
 \end{lstlisting}
 The first command takes a permutation of the integers from an interval $[ a, b ]$ (where $N = b - a + 1 \geq 0$ is the cardinality of the causet).
 The permutation determines the event positions and causal structure such that events $i$ and $j$ are linked if $i < j$ and there is no $k > j$ between $i$ and $j$ in the permutation.
-The second command does the same, but removes (restyles) links between event pairs \lstinline�i/j� as given in the second argument.
-The third command only uses the permutation to position the events, the links have to be explicitly specified by event pairs \lstinline�i/j� in the second argument.
+The second command does the same, but removes (restyles) links between event pairs \lstinline&i/j& as given in the second argument.
+The third command only uses the permutation to position the events, the links have to be explicitly specified by event pairs \lstinline&i/j& in the second argument.
 
 Any causet that can be embedded in $1 + 1$ dimensional Minkowski spacetime can also be described by the product of two total orders (a 2-order).
 Let the causet elements be labeled by an increasing null coordinate $u$.
 In the first diagram of \autoref{tab:MainCommandsExamples}, the $u$-coordinate axis points upwards on the right hand side.
 The causal relation (partial order) implies a label permutation along the null coordinate $v$ (pointing upwards along the left axis).
-This permutation is the input of the \lstinline�\pcauset� command that computes the causal relation from the permutation.
+This permutation is the input of the \lstinline&\pcauset& command that computes the causal relation from the permutation.
 See example 1 in \autoref{tab:MainCommandsExamples}.
-\begin{table}[h!]
+\begin{table}[ht!]
   \centering
   \tikzcausetsset{black colors, show permutation}
   \begin{tabular*}{\textwidth}{lp{0.75\textwidth}c}
@@ -198,32 +198,32 @@ See example 1 in \autoref{tab:MainCommandsExamples}.
   & inline output
   \\\midrule
     1
-  & \lstinline�\pcauset{4,7,2,6,1,5,3}�
+  & \lstinline+\pcauset{4,7,2,6,1,5,3}+
   & \pcauset[name=pcausetExample_perm]{4,7,2,6,1,5,3}
   \\\midrule
     2
-  & \lstinline�\rcauset{4,7,2,6,1,5,3}{2/5}�
+  & \lstinline+\rcauset{4,7,2,6,1,5,3}{2/5}+
   & \rcauset[name=rcausetExample_perm]{4,7,2,6,1,5,3}{2/5}
   \\\midrule
     3
-  & \lstinline�\causet{4,7,2,6,1,5,3}{1/3,1/5,2/3,2/6,4/5,4/6,4/7}�
+  & \lstinline+\causet{4,7,2,6,1,5,3}{1/3,1/5,2/3,2/6,4/5,4/6,4/7}+
   & \causet[name=causetExample_perm]{4,7,2,6,1,5,3}{1/3,1/5,2/3,2/6,4/5,4/6,4/7}
   \\\bottomrule
   \end{tabular*}
   \caption{\label{tab:MainCommandsExamples} Examples of the three main commands.}
 \end{table}
 
-Every causet that does not embed in $1 + 1$ dimensional Minkowski spacetime can be made embeddable by adding links, for which the \lstinline�\rcauset� command is defined.
+Every causet that does not embed in $1 + 1$ dimensional Minkowski spacetime can be made embeddable by adding links, for which the \lstinline&\rcauset& command is defined.
 Find an embedding causet by adding a minimal number of causal relations to the given causet.
-The so obtained, embedding causet gives a permutation as discussed before for the \lstinline�\pcauset� causet.
-The links that have been added to obtain this permutation need to be removed from the generated causet, which is specified by link pairs \lstinline�i/j� in the second argument.
+The so obtained, embedding causet gives a permutation as discussed before for the \lstinline&\pcauset& causet.
+The links that have been added to obtain this permutation need to be removed from the generated causet, which is specified by link pairs \lstinline&i/j& in the second argument.
 See example 2 in \autoref{tab:MainCommandsExamples}.
 
 In some situations, it might be easier to specify the list of link pairs that exist, instead of removing links.
-For this purpose, use the \lstinline�\causet� command.
+For this purpose, use the \lstinline&\causet& command.
 As an example, we rewrite the example 2 by specifying all existing links as pairs, see example 3 in \autoref{tab:MainCommandsExamples}.
-Note that the \lstinline�\rcauset� command was actually much shorter for this particular example.
-However, if the list of link pairs in the \lstinline�\rcauset� command is very long, specifying all existing link pairs instead with the \lstinline�\causet� yields a faster performance.
+Note that the \lstinline&\rcauset& command was actually much shorter for this particular example.
+However, if the list of link pairs in the \lstinline&\rcauset& command is very long, specifying all existing link pairs instead with the \lstinline&\causet& yields a faster performance.
 
 You may use any of the three main commands to add a causet diagram in-line with text or within a mathematical expression.
 As an example for the use in a mathematical equation, here is the code for the first set of causets on the title page:
@@ -232,17 +232,17 @@ As an example for the use in a mathematical equation, here is the code for the f
 ...
 \begin{document}
 ...
-\begin{align}
-  S &=
-  \left\{
+\begin{equation}
+    S
+  = \left\{
     \pcauset{3,2,1}, \pcauset{3,1,2}, \pcauset{2,1,3}, \pcauset{1,3,2}, \pcauset{1,2,3}
   \right\}.
-\end{align}
+\end{equation}
 \end{lstlisting}
 %\vspace{-1ex}
-\begin{align}
-  S &=
-  \left\{
+\begin{equation}
+    S
+  = \left\{
     \pcauset[name=3Antichain]{3,2,1},
     \pcauset[name=2ChainUnion1Chain]{3,1,2},
     \pcauset[name=Wedge]{2,1,3},
@@ -250,15 +250,15 @@ As an example for the use in a mathematical equation, here is the code for the f
     \pcauset[name=3Chain]{1,2,3}
   \right\}
   .
-\end{align}
+\end{equation}
 
 Of course, a given causet might have more than one representing permutation, so that any of those permutations may be used.
 However, you may consider it a good practice to choose the permutation that starts with the larger integer, so that disjoint elements appear to the right in the graphs.
-For example, you may write \lstinline�\pcauset{3,1,2}�, \pcauset[name=2ChainUnion1Chain]{3,1,2}, as opposed to \lstinline�\pcauset{2,3,1}�, \pcauset[name=1ChainUnion2Chain]{2,3,1}.
+For example, you may write \lstinline&\pcauset{3,1,2}&, \pcauset[name=2ChainUnion1Chain]{3,1,2}, as opposed to \lstinline&\pcauset{2,3,1}&, \pcauset[name=1ChainUnion2Chain]{2,3,1}.
 
-The arguments of the commands are lists that are iterated over by a \lstinline�\foreach� loop of PGF/TikZ.
+The arguments of the commands are lists that are iterated over by a \lstinline&\foreach& loop of PGF/TikZ.
 So you may use dots {...} to complete ranges of integers automatically.
-You may use this feature to draw chains like \pcauset[name=5Chain]{1,...,5} (with \lstinline�\pcauset{1,...,5}�) or antichains like \pcauset[name=5Antichain]{5,...,1} (with \lstinline�\pcauset{5,...,1}�).
+You may use this feature to draw chains like \pcauset[name=5Chain]{1,...,5} (with \lstinline&\pcauset{1,...,5}&) or antichains like \pcauset[name=5Antichain]{5,...,1} (with \lstinline&\pcauset{5,...,1}&).
 As a more complex example for the dots notation, consider
 \begin{lstlisting}
 \pcauset{20,18,...,8, 1,7,6,...,2, 9,11,...,19}
@@ -282,14 +282,14 @@ To help create and modify poset diagrams visually, I developed the PrOSET editor
 \url{https://c-minz.github.io/assets/html/proset-editor.html}
 
 Whenever you use this package to compose a publication to be uploaded to the arXiv, or a document that may be converted to XML or HTML with \LaTeXML, this package provides special support.
-To replace the diagram figures especially for screen readers, add a short description with the key \lstinline�alt={�\PH\lstinline�}� in the optional argument.
+To replace the diagram figures especially for screen readers, add a short description with the key \lstinline&alt={&\PH\lstinline&}& in the optional argument.
 For example, the code
 \begin{lstlisting}
 \pcauset[alt={N}]{2,4,1,3},
 \pcauset[alt={union of an N and a 2-chain}]{5,6,2,4,1,3}
 \end{lstlisting}
 adds ``N'' as alternative text for \pcauset[name=N, alt={N}]{2,4,1,3}, and ``union of an N and a 2-chain'' as description for \pcauset[name=N_2-chain, alt={union of an N and a 2-chain}]{5,6,2,4,1,3}.
-If no alternative text is specified, the default value ``causet'' is used (which is set in the style \lstinline�every causet�).
+If no alternative text is specified, the default value ``causet'' is used (which is set in the style \lstinline&every causet&).
 
 
 \section{Package options}
@@ -304,23 +304,23 @@ If no options are used, an output like \rcauset[name=Options_rcauset, alt={3-cro
 \rcauset[alt={3-crown with doubled top right}]{4,2,7,6,1,5,3}{2/5}
 \end{lstlisting}
 
-The options -- given in the following table -- are passed to the \lstinline�causets� package as optional parameter and can be combined.
+The options -- given in the following table -- are passed to the \lstinline&causets& package as optional parameter and can be combined.
 The package options are listed together with example outputs created with the commands
 \begin{lstlisting}
 \pcauset{4,2,7,6,1,5,3}
 \rcauset{4,2,7,6,1,5,3}{2/5}
 \end{lstlisting}
-If not specified otherwise, any package option also works with the command \lstinline�\causet�.
+If not specified otherwise, any package option also works with the command \lstinline&\causet&.
 
 \begin{longtable}{p{0.63\textwidth}p{0.14\textwidth}p{0.14\textwidth}}
   \toprule
-  Package option & \lstinline�\pcauset� & \lstinline�\rcauset�
+  Package option & \lstinline+\pcauset+ & \lstinline+\rcauset+
   \\\midrule
   \endfirsthead
 
   \multicolumn{3}{c}{\footnotesize \textit{continued from the previous page}}
   \\\midrule
-  Package option & \lstinline�\pcauset� & \lstinline�\rcauset�
+  Package option & \lstinline+\pcauset+ & \lstinline+\rcauset+
   \\\midrule
   \endhead
 
@@ -330,17 +330,17 @@ If not specified otherwise, any package option also works with the command \lsti
 
   \endlastfoot
 
-  \lstinline�\usepackage[permutation]{causets}� shows permutations
+  \lstinline+\usepackage[permutation]{causets}+ shows permutations
 & \multirow{3}{5em}{%
   \causetsDrawPermutationtrue \pcauset[name=Options_pcauset_perm]{4,2,7,6,1,5,3}}
 & \multirow{3}{5em}{%
   \causetsDrawPermutationtrue \rcauset[name=Options_rcauset_perm]{4,2,7,6,1,5,3}{2/5}}
 \\
-  (\lstinline�\causetsDrawPermutationtrue� activates this option)
+  (\lstinline+\causetsDrawPermutationtrue+ activates this option)
 \\
-  (\lstinline�\causetsDrawPermutationfalse� deactivates this option)
+  (\lstinline+\causetsDrawPermutationfalse+ deactivates this option)
 \\\midrule
-  \lstinline�\usepackage[permutation, uunlabeled]{causets}�
+  \lstinline+\usepackage[permutation, uunlabeled]{causets}+
 & \multirow{4}{5em}{%
   \causetsDrawPermutationtrue \causetsDrawULabelsfalse \pcauset[name=Options_pcauset_permv]{4,2,7,6,1,5,3}}
 & \multirow{4}{5em}{%
@@ -348,11 +348,11 @@ If not specified otherwise, any package option also works with the command \lsti
 \\
   shows permutations without u-labels
 \\
-  (\lstinline�\causetsDrawULabelstrue� activates u-labels)
+  (\lstinline+\causetsDrawULabelstrue+ activates u-labels)
 \\
-  (\lstinline�\causetsDrawULabelsfalse� deactivates u-labels)
+  (\lstinline+\causetsDrawULabelsfalse+ deactivates u-labels)
 \\\midrule
-  \lstinline�\usepackage[permutation, vunlabeled]{causets}�
+  \lstinline+\usepackage[permutation, vunlabeled]{causets}+
 & \multirow{4}{5em}{%
   \causetsDrawPermutationtrue \causetsDrawVLabelsfalse \pcauset[name=Options_pcauset_permu]{4,2,7,6,1,5,3}}
 & \multirow{4}{5em}{%
@@ -360,22 +360,22 @@ If not specified otherwise, any package option also works with the command \lsti
 \\
   shows permutations without v-labels
 \\
-  (\lstinline�\causetsDrawVLabelstrue� activates v-labels)
+  (\lstinline+\causetsDrawVLabelstrue+ activates v-labels)
 \\
-  (\lstinline�\causetsDrawVLabelsfalse� deactivates v-labels)
+  (\lstinline+\causetsDrawVLabelsfalse+ deactivates v-labels)
 \\\midrule\midrule
-  \lstinline�\usepackage[labeled]{causets}� shows labeled events
+  \lstinline+\usepackage[labeled]{causets}+ shows labeled events
 & \multirow{3}{5em}{%
   \causetsDrawLabelstrue \pcauset[name=Options_pcauset_labeled]{4,2,7,6,1,5,3}}
 & \multirow{3}{5em}{%
   \causetsDrawLabelstrue \rcauset[name=Options_rcauset_labeled]{4,2,7,6,1,5,3}{2/5}}
 \\
-  (\lstinline�\causetsDrawLabelstrue� activates labels)
+  (\lstinline+\causetsDrawLabelstrue+ activates labels)
 \\
-  (\lstinline�\causetsDrawLabelsfalse� deactivates labels)
+  (\lstinline+\causetsDrawLabelsfalse+ deactivates labels)
 \\\midrule\midrule
-  \lstinline�\usepackage[continuous]{causets}� allows links to cross over events.
-  Link interruptions (default) only affect the \lstinline�\causet� command and ``restyled'' links of \lstinline�\rcauset�, but not the examples shown on the right.
+  \lstinline+\usepackage[continuous]{causets}+ allows links to cross over events.
+  Link interruptions (default) only affect the \lstinline+\causet+ command and ``restyled'' links of \lstinline+\rcauset+, but not the examples shown on the right.
 & \multirow{6}{5em}{%
   \causetsBreakLinkstrue \pcauset[name=Options_pcauset_continuous]{4,2,7,6,1,5,3}}
 & \multirow{6}{5em}{%
@@ -383,52 +383,52 @@ If not specified otherwise, any package option also works with the command \lsti
 \\
   Details on interrupted (broken) links are given below this table.
 \\\midrule
-  \lstinline�\usepackage[caps]{causets}� sets caps as link tips
+  \lstinline+\usepackage[caps]{causets}+ sets caps as link tips
 & \multirow{2}{5em}{%
   \pcauset[name=Options_pcauset_caps, cap links]{4,2,7,6,1,5,3}}
 & \multirow{2}{5em}{%
   \rcauset[name=Options_rcauset_caps, cap links]{4,2,7,6,1,5,3}{2/5}}
 \\
 \\\midrule
-  \lstinline�\usepackage[arrows]{causets}� sets arrows (rounded stealth) as link tips
+  \lstinline+\usepackage[arrows]{causets}+ sets arrows (rounded stealth) as link tips
 & \multirow{2}{5em}{%
   \pcauset[name=Options_pcauset_arrows, arrow links]{4,2,7,6,1,5,3}}
 & \multirow{2}{5em}{%
   \rcauset[name=Options_rcauset_arrows, arrow links]{4,2,7,6,1,5,3}{2/5}}
 \\\midrule
-  \lstinline�\usepackage[unlinked]{causets}� does not draw links
+  \lstinline+\usepackage[unlinked]{causets}+ does not draw links
 & \multirow{3}{5em}{%
   \causetsDrawLinksfalse \pcauset[name=Options_pcauset_unlinked]{4,2,7,6,1,5,3}}
 & \multirow{3}{5em}{%
   \causetsDrawLinksfalse \rcauset[name=Options_rcauset_unlinked]{4,2,7,6,1,5,3}{2/5}}
 \\
-  (\lstinline�\causetsDrawLinkstrue� actives links)
+  (\lstinline+\causetsDrawLinkstrue+ actives links)
 \\
-  (\lstinline�\causetsDrawLinksfalse� deactivates links)
+  (\lstinline+\causetsDrawLinksfalse+ deactivates links)
 \\\pagebreak%\midrule
-  \lstinline�\usepackage[tiny]{causets}� for tiny diagrams
+  \lstinline+\usepackage[tiny]{causets}+ for tiny diagrams
 & \multirow{2}{5em}{%
   \pcauset[name=Options_pcauset_tiny, tiny]{4,2,7,6,1,5,3}}
 & \multirow{2}{5em}{%
   \rcauset[name=Options_rcauset_tiny, tiny]{4,2,7,6,1,5,3}{2/5}}
 \\
-  (\lstinline�\tikzcausetsset{tiny}� sets tiny sizes)
+  (\lstinline+\tikzcausetsset{tiny}+ sets tiny sizes)
 \\\midrule
-  \lstinline�\usepackage[smaller]{causets}� for very small diagrams
+  \lstinline+\usepackage[smaller]{causets}+ for very small diagrams
 & \multirow{2}{5em}{%
   \pcauset[name=Options_pcauset_verysmall, very small]{4,2,7,6,1,5,3}}
 & \multirow{2}{5em}{%
   \rcauset[name=Options_rcauset_verysmall, very small]{4,2,7,6,1,5,3}{2/5}}
 \\
-  (\lstinline�\tikzcausetsset{very small}� sets very small sizes)
+  (\lstinline+\tikzcausetsset{very small}+ sets very small sizes)
 \\\midrule
-  \lstinline�\usepackage[small]{causets}� for small diagrams
+  \lstinline+\usepackage[small]{causets}+ for small diagrams
 & \multirow{2}{5em}{%
   \pcauset[name=Options_pcauset_small, small]{4,2,7,6,1,5,3}}
 & \multirow{2}{5em}{%
   \rcauset[name=Options_rcauset_small, small]{4,2,7,6,1,5,3}{2/5}}
 \\
-  (\lstinline�\tikzcausetsset{small}� sets small sizes)
+  (\lstinline+\tikzcausetsset{small}+ sets small sizes)
 \\\midrule
   For comparison, here are the normal sized causets.
 & \multirow{2}{5em}{%
@@ -436,78 +436,78 @@ If not specified otherwise, any package option also works with the command \lsti
 & \multirow{2}{5em}{%
   \rcauset[name=Options_rcauset, normal]{4,2,7,6,1,5,3}{2/5}}
 \\
-  (\lstinline�\tikzcausetsset{normal}� sets normal sizes)
+  (\lstinline+\tikzcausetsset{normal}+ sets normal sizes)
 \\\midrule
-  \lstinline�\usepackage[large]{causets}� for large diagrams
+  \lstinline+\usepackage[large]{causets}+ for large diagrams
 & \multirow{3}{5em}{%
   \pcauset[name=Options_pcauset_large, large]{4,2,7,6,1,5,3}}
 & \multirow{3}{5em}{%
   \rcauset[name=Options_rcauset_large, large]{4,2,7,6,1,5,3}{2/5}}
 \\
-  (\lstinline�\tikzcausetsset{large}� sets large sizes)
+  (\lstinline+\tikzcausetsset{large}+ sets large sizes)
 \\[1.3em]\midrule
-  \lstinline�\usepackage[larger]{causets}� for very large diagrams
+  \lstinline+\usepackage[larger]{causets}+ for very large diagrams
 & \multirow{3}{5em}{%
   \pcauset[name=Options_pcauset_verylarge, very large]{4,2,7,6,1,5,3}}
 & \multirow{3}{5em}{%
   \rcauset[name=Options_rcauset_verylarge, very large]{4,2,7,6,1,5,3}{2/5}}
 \\
-  (\lstinline�\tikzcausetsset{very large}� sets very large sizes)
+  (\lstinline+\tikzcausetsset{very large}+ sets very large sizes)
 \\[2.1em]\midrule
-  \lstinline�\usepackage[huge]{causets}� for huge diagrams
+  \lstinline+\usepackage[huge]{causets}+ for huge diagrams
 & \multirow{4}{5em}{%
   \pcauset[name=Options_pcauset_huge, huge]{4,2,7,6,1,5,3}}
 \\
-  (\lstinline�\tikzcausetsset{huge}� sets huge sizes)
+  (\lstinline+\tikzcausetsset{huge}+ sets huge sizes)
 \\
   Details on size options are given in \autoref{sec:Sizes}.
 \\[2.5em]\midrule\midrule
-  \lstinline�\usepackage[black]{causets}� for black and white causets
+  \lstinline+\usepackage[black]{causets}+ for black and white causets
 & \multirow{2}{5em}{%
   \pcauset[name=Options_pcauset_black, black colors]{4,2,7,6,1,5,3}}
 & \multirow{2}{5em}{%
   \rcauset[name=Options_rcauset_black, black colors]{4,2,7,6,1,5,3}{2/5}}
 \\
-  (\lstinline�\tikzcausetsset{black colors}� activates the option)
+  (\lstinline+\tikzcausetsset{black colors}+ activates the option)
 \\\midrule
-  \lstinline�\usepackage[gray]{causets}� for grey scale causets (default)
+  \lstinline+\usepackage[gray]{causets}+ for grey scale causets (default)
 & \multirow{3}{5em}{%
   \pcauset[name=Options_pcauset_gray, gray colors]{4,2,7,6,1,5,3}}
 & \multirow{3}{5em}{%
   \rcauset[name=Options_rcauset_gray, gray colors]{4,2,7,6,1,5,3}{2/5}}
 \\
-  (\lstinline�\tikzcausetsset{gray colors}� activates the option)
+  (\lstinline+\tikzcausetsset{gray colors}+ activates the option)
 \\\midrule
-  \lstinline�\usepackage[blue]{causets}� for blue causets
+  \lstinline+\usepackage[blue]{causets}+ for blue causets
 & \multirow{2}{5em}{%
   \pcauset[name=Options_pcauset_blue, blue colors]{4,2,7,6,1,5,3}}
 & \multirow{2}{5em}{%
   \rcauset[name=Options_rcauset_blue, blue colors]{4,2,7,6,1,5,3}{2/5}}
 \\
-  (\lstinline�\tikzcausetsset{blue colors}� activates the option)
+  (\lstinline+\tikzcausetsset{blue colors}+ activates the option)
 \\\midrule
-  \lstinline�\usepackage[neon]{causets}� for brightly colored causets
+  \lstinline+\usepackage[neon]{causets}+ for brightly colored causets
 & \multirow{3}{5em}{%
   \pcauset[name=Options_pcauset_neon, neon colors]{4,2,7,6,1,5,3}}
 & \multirow{3}{5em}{%
   \rcauset[name=Options_rcauset_neon, neon colors]{4,2,7,6,1,5,3}{2/5}}
 \\
-  (\lstinline�\tikzcausetsset{neon colors}� activates the option)
+  (\lstinline+\tikzcausetsset{neon colors}+ activates the option)
 \\
   Details on color options are given in \autoref{sec:Colors}.
 \\\midrule%\midrule
-  \lstinline�\usepackage[spatial]{causets}� shows dashed lines between spatially separated events (which is a secondary partial order for the causets drawn with \lstinline�\pcauset�).
-  This option only affects the \lstinline�\pcauset� and \lstinline�\rcauset� commands, but not the \lstinline�\causet� command.
+  \lstinline+\usepackage[spatial]{causets}+ shows dashed lines between spatially separated events (which is a secondary partial order for the causets drawn with \lstinline+\pcauset+).
+  This option only affects the \lstinline+\pcauset+ and \lstinline+\rcauset+ commands, but not the \lstinline+\causet+ command.
 & \multirow{7}{5em}{%
   \pcauset[name=Options_pcauset_spatial, spatially linked]{4,2,7,6,1,5,3}}
 & \multirow{7}{5em}{%
   \rcauset[name=Options_rcauset_spatial, spatially linked]{4,2,7,6,1,5,3}{2/5}}
 \\
-  (\lstinline�\causetsDrawSpatialLinkstrue� activates the option)
+  (\lstinline+\causetsDrawSpatialLinkstrue+ activates the option)
 \\
-  (\lstinline�\causetsDrawSpatialLinksfalse� deactivates the option)
+  (\lstinline+\causetsDrawSpatialLinksfalse+ deactivates the option)
 \\\midrule
-  \lstinline�\usepackage[external]{causets}� loads the \lstinline�external� library, sets the external file name prefix to ``\lstinline�causets/�'', and enables the use of causet names for the external file names.
+  \lstinline+\usepackage[external]{causets}+ loads the \lstinline+external+ library, sets the external file name prefix to ``\lstinline+causets/+'', and enables the use of causet names for the external file names.
   (This feature has to be loaded as option in the preamble not later in the document.)
 & \multirow{6}{5em}{%
   \pcauset[name=Options_pcauset]{4,2,7,6,1,5,3}}
@@ -519,8 +519,8 @@ If not specified otherwise, any package option also works with the command \lsti
 \end{longtable}
 
 By default, the links in a diagram are interrupted if they cross over another event (exactly over the event centre).
-Any such crossing of links over events can only occur for the links explicitly specified for the \lstinline�\causet� command or the locally restyled links of the \lstinline�\rcauset� command, but not for the links drawn by \lstinline�\pcauset� or automatically drawn links by \lstinline�\rcauset�.
-This feature is activated by default (\lstinline�\causetsBreakLinkstrue�) and can be  deactivated with \lstinline�\causetsBreakLinksfalse�, or with the option \lstinline�continuously linked�.
+Any such crossing of links over events can only occur for the links explicitly specified for the \lstinline&\causet& command or the locally restyled links of the \lstinline&\rcauset& command, but not for the links drawn by \lstinline&\pcauset& or automatically drawn links by \lstinline&\rcauset&.
+This feature is activated by default (\lstinline&\causetsBreakLinkstrue&) and can be  deactivated with \lstinline&\causetsBreakLinksfalse&, or with the option \lstinline&continuously linked&.
 
 For example, here is a causet that embeds in 3-dimensional but not in 2-dimensional Minkowski spacetime.
 This causet has one event (0) in the centre that is linked to events -3 and 3 but not to events -6 and 6, while a link (blue) from -6 to 6 crosses over it.
@@ -537,23 +537,23 @@ This causet has one event (0) in the centre that is linked to events -3 and 3 bu
   \causet[name=ContinuouslyLinkedExample_verylarge, very large, labels={right, at=east}, continuously linked]{-1,2,-5,-7,4,-3,-6,0,6,3,-4,7,5,-2,1}{-7/-6,-7/4,-6/-4,-6/6/blue!50!cyan,-5/-4,-5/-3,-4/-2,-4/7,-3/-2,-3/0,-2/1,-1/0,-1/2,0/1,0/3,2/3,2/4,3/5,4/5,4/6,6/7}
 \end{center}
 Note that the links are drawn in the order given by the second argument.
-Similar results are obtained with the following \lstinline�\rcauset� commands (since version 1.4) 
+Similar results are obtained with the following \lstinline&\rcauset& commands (since version 1.4) 
 \begin{lstlisting}
 \rcauset[brokenly linked]{-1,2,-5,-7,4,-3,-6,0,6,3,-4,7,5,-2,1} {-7/-3,-6/0,-5/4,-4/5,0/6,3/7,-6/6/blue!50!cyan}
 \rcauset[continuously linked]{-1,2,-5,-7,4,-3,-6,0,6,3,-4,7,5,-2,1} {-7/-3,-6/0,-5/4,-4/5,0/6,3/7,-6/6/blue!50!cyan}
 \end{lstlisting}
-where all pairs of integers in the second argument are links to be removed (by default, get the local style \lstinline�draw=none�).
+where all pairs of integers in the second argument are links to be removed (by default, get the local style \lstinline&draw=none&).
 All links with a local style specified (here the last link only) are drawn in the order they appear after all automatic links have been drawn.
 Local styles are explained in \autoref{sec:LocalStyles} in more detail.
 
-All main commands, the short hand macros (see \autoref{sec:ShortHandMacros}), and the command \lstinline�\causetfile� (see \autoref{sec:ExternalCausets}) add a small padding to the left and right of the diagram for a better spacing within text and mathematical expressions.
-The padding is adjustable with \lstinline�padding=�\PH\ and stored in the macro \lstinline�\causets@Padding� (by default, it is \lstinline�\thinspace�).
+All main commands, the short hand macros (see \autoref{sec:ShortHandMacros}), and the command \lstinline&\causetfile& (see \autoref{sec:ExternalCausets}) add a small padding to the left and right of the diagram for a better spacing within text and mathematical expressions.
+The padding is adjustable with \lstinline&padding=&\PH\ and stored in the macro \lstinline&\causets@Padding& (by default, it is \lstinline&\thinspace&).
 
 
 \section{Changing the options for individual diagrams}
 \label{sec:ShortHandMacros}
 
-Most of the package options introduced in the section before are also defined as keys that can be specified in the optional argument of the three main macros \lstinline+\pcauset+, \lstinline+\rcauset+ and \lstinline+\causet+.
+Most of the package options introduced in the section before are also defined as keys that can be specified in the optional argument of the three main macros \lstinline&\pcauset&, \lstinline&\rcauset& and \lstinline&\causet&.
 
 To add labels or the permutation grid to a diagram, specify the respective option in the optional argument of the macro:
 \begin{longtable}{p{0.35\textwidth}p{0.60\textwidth}}
@@ -598,9 +598,9 @@ To add labels or the permutation grid to a diagram, specify the respective optio
 \\\bottomrule
 \end{longtable}
 
-Additionally, the package has short hand macros to switch on labels, the permutation grid, or both (\lstinline�\causetsDrawLabelstrue�, \lstinline�\causetsDrawPermutationtrue�, or \lstinline�\tikzcausetsset{ labeled, show permutation}�) to help compile diagrams.
-Since package version 1.5, these short hand macros ending in \lstinline�L�, \lstinline�P� and \lstinline�X� are depreciated, because diagrams can now be designed and exported to \LaTeX\ macros with the \href{https://c-minz.github.io/assets/html/proset-editor.html}{PrOSET editor}.
-To use these short hand macros nevertheless, add the following lines to the preamble after importing the package with \lstinline�\usepackage{causets}�:
+Additionally, the package has short hand macros to switch on labels, the permutation grid, or both (\lstinline&\causetsDrawLabelstrue&, \lstinline&\causetsDrawPermutationtrue&, or \lstinline&\tikzcausetsset{ labeled, show permutation}&) to help compile diagrams.
+Since package version 1.5, these short hand macros ending in \lstinline&L&, \lstinline&P& and \lstinline&X& are depreciated, because diagrams can now be designed and exported to \LaTeX\ macros with the \href{https://c-minz.github.io/assets/html/proset-editor.html}{PrOSET editor}.
+To use these short hand macros nevertheless, add the following lines to the preamble after importing the package with \lstinline&\usepackage{causets}&:
 \begin{lstlisting}
 \providecommand*{\pcausetP}[2][]{%
 {\causetsDrawPermutationtrue\causetsDrawLabelsfalse
@@ -631,7 +631,7 @@ To use these short hand macros nevertheless, add the following lines to the prea
 \rcauset[#1]{#2}{#3}}}
 \end{lstlisting}
 
-The short hand macros \lstinline+\causetFence+ and \lstinline+\causetCrown+ have been removed in version 1.5, since diagrams of fences, crowns, polygons and other posets are supported by the \href{https://c-minz.github.io/assets/html/proset-editor.html}{PrOSET editor} and can be exported as \LaTeX\ macros.
+The short hand macros \lstinline&\causetFence& and \lstinline&\causetCrown& have been removed in version 1.5, since diagrams of fences, crowns, polygons and other posets are supported by the \href{https://c-minz.github.io/assets/html/proset-editor.html}{PrOSET editor} and can be exported as \LaTeX\ macros.
 
 
 \section{Labeling and replacing events (also to represent infinite causets)}
@@ -641,10 +641,10 @@ Since version v1.3 of the package, it is possible to relabel and replace causet 
 These features are useful for labelling events arbitrarily, and drawing diagrams of infinite causets using ellipsis.
 
 By default, all events get named and labeled by the integers given in the arguments of the commands.
-For example, \lstinline�\pcauset[labeled]{0,2,1}� creates the diagram \pcauset[labeled]{0,2,1} where the event notes are named \lstinline�(E0)�, \lstinline�(E2)�, \lstinline�(E1)� (which are always created), respectively, while the label nodes have the names \lstinline�(EL0)�, \lstinline�(EL2)�, \lstinline�(EL1)� (which are only created with the \lstinline�labeled� option).
-If the permutation is displayed as well, the $u$- and $v$-coordinate labels are the nodes \lstinline�(EUL�\PH\lstinline�)� and \lstinline�(EVL�\PH\lstinline�)�, with \PH\ taking on the values $\{0, 2, 1 \}$.
+For example, \lstinline&\pcauset[labeled]{0,2,1}& creates the diagram \pcauset[labeled]{0,2,1} where the event notes are named \lstinline&(E0)&, \lstinline&(E2)&, \lstinline&(E1)& (which are always created), respectively, while the label nodes have the names \lstinline&(EL0)&, \lstinline&(EL2)&, \lstinline&(EL1)& (which are only created with the \lstinline&labeled& option).
+If the permutation is displayed as well, the $u$- and $v$-coordinate labels are the nodes \lstinline&(EUL&\PH\lstinline&)& and \lstinline&(EVL&\PH\lstinline&)&, with \PH\ taking on the values $\{0, 2, 1 \}$.
 
-To offset the names of all causet events by an integer amount, use the key-value pair \lstinline�offset=�\PH\ to adjust the naming and labelling of events and get distinct event names, while the same integers are used in the command arguments.
+To offset the names of all causet events by an integer amount, use the key-value pair \lstinline&offset=&\PH\ to adjust the naming and labelling of events and get distinct event names, while the same integers are used in the command arguments.
 Consider the following example.
 \begin{lstlisting}
 \begin{align*}
@@ -663,11 +663,11 @@ Consider the following example.
   \pcauset[name=Diamond_labeled, labeled]{0,2,1,3}\quad\cdots\quad
   \pcauset[name=Diamond_labeledoffset, labeled, offset=12]{0,2,1,3}\quad\cdots
 \end{align*}
-Here, the three commands have the same integer argument \lstinline�{0,2,1,3}�, but the events are named with the specified offsets and the labels are adjusted accordingly.
+Here, the three commands have the same integer argument \lstinline&{0,2,1,3}&, but the events are named with the specified offsets and the labels are adjusted accordingly.
 In this way, it will be possible to address the event (and label) nodes of the (sub-)causets distinctively within a larger TikZ picture.
 For more details on how to draw causets within a TikZ picture, see \autoref{sec:TikZ}.
 
-When you (only) want to change the labelling of an event to \PH, add a slash and \lstinline�label=�\PH\ directly after the event integer in the first command argument.
+When you (only) want to change the labelling of an event to \PH, add a slash and \lstinline&label=&\PH\ directly after the event integer in the first command argument.
 For example, the causet \pcauset{2,1,3} has six different labellings by (distinct) integers from the set $\{ 0, 1, 2 \}$,
 %\pagebreak
 \begin{lstlisting}
@@ -711,7 +711,7 @@ For example, the causet \pcauset{2,1,3} has six different labellings by (distinc
 \end{align}
 
 You may use any text as a label.
-Longer text labels should be written in a \TeX\ group \lstinline�{...}�.
+Longer text labels should be written in a \TeX\ group \lstinline&{...}&.
 Here is an example
 \begin{lstlisting}
 \pcauset[large]{2/label=$-\infty$,6,5,7,3/label={Text and $maths$},4/label=-1}
@@ -721,11 +721,11 @@ Here is an example
   \pcauset[name=RelabeledEventsExample_large, large]{2/label=$-\infty$,6,5,7,3/label={Text and $maths$},4/label=-1}
 \end{center}
 
-Notice that replaced labels will always be visible, even if labels are deactivated (\lstinline�\causetsDrawLabelsfalse�) as in this example.
+Notice that replaced labels will always be visible, even if labels are deactivated (\lstinline&\causetsDrawLabelsfalse&) as in this example.
 To change the style of the replaced labels, add the key-value pair
-\lstinline�replaced labels=�\PH, which extends the style of standard labels.
+\lstinline&replaced labels=&\PH, which extends the style of standard labels.
 
-Similarly to the replacement of labels, you can replace event nodes by using a slash followed by \lstinline�event=�\PH.
+Similarly to the replacement of labels, you can replace event nodes by using a slash followed by \lstinline&event=&\PH.
 This feature may have its main application for the representation of infinite causets, for example, the code
 \begin{lstlisting}
 % Define ellipsis rotated by #1 degrees:
@@ -741,14 +741,14 @@ yields the diagram
   \pcauset[name=ReplacedEventsExample_large, large, replaced labels={below, at=south}, replaced events={text scale=1}]
   {-2/{label={$\downarrow$ continues infinitely $\downarrow$}, event={\rdots[90]}}, -1,0,1,16,14,15,11,12,13,7,8,9,10, 2/event={\rdots[10]},3,4/event={~},5,6/event={\rdots[-10]}}
 \end{center}
-Here, three events are replaced by ellipsis with different rotations, and one event is replaced by an empty node (\lstinline�~�).
-The style of the replaced events is specified via the key \lstinline�replaced labels=�\PH\ -- where \PH\ is \lstinline�{text scale=1}� in this example.
+Here, three events are replaced by ellipsis with different rotations, and one event is replaced by an empty node (\lstinline&~&).
+The style of the replaced events is specified via the key \lstinline&replaced labels=&\PH\ -- where \PH\ is \lstinline&{text scale=1}& in this example.
 This example also shows how to relabel and replace simultaneously (see the bottom-most event).
 
-The style and the position of all event labels is set with \lstinline�labels=�\PH, while \lstinline�replaced labels=�\PH\ extends this style.
-As shown in the previous example, the position of labels is defined with a key word like \lstinline�left�, \lstinline�right�, \lstinline�above�, \lstinline�below�, etc.\ (see also the TikZ manual) relative to the position given by the key \lstinline�at=�\PH.
-The \lstinline�at� key holds a coordinate of the event note.
-The default positioning is \lstinline�below left, at=south west�.
+The style and the position of all event labels is set with \lstinline&labels=&\PH, while \lstinline&replaced labels=&\PH\ extends this style.
+As shown in the previous example, the position of labels is defined with a key word like \lstinline&left&, \lstinline&right&, \lstinline&above&, \lstinline&below&, etc.\ (see also the TikZ manual) relative to the position given by the key \lstinline&at=&\PH.
+The \lstinline&at& key holds a coordinate of the event note.
+The default positioning is \lstinline&below left, at=south west&.
 
 
 \section{Changing sizes and fonts (for mathematical expressions)}
@@ -756,15 +756,15 @@ The default positioning is \lstinline�below left, at=south west�.
 
 The pre-defined size styles have the following scaling with respect to the normal size:\vspace{-1ex}
 \begin{itemize}\itemsep=-1ex
-  \item \lstinline�tiny� is $\frac{1}{3}$ times the normal size
-  \item \lstinline�very small� is $\frac{4}{9}$ times the normal size
-  \item \lstinline�small� is $\frac{2}{3}$ times the normal size
-  \item \lstinline�large� is $\frac{3}{2}$ times the normal size
-  \item \lstinline�very large� is $\frac{9}{4}$ times the normal size
-  \item \lstinline�huge� is $3$ times the normal size
+  \item \lstinline&tiny& is $\frac{1}{3}$ times the normal size
+  \item \lstinline&very small& is $\frac{4}{9}$ times the normal size
+  \item \lstinline&small& is $\frac{2}{3}$ times the normal size
+  \item \lstinline&large& is $\frac{3}{2}$ times the normal size
+  \item \lstinline&very large& is $\frac{9}{4}$ times the normal size
+  \item \lstinline&huge& is $3$ times the normal size
 \end{itemize}
-Apart from the pre-defined sizes, a causet can be scaled to any size using \lstinline�size unit=�\PH\ (which is equal to the tile size, \lstinline�tile size=�\PH).
-The normal size unit has the value \lstinline�0.9ex�.
+Apart from the pre-defined sizes, a causet can be scaled to any size using \lstinline&size unit=&\PH\ (which is equal to the tile size, \lstinline&tile size=&\PH).
+The normal size unit has the value \lstinline&0.9ex&.
 
 I recommend to change the size of a causet when used in indices or limits for mathematical expression.
 For a (first level) sub-script in a summation, you may use the small size,
@@ -793,34 +793,34 @@ For a (first level) sub-script in a summation, you may use the small size,
     + \left| \pcauset[name=Pure4Diamond]{1,5,4,3,2,6} \right|
 \end{equation}
 
-Like any other options, sizes can also be specified in the optional argument of a single causet diagram or with \lstinline�\tikzcausetsset{...}� for the current scope.
+Like any other options, sizes can also be specified in the optional argument of a single causet diagram or with \lstinline&\tikzcausetsset{...}& for the current scope.
 
 If you need to set the sizes of individual components of a causet, use the keys \vspace{-1ex}
 \begin{itemize}\itemsep=-1ex
-  \item \lstinline�tile size=�\PH\ to store \PH\ in the macro \lstinline�\causetTileSize� as the size of the tiles in the permutation (this is equivalent to setting the size unit),
-  \item \lstinline�region line width=�\PH\ to set the thickness for the line surrounding the permutation region,
-  \item \lstinline�grid line width=�\PH\ to set the line thickness of the permutation grid,
-  \item \lstinline�event size=�\PH\ to set the diameter of the events,
-  \item \lstinline�event outline=�\PH\ to set the thickness of the transparent line around the events,
-  \item \lstinline�link width=�\PH\ to set the link thickness, and
-  \item \lstinline�broken link gap=�\PH\ to set the link gap before and after an event that interrupts a link.
+  \item \lstinline&tile size=&\PH\ to store \PH\ in the macro \lstinline&\causetTileSize& as the size of the tiles in the permutation (this is equivalent to setting the size unit),
+  \item \lstinline&region line width=&\PH\ to set the thickness for the line surrounding the permutation region,
+  \item \lstinline&grid line width=&\PH\ to set the line thickness of the permutation grid,
+  \item \lstinline&event size=&\PH\ to set the diameter of the events,
+  \item \lstinline&event outline=&\PH\ to set the thickness of the transparent line around the events,
+  \item \lstinline&link width=&\PH\ to set the link thickness, and
+  \item \lstinline&broken link gap=&\PH\ to set the link gap before and after an event that interrupts a link.
 \end{itemize}
 
 The text of all labels is sized independently to the other components of the causet diagrams.
 To adjust the text typesetting, use \vspace{-1ex}
 \begin{itemize}\itemsep=-1ex
-  \item \lstinline�text font=�\PH\ to set the font used for all the text labels -- for example, \lstinline�text font=\fontsize{13}{15.6}\selectfont�\ sets the font size to 13pt (and the baseline skip to 1.2 times this font size),
-  \item \lstinline�text scale=�\PH\ to set the scaling factor of all the text labels (relative to the font size).
+  \item \lstinline&text font=&\PH\ to set the font used for all the text labels -- for example, \lstinline&text font=\fontsize{13}{15.6}\selectfont&\ sets the font size to 13pt (and the baseline skip to 1.2 times this font size),
+  \item \lstinline&text scale=&\PH\ to set the scaling factor of all the text labels (relative to the font size).
 \end{itemize}
 The pre-defined size styles use the following font sizes, \vspace{-1ex}
 \begin{itemize}\itemsep=-1ex
-  \item \lstinline�tiny� is typeset with \lstinline�\tiny� (scaled by 0.30)
-  \item \lstinline�very small� is typeset with \lstinline�\tiny� (scaled by 0.40)
-  \item \lstinline�small� is typeset with \lstinline�\scriptsize� (scaled by 0.43)
-  \item \lstinline�normal� is typeset with \lstinline�\footnotesize� (scaled by 0.56)
-  \item \lstinline�large� is typeset with \lstinline�\small� (scaled by 0.75)
-  \item \lstinline�very large� is typeset with \lstinline�\normalsize� (scaled by 1.02)
-  \item \lstinline�huge� is typeset with \lstinline�\Large� (scaled by 0.97)
+  \item \lstinline&tiny& is typeset with \lstinline&\tiny& (scaled by 0.30)
+  \item \lstinline&very small& is typeset with \lstinline&\tiny& (scaled by 0.40)
+  \item \lstinline&small& is typeset with \lstinline&\scriptsize& (scaled by 0.43)
+  \item \lstinline&normal& is typeset with \lstinline&\footnotesize& (scaled by 0.56)
+  \item \lstinline&large& is typeset with \lstinline&\small& (scaled by 0.75)
+  \item \lstinline&very large& is typeset with \lstinline&\normalsize& (scaled by 1.02)
+  \item \lstinline&huge& is typeset with \lstinline&\Large& (scaled by 0.97)
 \end{itemize}
 
 Below is an example for a diagram drawn with some sizes defined manually:
@@ -838,24 +838,24 @@ Below is an example for a diagram drawn with some sizes defined manually:
 
 Colors can be set with the following keys: \vspace{-1ex}
 \begin{itemize}\itemsep=-1ex
-  \item \lstinline�region color=�\PH\ (or \lstinline�region color=�\PH) for the frame of the permutation grid
-  \item \lstinline�grid color=�\PH\ (or \lstinline�grid color=�\PH) for the lines of the permutation grid
-  \item \lstinline�tile color=�\PH\ (or \lstinline�tile color=�\PH) for the occupied tiles
-  \item \lstinline�ulabel color=�\PH\ (or \lstinline�ulabel color=�\PH) for the $u$ labels
-  \item \lstinline�vlabel color=�\PH\ (or \lstinline�vlabel color=�\PH) for the $v$ labels
-  \item \lstinline�event color=�\PH\ (or \lstinline�event color=�\PH) for the events
-  \item \lstinline�label color=�\PH\ (or \lstinline�label color=�\PH) for the event labels
-  \item \lstinline�link color=�\PH\ (or \lstinline�link color=�\PH) for the links
-  \item \lstinline�spatial link color=�\PH\ (or \lstinline�spatial link color=�\PH) for the spatial links.
+  \item \lstinline&region color=&\PH\ (or \lstinline&region color=&\PH) for the frame of the permutation grid
+  \item \lstinline&grid color=&\PH\ (or \lstinline&grid color=&\PH) for the lines of the permutation grid
+  \item \lstinline&tile color=&\PH\ (or \lstinline&tile color=&\PH) for the occupied tiles
+  \item \lstinline&ulabel color=&\PH\ (or \lstinline&ulabel color=&\PH) for the $u$ labels
+  \item \lstinline&vlabel color=&\PH\ (or \lstinline&vlabel color=&\PH) for the $v$ labels
+  \item \lstinline&event color=&\PH\ (or \lstinline&event color=&\PH) for the events
+  \item \lstinline&label color=&\PH\ (or \lstinline&label color=&\PH) for the event labels
+  \item \lstinline&link color=&\PH\ (or \lstinline&link color=&\PH) for the links
+  \item \lstinline&spatial link color=&\PH\ (or \lstinline&spatial link color=&\PH) for the spatial links.
 \end{itemize}
 When using any of these key-value pairs in an optional arguments of the causet macros, they apply to that diagram.
-To change colors within a scope or the entire document, use the \lstinline�\tikzcausetsset� macro, for example
+To change colors within a scope or the entire document, use the \lstinline&\tikzcausetsset& macro, for example
 \begin{lstlisting}
 \tikzcausetsset{event color=purple, link color=cyan}
 \end{lstlisting}
 changes the event color to purple and the link color to cyan.
 
-For the pre-defined color schemes, use the keys \lstinline�gray colors� (or \lstinline�gray colors�, default), \lstinline�black colors� (or \lstinline�black colors�, only black and white), \lstinline�blue colors� (or \lstinline�blue colors�, blue color tones), or \lstinline�neon colors� (or \lstinline�neon colors�, bright colors).
+For the pre-defined color schemes, use the keys \lstinline&gray colors& (or \lstinline&gray colors&, default), \lstinline&black colors& (or \lstinline&black colors&, only black and white), \lstinline&blue colors& (or \lstinline&blue colors&, blue color tones), or \lstinline&neon colors& (or \lstinline&neon colors&, bright colors).
 These keys set all the colors listed above to pre-defined values.
 
 
@@ -864,12 +864,12 @@ These keys set all the colors listed above to pre-defined values.
 
 The full supported formats of the three main commands are
 \\[1ex]
-\lstinline�\pcauset[�\PH[causet style]\lstinline�]{�\PH[index]\lstinline�/�\PH[event style]\lstinline�,...}�
+\lstinline&\pcauset[&\PH[causet style]\lstinline&]{&\PH[index]\lstinline&/&\PH[event style]\lstinline&,...}&
 \\[1ex]
-\lstinline�\rcauset[�\PH[causet style]\lstinline�]{�\PH[index]\lstinline�/�\PH[event style]\lstinline�,...}{�\PH[unlink from]\lstinline�/�\PH[unlink to]\lstinline�,...,�
-\\\PH[link from]\lstinline�/�\PH[link to]\lstinline�/�\PH[link style]\lstinline�,...}�
+\lstinline&\rcauset[&\PH[causet style]\lstinline&]{&\PH[index]\lstinline&/&\PH[event style]\lstinline&,...}{&\PH[unlink from]\lstinline&/&\PH[unlink to]\lstinline&,...,&
+\\\PH[link from]\lstinline&/&\PH[link to]\lstinline&/&\PH[link style]\lstinline&,...}&
 \\[1ex]
-\lstinline�\causet[�\PH[causet style]\lstinline�]{�\PH[index]\lstinline�/�\PH[event style]\lstinline�,...}{�\PH[link from]\lstinline�/�\PH[link to]\lstinline�/�\PH[link style]\lstinline�,...}�
+\lstinline&\causet[&\PH[causet style]\lstinline&]{&\PH[index]\lstinline&/&\PH[event style]\lstinline&,...}{&\PH[link from]\lstinline&/&\PH[link to]\lstinline&/&\PH[link style]\lstinline&,...}&
 \\[1ex]
 and similarly for all short hand macros as described in \autoref{sec:ShortHandMacros}.
 The style values are all optional, where \PH[causet style] is applied to that causet only, \PH[event style] is applied to a single event, and \PH[link style] is applied to a single link.
@@ -882,44 +882,44 @@ The feature to apply styles only to individual events and links is to highlight 
 \begin{center}
   \rcauset[name=Example_locallystyled, labeled, large, subset A/.style={red, dotted}, subset B/.style=blue, replaced labels={text scale=1, at=east, right}]{2/{subset A, label=event $a$}, 5/subset B, 1, 3/{subset A, label=$b$, replaced labels=orange}, 4/subset B, 6/subset B}{2/3/subset A, 4/6/subset B, 5/6/subset B}
 \end{center}
-Note that \lstinline�label=event $a$� and \lstinline�label=$b$� adds (replaced) labels $a$ and $b$, respectively, but their style is not affected by \lstinline�subset A�.
-To change the style of the labels, we have to use the \lstinline�replaced labels� key, see also \autoref{sec:LabelingReplacing}.
+Note that \lstinline&label=event $a$& and \lstinline&label=$b$& adds (replaced) labels $a$ and $b$, respectively, but their style is not affected by \lstinline&subset A&.
+To change the style of the labels, we have to use the \lstinline&replaced labels& key, see also \autoref{sec:LabelingReplacing}.
 
 
 \section{Externalisation and standalone causets}
 \label{sec:ExternalCausets}
 
-For any document that contains many (large) causet diagrams or the same causets that are used repeatedly, the compilation time can be reduced by moving the graphics to external files using the externalisation library of TikZ or \lstinline�standalone� files.
+For any document that contains many (large) causet diagrams or the same causets that are used repeatedly, the compilation time can be reduced by moving the graphics to external files using the externalisation library of TikZ or \lstinline&standalone& files.
 
 The externalisation feature of TikZ provides the tools to automatically externalise all causet diagrams and only recompile them when they are changed in the document.
-To enable this feature, use the \lstinline�external� option when loading the package and make sure that the document is compiled with the flag 
+To enable this feature, use the \lstinline&external& option when loading the package and make sure that the document is compiled with the flag 
 \begin{lstlisting}
 --shell-escape
 \end{lstlisting}
-The \lstinline�external� option loads the \lstinline�external� library, sets the \lstinline�prefix� to add ``\lstinline�causets/�'' before each external file, and calls \lstinline�\causetsNameExternaltrue� to use the manually specified names for external file names.
-Any causet can be manually named by providing the name key-value pair \lstinline�name=�\PH\ in the optional parameter of a causet command.
+The \lstinline&external& option loads the \lstinline&external& library, sets the \lstinline&prefix& to add ``\lstinline&causets/&'' before each external file, and calls \lstinline&\causetsNameExternaltrue& to use the manually specified names for external file names.
+Any causet can be manually named by providing the name key-value pair \lstinline&name=&\PH\ in the optional parameter of a causet command.
 As an example, the inline code 
 \begin{lstlisting}
 \pcauset[name=Vee, alt={Vee}]{1,3,2}
 \end{lstlisting}
-yields the causet \pcauset[name=Vee, alt={Vee}]{1,3,2} and creates an external pdf file with the name \lstinline�causets/Vee.pdf� relative to the main tex file.
-The alternative text \lstinline�alt={�\PH\lstinline�}� may be the same as name for short names (like here), but the file names are usually shorter.
+yields the causet \pcauset[name=Vee, alt={Vee}]{1,3,2} and creates an external pdf file with the name \lstinline&causets/Vee.pdf& relative to the main tex file.
+The alternative text \lstinline&alt={&\PH\lstinline&}& may be the same as name for short names (like here), but the file names are usually shorter.
 
 I recommend to always name causets, even if externalisation is not used.
 In this way, it is easier to read the source code and switch to externalising at a later point more easily.
 Note that the name of a causet does not have to be unique (especially if it is used repeatedly throughout the document), but you may give different names to causets with different style options to avoid unwanted overwrites.
-For a repeated causet in the document, either use the same code or the \lstinline�\causetfile� macro.
-For example, \lstinline�\pcauset[name=N]{2,4,1,3}� can be repeated with \lstinline�\causetfile{N}� to print the N causet \pcauset[name=N]{2,4,1,3}.
-The macro \lstinline�\causetfile[#1]{#2}� also accepts one optional argument \lstinline�[#1]� and expands to
+For a repeated causet in the document, either use the same code or the \lstinline&\causetfile& macro.
+For example, \lstinline&\pcauset[name=N]{2,4,1,3}& can be repeated with \lstinline&\causetfile{N}& to print the N causet \pcauset[name=N]{2,4,1,3}.
+The macro \lstinline&\causetfile[#1]{#2}& also accepts one optional argument \lstinline&[#1]& and expands to
 \begin{lstlisting}
 \causets@Padding%
 \includegraphics[#1]{\causets@NamePrefix#2}%
 \causets@Padding
 \end{lstlisting}
-To redefine the prefix stored in \lstinline�\causets@NamePrefix� and also set the \lstinline�external� library prefix to the same value, use \lstinline�\tikzcausetsset{set prefix=causets/}�.
-However, to set \lstinline�\causets@NamePrefix� only for \lstinline�causets� but not for other TikZ externalisation, use \lstinline�name prefix=�\PH.
+To redefine the prefix stored in \lstinline&\causets@NamePrefix& and also set the \lstinline&external& library prefix to the same value, use \lstinline&\tikzcausetsset{set prefix=causets/}&.
+However, to set \lstinline&\causets@NamePrefix& only for \lstinline&causets& but not for other TikZ externalisation, use \lstinline&name prefix=&\PH.
 
-If you are already loading the \lstinline�external� library for other uses, you do not want to use the \lstinline�external� option, but add the following to the document's preamble: 
+If you are already loading the \lstinline&external& library for other uses, you do not want to use the \lstinline&external& option, but add the following to the document's preamble: 
 \begin{lstlisting}
 \usetikzlibrary{external}
 ...
@@ -935,10 +935,10 @@ For switching externalisation on/off all together, the library provides the macr
 \tikzexternaldisable
 \tikzexternalenable
 \end{lstlisting}
-Please find further information on the \lstinline�external� library in the TikZ manual.
+Please find further information on the \lstinline&external& library in the TikZ manual.
 
-Graphics may also be moved to standalone tex files manually and included with \lstinline�\causetfile� or \lstinline�\includegraphics�.
-For example, create a file named \lstinline�M.tex� in the directory that was set to \lstinline�name prefix� (by default, this is ``\lstinline�./�'') with the following code:
+Graphics may also be moved to standalone tex files manually and included with \lstinline&\causetfile& or \lstinline&\includegraphics&.
+For example, create a file named \lstinline&M.tex& in the directory that was set to \lstinline&name prefix& (by default, this is ``\lstinline&./&'') with the following code:
 \begin{lstlisting}
 \documentclass[tikz]{standalone}
 \usepackage{causets}
@@ -946,7 +946,7 @@ For example, create a file named \lstinline�M.tex� in the directory that was
 \pcauset{4,2,5,1,3}
 \end{document}
 \end{lstlisting}
-The compiled diagram \pcauset[name=M, alt={M}]{4,2,5,1,3} is then included with the macro \lstinline�\causetfile[alt={M}]{M}� (where \lstinline�alt� is directly passed to \lstinline�\includegraphics� to be processed with \LaTeXML).
+The compiled diagram \pcauset[name=M, alt={M}]{4,2,5,1,3} is then included with the macro \lstinline&\causetfile[alt={M}]{M}& (where \lstinline&alt& is directly passed to \lstinline&\includegraphics& to be processed with \LaTeXML).
 
 More examples on larger standalone graphics are given in \autoref{sec:TikZ}.
 
@@ -964,38 +964,38 @@ A labeled causet with red-framed semi-transparent labels, \pcauset[name=NDash_re
 
 In the same way, it is possible to modify the existing styles of all parts of the diagrams, which means that the default drawing styles are extended by the options passed as value to these keys: \vspace{-1ex}
 \begin{enumerate}\itemsep=-1ex
-  \item \lstinline�region=�\PH\ shows the permutation (\lstinline�show permutation�) and appends to the style of the permutation frame,
-  \item \lstinline�grid=�\PH\ shows the permutation (\lstinline�show permutation�) and appends to the style of the permutation grid,
-  \item \lstinline�tiles=�\PH\ shows the permutation (\lstinline�show permutation�) and appends to the style of the occupied permutation tiles,
-  \item \lstinline�events=�\PH\ appends to the style of the event nodes (graph vertices),
-  \item \lstinline�links=�\PH\ shows the links (\lstinline�show links�) and appends to the style of the links (main graph edges),
-  \item \lstinline�link starts=�\PH\ sets the starting line tip of each link,
-  \item \lstinline�link ends=�\PH\ sets the ending line tip of each link,
-  \item \lstinline�link pauses=�\PH\ sets the ending line tip of each link at an interruption,
-  \item \lstinline�link resumes=�\PH\ sets the starting line tip of each link at an interruption,
-  \item \lstinline�cap links� sets the starting and ending line tip of each link to a (reversed) cap,
-  \item \lstinline�arrow links� sets the ending line tip of each link to a rounded, stealth arrow,
-  \item \lstinline�spatial links=�\PH\ shows the spatial links (\lstinline�show spatial links�) and appends to the style of the spatial links (secondary graph edges),
-  \item \lstinline�all labels=�\PH\ appends to the general style of all text labels (applies to the following three label types),
-  \item \lstinline�labels=�\PH\ shows the event labels (\lstinline�show labels�) and appends to the style that applies only to the event labels,
-  \item \lstinline�ulabels=�\PH\ shows the $u$ labels (\lstinline�show ulabels�) and appends to the style that applies only to the $u$ labels, and
-  \item \lstinline�vlabels=�\PH\ shows the $v$ labels (\lstinline�show vlabels�) and appends to the style that applies only to the $v$ labels.
+  \item \lstinline&region=&\PH\ shows the permutation (\lstinline&show permutation&) and appends to the style of the permutation frame,
+  \item \lstinline&grid=&\PH\ shows the permutation (\lstinline&show permutation&) and appends to the style of the permutation grid,
+  \item \lstinline&tiles=&\PH\ shows the permutation (\lstinline&show permutation&) and appends to the style of the occupied permutation tiles,
+  \item \lstinline&events=&\PH\ appends to the style of the event nodes (graph vertices),
+  \item \lstinline&links=&\PH\ shows the links (\lstinline&show links&) and appends to the style of the links (main graph edges),
+  \item \lstinline&link starts=&\PH\ sets the starting line tip of each link,
+  \item \lstinline&link ends=&\PH\ sets the ending line tip of each link,
+  \item \lstinline&link pauses=&\PH\ sets the ending line tip of each link at an interruption,
+  \item \lstinline&link resumes=&\PH\ sets the starting line tip of each link at an interruption,
+  \item \lstinline&cap links& sets the starting and ending line tip of each link to a (reversed) cap,
+  \item \lstinline&arrow links& sets the ending line tip of each link to a rounded, stealth arrow,
+  \item \lstinline&spatial links=&\PH\ shows the spatial links (\lstinline&show spatial links&) and appends to the style of the spatial links (secondary graph edges),
+  \item \lstinline&all labels=&\PH\ appends to the general style of all text labels (applies to the following three label types),
+  \item \lstinline&labels=&\PH\ shows the event labels (\lstinline&show labels&) and appends to the style that applies only to the event labels,
+  \item \lstinline&ulabels=&\PH\ shows the $u$ labels (\lstinline&show ulabels&) and appends to the style that applies only to the $u$ labels, and
+  \item \lstinline&vlabels=&\PH\ shows the $v$ labels (\lstinline&show vlabels&) and appends to the style that applies only to the $v$ labels.
 \end{enumerate}
 In order to manually define the full style of the parts in the diagram -- not extending, but \emph{overwriting all} drawing options -- set the style of the following keys: \vspace{-1ex}
 \begin{enumerate}\itemsep=-1ex
-  \item \lstinline�every causet� for the general style of the causet diagram (like \lstinline�baseline�, see below),
-  \item \lstinline�every tile� for the occupied permutation tiles,
-  \item \lstinline�every event� for the event nodes (graph vertices),
-  \item \lstinline�every grid� for the permutation grid,
-  \item \lstinline�every region� for the permutation region,
-  \item \lstinline�every label base� for all text labels,
-  \item \lstinline�every ulabel� for the permutation $u$ labels,
-  \item \lstinline�every vlabel� for the permutation $v$ labels,
-  \item \lstinline�every link� for the links (graph edges),
-  \item \lstinline�every spatial link� for the spacelike separations, and
-  \item \lstinline�every label� for the event labels.
+  \item \lstinline&every causet& for the general style of the causet diagram (like \lstinline&baseline&, see below),
+  \item \lstinline&every tile& for the occupied permutation tiles,
+  \item \lstinline&every event& for the event nodes (graph vertices),
+  \item \lstinline&every grid& for the permutation grid,
+  \item \lstinline&every region& for the permutation region,
+  \item \lstinline&every label base& for all text labels,
+  \item \lstinline&every ulabel& for the permutation $u$ labels,
+  \item \lstinline&every vlabel& for the permutation $v$ labels,
+  \item \lstinline&every link& for the links (graph edges),
+  \item \lstinline&every spatial link& for the spacelike separations, and
+  \item \lstinline&every label& for the event labels.
 \end{enumerate}
-With the macro \lstinline�\tikzcausetsset{...}�, any of these styles can also be set in the preamble of the document.
+With the macro \lstinline&\tikzcausetsset{...}&, any of these styles can also be set in the preamble of the document.
 So, for example,
 \begin{lstlisting}
 \usepackage{causets}
@@ -1006,8 +1006,8 @@ So, for example,
 will generate all causets with square nodes as events and triangle caps on the future (upper) link ends, like \pcauset[name=NDash_rectangleeventslarge, large, events={rectangle}, links={-Triangle Cap[]}]{2,4,5,1,3}.
 \vspace{1ex}
 
-By default, causets are placed such that a pre-defined coordinate point falls on the text baseline, \lstinline�baseline=(baseline point)�.
-The baseline point is \lstinline�tile size�/$\sqrt{2}$ below the centre of the diagram.
+By default, causets are placed such that a pre-defined coordinate point falls on the text baseline, \lstinline&baseline=(baseline point)&.
+The baseline point is \lstinline&tile size&/$\sqrt{2}$ below the centre of the diagram.
 You may adjust the baseline as for any TikZ graphic, for example,
 \begin{lstlisting}
 \pcauset[baseline=2mm]{2,4,5,1,3}
@@ -1020,24 +1020,24 @@ places the diagram centre $2\mathrm{mm}$ below the text base, \pcauset[name=NDas
 \label{sec:TikZ}
 
 Since the package is TikZ based, using a causet within a TikZ picture is simple.
-Each of the three main commands is based on a draw command in TikZ that has the same name but starts with \lstinline�\draw...�.
-The \lstinline�\draw� macros, however, do not support an optional argument (since this can be specified directly in a TikZ picture) and they also do not have any short hand macros ending in \lstinline�P�, \lstinline�L� or \lstinline�X�.
-The \lstinline�\draw...� do not add extra padding (\lstinline�\causets@Padding�) on the left and right of the graphic either.
+Each of the three main commands is based on a draw command in TikZ that has the same name but starts with \lstinline&\draw...&.
+The \lstinline&\draw& macros, however, do not support an optional argument (since this can be specified directly in a TikZ picture) and they also do not have any short hand macros ending in \lstinline&P&, \lstinline&L& or \lstinline&X&.
+The \lstinline&\draw...& do not add extra padding (\lstinline&\causets@Padding&) on the left and right of the graphic either.
 
-The two following examples are given by external (standalone) TikZ graphics and included with \lstinline�\includegraphics{...}�.
+The two following examples are given by external (standalone) TikZ graphics and included with \lstinline&\includegraphics{...}&.
 More details on using causets in standalone files are given in \autoref{sec:ExternalCausets}.
 
-Note that the output of the \lstinline�\draw� macros has the point (0,0) in the centre, so in order to shift it, we may enclose it in a TikZ scope, for example:
+Note that the output of the \lstinline&\draw& macros has the point (0,0) in the centre, so in order to shift it, we may enclose it in a TikZ scope, for example:
 \lstinputlisting{causets_example1.tex}
 \begin{center}
   \includegraphics{causets_example1}
 \end{center}
 
-Note that this example also shows how to use the event nodes that are generated by the \lstinline�\drawpcauset� macro.
-The green arrow points to the node of the second causet event \lstinline�(E5)�.
-The causet events, event labels, $u$-axis labels, and $v$-axis lables are the nodes \lstinline�(Ei)�, \lstinline�(ELi)�, \lstinline�(EULi)�, and \lstinline�(EVLi)�, respectively, where $\smash{i \in [ -1, 5 ]}$.
+Note that this example also shows how to use the event nodes that are generated by the \lstinline&\drawpcauset& macro.
+The green arrow points to the node of the second causet event \lstinline&(E5)&.
+The causet events, event labels, $u$-axis labels, and $v$-axis lables are the nodes \lstinline&(Ei)&, \lstinline&(ELi)&, \lstinline&(EULi)&, and \lstinline&(EVLi)&, respectively, where $\smash{i \in [ -1, 5 ]}$.
 
-It is also possible to use multiple causets in more complicated graphics, like a tree for example, but note that whenever a causet is actually a text of a node within a TikZ picture (like in the following), we need to use the \lstinline�\pcauset� (\lstinline�\rcauset� or \lstinline�\causet�) commands without the \lstinline�draw� prefix again:
+It is also possible to use multiple causets in more complicated graphics, like a tree for example, but note that whenever a causet is actually a text of a node within a TikZ picture (like in the following), we need to use the \lstinline&\pcauset& (\lstinline&\rcauset& or \lstinline&\causet&) commands without the \lstinline&draw& prefix again:
 \lstinputlisting{causets_example2.tex}
 \begin{center}
   \includegraphics[scale=0.80]{causets_example2}
@@ -1063,16 +1063,16 @@ It is also possible to use multiple causets in more complicated graphics, like a
 
 \begin{itemize}\itemsep=-1ex
 \item \versioncauset{v1-5}{\pcauset{1,5,3,6/{XMLv1.5, label=XML, labels={XMLv1.5, above=1ex, at=north}},2,4}}%
-  Added support for \LaTeXML\ including the key \lstinline�alt={�\PH\lstinline�}� to define an alternative text representing a diagram for screen readers.
+  Added support for \LaTeXML\ including the key \lstinline&alt={&\PH\lstinline&}& to define an alternative text representing a diagram for screen readers.
 \item Added references to a supporting online tool, the \href{https://c-minz.github.io/assets/html/proset-editor.html}{PrOSET editor}.
 \end{itemize}
 
 \subsubsection{Modifications and fixes}
 
 \begin{itemize}\itemsep=-1ex
-\item The short hand macros \lstinline�\pcausetL�, \lstinline�\pcausetP�, \lstinline�\pcausetX�, \lstinline�\rcausetL�, \lstinline�\rcausetP�, \\\lstinline�\rcausetX�, \lstinline�\causetL�, \lstinline�\causetP� and \lstinline�\causetX� are now depreciated.\\
-Write \lstinline�\pcauset[labeled]�, \lstinline�\pcauset[permutation]�, \lstinline�\pcauset[permutation, labeled]�, etc. instead, or use the PrOSET editor to design diagrams.
-\item Removed the short hand macros \lstinline�\causetFence� and \lstinline�\causetCrown�.
+\item The short hand macros \lstinline&\pcausetL&, \lstinline&\pcausetP&, \lstinline&\pcausetX&, \lstinline&\rcausetL&, \lstinline&\rcausetP&, \\\lstinline&\rcausetX&, \lstinline&\causetL&, \lstinline&\causetP& and \lstinline&\causetX& are now depreciated.\\
+Write \lstinline&\pcauset[labeled]&, \lstinline&\pcauset[permutation]&, \lstinline&\pcauset[permutation, labeled]&, etc. instead, or use the PrOSET editor to design diagrams.
+\item Removed the short hand macros \lstinline&\causetFence& and \lstinline&\causetCrown&.
 \item Corrected typos in the manual.
 \end{itemize}
 
@@ -1083,14 +1083,14 @@ Write \lstinline�\pcauset[labeled]�, \lstinline�\pcauset[permutation]�, 
 
 \begin{itemize}\itemsep=-1ex
 \item \versioncauset{v1-4}{\rcauset[release/.style={black!40!cyan!85}]{1,5/release,3,2,4}{1/5/release}}%
-  Second values in the sequence of the first argument: now modifies the style of individual events, the events are replaced with the key \lstinline�event=�\PH, and the labels are set with \lstinline�label=�\PH.
-\item Third values in the sequence of the second argument of \lstinline�\causet� and \lstinline�\rcauset�: to modify the style of individual links.
-\item Broken links for restyled links of \lstinline�\rcauset�: restyled links can also be drawn between events that would have not been automatically linked, hence these links might now be broken up like the links of \lstinline�\causet�.
-\item New key \lstinline�name=�\PH: to define a name of a causet for easier readability of the tex source code (and to be used as external file name when the corresponding package option has been activated).
-\item New option \lstinline�external�: to load the \lstinline�external� library of TikZ for automatic externalisation of all diagrams.
-\item New key \lstinline�set prefix=�\PH: to pass a file name prefix that is combined with a causet name for the external files when using \lstinline�external�.
-\item New key \lstinline�name external=�\PH[bool]: to activate/deactivate using the causet names for external files.
-\item Main commands: padded by a thin space (adjustable with \lstinline�padding=�\PH) for a better spacing in text and math mode.
+  Second values in the sequence of the first argument: now modifies the style of individual events, the events are replaced with the key \lstinline&event=&\PH, and the labels are set with \lstinline&label=&\PH.
+\item Third values in the sequence of the second argument of \lstinline&\causet& and \lstinline&\rcauset&: to modify the style of individual links.
+\item Broken links for restyled links of \lstinline&\rcauset&: restyled links can also be drawn between events that would have not been automatically linked, hence these links might now be broken up like the links of \lstinline&\causet&.
+\item New key \lstinline&name=&\PH: to define a name of a causet for easier readability of the tex source code (and to be used as external file name when the corresponding package option has been activated).
+\item New option \lstinline&external&: to load the \lstinline&external& library of TikZ for automatic externalisation of all diagrams.
+\item New key \lstinline&set prefix=&\PH: to pass a file name prefix that is combined with a causet name for the external files when using \lstinline&external&.
+\item New key \lstinline&name external=&\PH[bool]: to activate/deactivate using the causet names for external files.
+\item Main commands: padded by a thin space (adjustable with \lstinline&padding=&\PH) for a better spacing in text and math mode.
 \end{itemize}
 
 \subsubsection{Modifications and fixes}
@@ -1098,16 +1098,16 @@ Write \lstinline�\pcauset[labeled]�, \lstinline�\pcauset[permutation]�, 
 \begin{itemize}\itemsep=-1ex
 \item Third values in the sequence of the first argument: no longer supported.
 \item Spatial links: are now drawn before (so on a lower layer than) links.
-\item Style \lstinline�arrow links�: the arrow heads are now filled.
-\item Macro \lstinline�\causetspath�: has been replaced by \lstinline�name prefix=�\PH.
-\item Short-hand macro \lstinline�\causetCrown�: changed to take a single argument (and the optional style argument) and returns the same output as \lstinline�\causetClosedFence� used to, which has been removed.
+\item Style \lstinline&arrow links&: the arrow heads are now filled.
+\item Macro \lstinline&\causetspath&: has been replaced by \lstinline&name prefix=&\PH.
+\item Short-hand macro \lstinline&\causetCrown&: changed to take a single argument (and the optional style argument) and returns the same output as \lstinline&\causetClosedFence& used to, which has been removed.
 \end{itemize}
 
 \subsection[v1.3.1, 2022-07-27 (Diamond)]{v1.3.1, 2022-07-27}
 \subsubsection{Modifications and fixes}
 \begin{itemize}\itemsep=-1ex
 \item \versioncauset{v1-3-1}{\pcauset[replaced labels={left=0.5ex, at=west}]{1,3,2,4/label=.3}}%
-  Automatic event labels: now correctly printed when using \lstinline�offset=�\PH.
+  Automatic event labels: now correctly printed when using \lstinline&offset=&\PH.
 \end{itemize}
 
 
@@ -1120,8 +1120,8 @@ Write \lstinline�\pcauset[labeled]�, \lstinline�\pcauset[permutation]�, 
   Integer sequences in the arguments: use a permutation of an interval $[ a, b ]$, where $a$ and $b$ do no longer have to be natural numbers but can be any integers ($a \leq b$) including 0 and negative numbers.
   These numbers name and label the events of the causet if the respective options are chosen.
 \item Second values in the sequence of the first argument: to change the name and label of events.
-\item New key \lstinline�offset=�\PH\ (0 by default): to define an integer shift for all events before they are named and labeled.
-\item New style \lstinline�text font=�\PH\ (additionally to \lstinline�text scale=�\PH): to adjust the font style of text (labels), for example, to set the font size to 20pt (and a baseline skip of 24pt), use \lstinline�text font=\fontsize{20}{24}\selectfont�
+\item New key \lstinline&offset=&\PH\ (0 by default): to define an integer shift for all events before they are named and labeled.
+\item New style \lstinline&text font=&\PH\ (additionally to \lstinline&text scale=&\PH): to adjust the font style of text (labels), for example, to set the font size to 20pt (and a baseline skip of 24pt), use \lstinline&text font=\fontsize{20}{24}\selectfont&
 \end{itemize}
 
 \subsubsection{Modifications and fixes}
@@ -1129,11 +1129,11 @@ Write \lstinline�\pcauset[labeled]�, \lstinline�\pcauset[permutation]�, 
 \begin{itemize}\itemsep=-1ex
 \item Size options: all sizes are now scaled with respect to the normal size.
 \item Event style: line thickness of the event outline has been corrected.
-\item Size macros removed: \lstinline�\causetRegionLine�, \lstinline�\causetGridLine�, \lstinline�\causetEventSize�, \\ \lstinline�\causetLinkWidth�, and \lstinline�\causetBrokenLinkGap�.
-  The respective values are now stored in PGF keys and are measured with respect to the size unit (stored in \lstinline�\causetTileSize�).
+\item Size macros removed: \lstinline&\causetRegionLine&, \lstinline&\causetGridLine&, \lstinline&\causetEventSize&, \\ \lstinline&\causetLinkWidth&, and \lstinline&\causetBrokenLinkGap&.
+  The respective values are now stored in PGF keys and are measured with respect to the size unit (stored in \lstinline&\causetTileSize&).
 \item All package options: reduced to single words.
-\item Permutation for \lstinline�\*causetL...�: now deactivated (if activated previously), by default.
-\item Labels for \lstinline�\*causetP...�: now deactivated (if activated previously), by default.
+\item Permutation for \lstinline&\*causetL...&: now deactivated (if activated previously), by default.
+\item Labels for \lstinline&\*causetP...&: now deactivated (if activated previously), by default.
 \end{itemize}
 
 
@@ -1143,18 +1143,18 @@ Write \lstinline�\pcauset[labeled]�, \lstinline�\pcauset[permutation]�, 
 
 \begin{itemize}\itemsep=-1ex
 \item \versioncauset{v1-2}{\pcauset[arrow links]{1,3,2}}%
-  New style \lstinline�at=�\PH: to specify the relative point of events (\lstinline�at=�\PH, by default) and position relative to this point using TikZ keys \lstinline�left=�\PH, \lstinline�right=�\PH, etc.
-\item New styles \lstinline�cap links� and \lstinline�arrow links�: add different arrow tips to the start and end of links.
-\item New styles \lstinline�link starts=�\PH\ and \lstinline�link ends=�\PH: to modify arrow tips to the start and end of links.
-\item Broken links for \lstinline�\causet�: links crossing over unlinked events are broken up now.
-\item New styles \lstinline�link pauses=�\PH\ and \lstinline�link resumes=�\PH: to set the link ending style (arrows) at breaking points.
-\item Spatial links for \lstinline�\rcauset�: spatial links for spacelike separated events are now supported by \lstinline�\rcauset�, too.
+  New style \lstinline&at=&\PH: to specify the relative point of events (\lstinline&at=&\PH, by default) and position relative to this point using TikZ keys \lstinline&left=&\PH, \lstinline&right=&\PH, etc.
+\item New styles \lstinline&cap links& and \lstinline&arrow links&: add different arrow tips to the start and end of links.
+\item New styles \lstinline&link starts=&\PH\ and \lstinline&link ends=&\PH: to modify arrow tips to the start and end of links.
+\item Broken links for \lstinline&\causet&: links crossing over unlinked events are broken up now.
+\item New styles \lstinline&link pauses=&\PH\ and \lstinline&link resumes=&\PH: to set the link ending style (arrows) at breaking points.
+\item Spatial links for \lstinline&\rcauset&: spatial links for spacelike separated events are now supported by \lstinline&\rcauset&, too.
 \end{itemize}
 
 \subsubsection{Modifications and fixes}
 
 \begin{itemize}\itemsep=-1ex
-\item Color option \lstinline�blue�: blue colors are now different shades of blue, gray and black only.
+\item Color option \lstinline&blue&: blue colors are now different shades of blue, gray and black only.
 \end{itemize}
 
 
@@ -1174,7 +1174,7 @@ Write \lstinline�\pcauset[labeled]�, \lstinline�\pcauset[permutation]�, 
 
 \begin{itemize}\itemsep=-1ex
 \item \versioncauset{v1-0}{\pcauset{1}}%
-  First release of the package \lstinline�causets� on CTAN, \url{https://ctan.org/pkg/causets}, including all the main commands.
+  First release of the package \lstinline&causets& on CTAN, \url{https://ctan.org/pkg/causets}, including all the main commands.
 \end{itemize}
 
 \noindent
