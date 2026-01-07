@@ -36,7 +36,7 @@ Bug reports can be send to the maintainer:
 
 
 ## License and distribution
-Copyright 2020-2025 by C. Minz
+Copyright 2020-2026 by C. Minz
 
 This work may be distributed and/or modified under the conditions of the LaTeX Project Public License, either version 1.3 of this licence or (at your option) any later version.
 The latest version of this licence is in
@@ -47,7 +47,7 @@ This work has the LPPL maintenance status "maintained".
 The current maintainer of this work is C. Minz.
 https://github.com/c-minz
 
-**Current package version: v1.5 (2024/02/24)**
+**Current package version: v1.5 (2025/02/24)**
 
 CTAN location: /graphics/pgf/contrib/causets/
 

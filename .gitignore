@@ -1,8 +1,9 @@
-/tmp/
-/causets/
-/latexml/
-/.settings/
+tmp/
+causets/
+latexml/
+.settings/
 examples/*.sty
+.externalToolBuilders/
 *.css
 causets*.html
 .pydevproject
