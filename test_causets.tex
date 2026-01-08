@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage{causets}
+\usepackage{amsmath}
 
 \begin{document}
 
@@ -8,9 +9,22 @@ Test cases for typesetting Hasse diagrams with the \verb$causets$ package.
 
 \begin{enumerate}
 \item \verb$\pcauset$ test \pcauset[alt={3-chain}]{1,2,3} in the standard style (with attribute \verb$alt={3-chain}$).
-\item \verb$\pcauset$ test \pcauset[permutation, spatial links={densely dotted}, alt={N with permutation}, black colors]{2,4,1,3} in black/white with permutation grid, spatial links (densely dotted), and attribute \verb$alt={N with permutation grid}$.
+\item \verb$\pcauset$ test {\tikzcausetsset{very large} \pcauset[permutation, spatial links={densely dotted}, alt={N with permutation}, black colors, very large]{2,4,1,3}} in black/white, very large, with permutation grid, spatial links (densely dotted), and alt text ``N with permutation grid''.
+  The style \verb$very large$ is selected with \verb$\tikzcausetsset$ to test the processing of (local) styles.
 \item \verb$\rcauset$ test \rcauset[labeled, neon colors]{4,2,6,1,5,3}{2/5} in neon colours with labels, spatial links, and neon colors.
 \item \verb$\causet$ test \causet[labels={right, at=east}, blue colors]{-1,2,-5,-7,4,-3,-6,0/orange,6,3,-4,7,5,-2,1}{-7/-6,-7/4,-6/-4,-6/6/red,-5/-4,-5/-3,-4/-2,-4/7,-3/-2,-3/0,-2/1,-1/0,-1/2,0/1,0/3,2/3,2/4,3/5,4/5,4/6,6/7} in blue colours with labels, an automatically interrupted link (local style: red) crossing the event 0 (local style: orange).
+\item Test in mathematical expressions:
+  \begin{align}
+      \pcauset[alt={2-chain diamond}]{1,4,5,2,3,6}
+      \oslash \pcauset[alt={2-chain}]{1,2}
+    &= \pcauset[alt={4-chain}]{1,2,3,4}
+    \,,
+    \\
+      \pcauset[alt={2-chain}]{1,2}
+      \cup \pcauset[alt={singleton}]{1}
+    &= \left( \pcauset[alt={2-chain and singleton}]{2,3,1} \right)
+    \,.
+  \end{align}
 \end{enumerate}
 
 \end{document}

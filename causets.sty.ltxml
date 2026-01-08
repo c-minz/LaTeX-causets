@@ -18,6 +18,8 @@ use LaTeXML::Package;
 
 #======================================================================
 InputDefinitions('causets', type => 'sty', noltxml => 1);
+RequirePackage('tikz');
+RequirePackage('pgf');
 #======================================================================
 
 1;
