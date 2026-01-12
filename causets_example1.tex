@@ -3,7 +3,7 @@
 \usetikzlibrary{fit,shapes.geometric}
 \begin{document}
 \begin{tikzpicture}
-	% Create causet, shifted in x- and y-direction:
+	% Create causet, shifted in x- and y-direction to test note positions:
 	\begin{scope}[xshift=3cm, yshift=-1cm]
 		\tikzcausetsset{offset=-2}
 		\drawpcauset{5,2,7,3,6,1,4}
@@ -12,12 +12,12 @@
 	% Mark the maximal elements (future infinity):
 	\node[draw=blue, inner sep=1pt, thick, ellipse, fit=(E2) (E4) (E5)] (Finf) {};
 	% Add labels on top:
-	\node[draw=blue, right, align=right] (FinfLabel) at (4.8, -0.5) {maximal events / \\ (future infinity)};
-	\node[draw=red] (centerLabel) at (0.5, -0.5) {centre};
+	\node[draw=blue, right, align=right] (FinfLabel) at (4.8, -0.5) {maximal events / \\ future infinity};
+	\node[draw=red] (centerLabel) at (0.5, -0.5) {center};
 	\node[draw=green!50!black] (myEventLabel) at (5.5, -2.5) {event (E0)};
 	% Draw arrows from the labels to the references:
-	\draw[ultra thick, blue, ->] (FinfLabel) -- (Finf);
-	\draw[ultra thick, red, ->] (centerLabel) -- (3, -1);  % centre was shifted by the scope
-	\draw[ultra thick, green!50!black, ->] (myEventLabel) -- (E0);
+	\draw[ultra thick, blue, ->] (FinfLabel.west) -- (Finf);
+	\draw[ultra thick, red, ->] (centerLabel.east) -- (3, -1);  % center was shifted by the scope
+	\draw[ultra thick, green!50!black, ->] (myEventLabel.west) -- (E0);
 \end{tikzpicture}
 \end{document}

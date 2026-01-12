@@ -5,7 +5,6 @@ latexml/
 examples/*.sty
 .externalToolBuilders/
 *.css
-causets*.html
 .pydevproject
 .project
 .texlipse
