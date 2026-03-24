@@ -1,5 +1,5 @@
 %% Copyright 2020-2026 by C. Minz
-% Current package version: v1.5 (2025/02/24).
+% Current package version: v1.5.1 (2026/03/24).
 \documentclass[12pt]{article}
 \usepackage[a4paper, left = 2.5cm, right = 2.5cm, top = 2.5cm, bottom = 2.5cm]{geometry}
 \usepackage[english]{babel}
@@ -91,9 +91,9 @@
 
 \title{{\small package}\\[0.5cm]%
 \huge causets\\[0.2cm]%
-{\small version 1.5\\[0.5cm]}}
+{\small version 1.5.1\\[0.5cm]}}
 \author{Christoph Minz}
-\date{2025/02/24}
+\date{2026/03/24}
 
 \begin{document}
 
@@ -1037,12 +1037,16 @@ Note that this example also shows how to use the event nodes that are generated 
 The green arrow points to the node of the second causet event \lstinline&(E5)&.
 The causet events, event labels, $u$-axis labels, and $v$-axis lables are the nodes \lstinline&(Ei)&, \lstinline&(ELi)&, \lstinline&(EULi)&, and \lstinline&(EVLi)&, respectively, where $\smash{i \in [ -1, 5 ]}$.
 
-It is also possible to use multiple causets in more complicated graphics, like a tree for example, but note that whenever a causet is actually a text of a node within a TikZ picture (like in the following), we need to use the \lstinline&\pcauset& (\lstinline&\rcauset& or \lstinline&\causet&) commands without the \lstinline&draw& prefix again:
+It is also possible to use multiple causets, for example in a partial order of causet ``growth''.
+Here the causets appear as text in the TikZ node contents (within the \lstinline&{}&), so we need to use the \lstinline&\pcauset& (\lstinline&\rcauset& or \lstinline&\causet&) commands without the \lstinline&draw& prefix.
 \lstinputlisting{causets_example2.tex}
 \begin{center}
   \includegraphics[scale=0.80]{causets_example2}
   (rescaled to 80\%)
 \end{center}
+WARNING: Causet diagrams use TikZ nodes for the elements and element labels, so that changing how nodes are drawn in TikZ (either globally or in a local scope around a \lstinline&causets& macro) will also affect the nodes of elements and element labels.
+Here we use multiple layers to avoid inheriting the style from the parent node for all \lstinline&\pcauset& macros.
+The first layer consists of the big circular nodes with ``poscau node'' style and the second layer has the \lstinline&\pcauset& macros as content of TikZ node without style.
 
 \clearpage
 
@@ -1057,13 +1061,32 @@ It is also possible to use multiple causets in more complicated graphics, like a
 \tikzcausetsset{large, events={black!30}, links={black!30}, label color={black!40}}
 
 
-\subsection[v1.5 (Butterfly)]{v1.5, 2025-02-24}
+% \subsection[v1.6, unreleased (Crown)]{v1.6, unreleased}
+% 
+% \subsubsection{New features}
+% 
+% \begin{itemize}\itemsep=-1ex
+% \item \versioncauset{v1-5-1}{\rcauset{1,5,3,7,2,6/{orange},4}{3/6}}%
+%   \dots
+% \end{itemize}
+
+
+\subsection[v1.5.1, unreleased (Butterfly)]{v1.5.1, unreleased}
+
+\subsubsection{Modifications and fixes}
+
+\begin{itemize}\itemsep=-1ex
+\item \versioncauset{v1-5}{\pcauset{1,5,3,6/{XMLv1.5, label=XML, labels={XMLv1.5, above=1ex, at=north}},2,4}}%
+  Improved examples and added warning on nesting causet diagrams within TikZ nodes.
+\end{itemize}
+
+
+\subsection[v1.5, 2025-02-24 (Butterfly)]{v1.5, 2025-02-24}
 
 \subsubsection{New features}
 
 \begin{itemize}\itemsep=-1ex
-\item \versioncauset{v1-5}{\pcauset{1,5,3,6/{XMLv1.5, label=XML, labels={XMLv1.5, above=1ex, at=north}},2,4}}%
-  Added support for \LaTeXML\ including the key \lstinline&alt={&\PH\lstinline&}& to define an alternative text representing a diagram for screen readers.
+\item Added support for \LaTeXML\ including the key \lstinline&alt={&\PH\lstinline&}& to define an alternative text representing a diagram for screen readers.
 \item Added references to a supporting online tool, the \href{https://c-minz.github.io/assets/html/proset-editor.html}{PrOSET editor}.
 \end{itemize}
 

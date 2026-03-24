@@ -1,12 +1,15 @@
 \documentclass[tikz]{standalone}
 \usepackage[black]{causets}
-\usetikzlibrary{fit,shapes.geometric}
 % Set styles:
 \colorlet{future}{green!50!black}
 \colorlet{past}{yellow!30!orange!75!white}
 \colorlet{anywhere}{red!75!white}
 \tikzset{
   prob arrow/.style={line width=1.5pt}
+}
+\tikzcausetsset{
+  labels={gray},
+  unlabeled  % comment this line to show labels
 }
 % Define some helper functions:
 \def\defCevents#1#2#3{\xdef\Ea{#1}\xdef\Eb{#2}\xdef\Ec{#3}}
@@ -19,27 +22,22 @@
   \def\ystep{2.0cm}
   \def\xstep{0.60cm}
   % Create nodes of all causets with 1 to 4 events:
-  \begin{scope}[nodes={draw, thin, circle, minimum size=1.1cm}]
-    \node (C1)
-      at (0, 0)
-      {\pcauset{1}};
-    \node (C12)
-      at (-4*\xstep, 1*\ystep)
-      {\pcauset{1,2}};
-    \node (C21)
-      at (4*\xstep, 1*\ystep)
-      {\pcauset{2,1}};
+  \begin{scope}[poscau node/.style={draw, thin, circle, minimum size=1.1cm}]
+    \node[poscau node] (C1) at (0, 0) {};
+    \node at (C1) {\pcauset{1}};
+    \node[poscau node] (C12) at (-4*\xstep, 1*\ystep) {};
+    \node at (C12) {\pcauset{1,2}};
+    \node[poscau node] (C21) at (4*\xstep, 1*\ystep) {};
+    \node at (C21) {\pcauset{2,1}};
     \foreach \perm [count=\i from 0] in {123, 132, 312, 213, 321}{%
       \expandafter\defCevents\perm
-      \node (C\perm)
-        at (4*\i*\xstep-8*\xstep, 2*\ystep)
-        {\pcauset{\Ea,\Eb,\Ec}};
+      \node[poscau node] (C\perm) at (4*\i*\xstep-8*\xstep, 2*\ystep) {};
+      \node at (C\perm) {\pcauset{\Ea,\Eb,\Ec}};
     }
     \foreach \perm [count=\i from 0] in {1234, 1243, 1423, 1324, 1432, 4123, 4132, 3124, 3412, 3142, 4312, 2134, 2143, 4213, 3214, 4321}{%
       \expandafter\defDevents\perm
-      \node (C\perm)
-        at (2*\i*\xstep-15*\xstep, 3.75*\ystep)
-        {\pcauset{\Ea,\Eb,\Ec,\Ed}};
+      \node[poscau node] (C\perm) at (2*\i*\xstep-15*\xstep, 3.75*\ystep) {};
+      \node at (C\perm) {\pcauset{\Ea,\Eb,\Ec,\Ed}};
     }
   \end{scope}
   % Add graph edges for expandings ...
